@@ -1,7 +1,7 @@
-# Mobility AI — Learning Path Workspace
+# Agentic AI & MLOps on OpenShift AI — Learning Path Workspace
 
 Structured workspace for the Agentic AI & MLOps on OpenShift AI learning path.
-See [docs/index.md](docs/index.md) for the full curriculum (41 weeks, 9 phases).
+See [docs/index.md](docs/index.md) for the full curriculum.
 
 ---
 
