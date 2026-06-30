@@ -3,8 +3,6 @@
 Structured workspace for the Agentic AI & MLOps on OpenShift AI learning path.
 See [docs/index.md](docs/index.md) for the full curriculum.
 
----
-
 ## Prerequisites
 
 Install these before starting Phase 1.
@@ -22,13 +20,11 @@ Optional (cloud API access — needed for some exercises):
 - OpenAI API key: https://platform.openai.com
 - LangSmith API key (free): https://smith.langchain.com
 
----
-
 ## Quick Start
 
 ```bash
 # 1. Clone and enter the workspace
-git clone <repo-url> && cd mobility-ai
+git clone <repo-url> && cd learn-agentic-ai
 
 # 2. Copy and fill in API keys
 cp .env.example .env
@@ -48,8 +44,6 @@ podman-compose up -d
 # 6. Launch Jupyter for notebook-based experimentation
 uv run jupyter lab
 ```
-
----
 
 ## Installing Dependencies by Phase
 
@@ -81,8 +75,6 @@ uv sync --extra advanced
 # Everything at once (not recommended for Phase 1)
 uv sync --all-extras
 ```
-
----
 
 ## Local Infrastructure Services
 
@@ -124,11 +116,8 @@ podman-compose down -v
 | Redis | `localhost:6379` | RedisInsight UI at http://localhost:8001 |
 | Neo4j Browser | http://localhost:7474 | Bolt: `localhost:7687`, Password: `password` |
 
----
-
 ## Project Structure
 
-```
 .
 ├── README.md                         # This file
 ├── LEARNING_PATH.md                  # Full curriculum — start here
@@ -152,8 +141,6 @@ podman-compose down -v
 └── evals/                            # Reusable RAGAS evaluation harnesses (built in Phase 3)
 ```
 
----
-
 ## Running Tests
 
 ```bash
@@ -166,8 +153,6 @@ uv run pytest projects/phase2-langchain/
 # With verbose output
 uv run pytest -v
 ```
-
----
 
 ## Key Decisions and Conventions
 
