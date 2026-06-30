@@ -1,0 +1,90 @@
+# Local development infrastructure for the AI learning path.
+# Start all services:  podman-compose up -d
+# Stop all services:   podman-compose down
+# Reset data volumes:  podman-compose down -v
+#
+# docker-compose also works: replace `podman-compose` with `docker compose`
+#
+# Services needed by phase:
+#   Phase 3+  →  postgres (pgvector)
+#   Phase 3+  →  qdrant
+#   Phase 4+  →  redis
+#   Phase 9   →  neo4j
+
+services:
+
+  # ── PostgreSQL + pgvector ────────────────────────────────────────────────────
+  # Primary production vector store (used from Phase 3 onward)
+  postgres:
+    image: pgvector/pgvector:pg16
+    container_name: mobility-ai-postgres
+    environment:
+      POSTGRES_DB: ragdb
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ── Qdrant ───────────────────────────────────────────────────────────────────
+  # High-performance vector store with rich payload filtering (Phase 3+)
+  qdrant:
+    image: qdrant/qdrant:latest
+    container_name: mobility-ai-qdrant
+    ports:
+      - "6333:6333"   # HTTP API
+      - "6334:6334"   # gRPC API
+    volumes:
+      - qdrant_data:/qdrant/storage
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf http://localhost:6333/healthz || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ── Redis ────────────────────────────────────────────────────────────────────
+  # Semantic caching and general caching (Phase 4+)
+  redis:
+    image: redis/redis-stack:latest
+    container_name: mobility-ai-redis
+    ports:
+      - "6379:6379"   # Redis
+      - "8001:8001"   # RedisInsight UI
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ── Neo4j ────────────────────────────────────────────────────────────────────
+  # Knowledge graph store for GraphRAG (Phase 9)
+  neo4j:
+    image: neo4j:5
+    container_name: mobility-ai-neo4j
+    environment:
+      NEO4J_AUTH: neo4j/password
+      NEO4J_PLUGINS: '["apoc"]'
+    ports:
+      - "7474:7474"   # Browser UI  →  http://localhost:7474
+      - "7687:7687"   # Bolt protocol (Python driver)
+    volumes:
+      - neo4j_data:/data
+    healthcheck:
+      test: ["CMD-SHELL", "cypher-shell -u neo4j -p password 'RETURN 1' || exit 1"]
+      interval: 15s
+      timeout: 10s
+      retries: 10
+
+volumes:
+  postgres_data:
+  qdrant_data:
+  redis_data:
+  neo4j_data:

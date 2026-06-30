@@ -1,0 +1,45 @@
+# Environment and secrets
+.env
+.env.local
+
+# Python
+.venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+*.so
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# Tools
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Local model files (can be large)
+models/
+*.gguf
+*.safetensors
+*.bin
+
+# ML artifacts and experiment outputs
+mlruns/
+mlartifacts/
+outputs/
+checkpoints/
+runs/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
