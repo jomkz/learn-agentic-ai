@@ -57,16 +57,16 @@ uv sync --extra langchain
 # Phase 3 — RAG: Docling, pgvector, Qdrant, RAGAS
 uv sync --extra rag
 
-# Phase 4 — Advanced RAG: Redis semantic cache, rerankers
+# Phase 4 — Advanced RAG: Redis semantic cache, rerankers, DSPy
 uv sync --extra advanced-rag
 
-# Phase 5-6 — LangGraph, MCP, Guardrails
+# Phase 5-6 — LangGraph, MCP, A2A, Guardrails, Garak, OpenTelemetry
 uv sync --extra agents
 
 # Phase 7 — LlamaStack
 uv sync --extra llamastack
 
-# Phase 8 — HuggingFace, LoRA/QLoRA, MLflow, Ray, KFP
+# Phase 8 — HuggingFace, LoRA/QLoRA, Axolotl, MLflow, W&B, DVC, Ray, KFP
 uv sync --extra ml
 
 # Phase 9 — GraphRAG, Neo4j
@@ -120,7 +120,7 @@ podman-compose down -v
 
 .
 ├── README.md                         # This file
-├── LEARNING_PATH.md                  # Full curriculum — start here
+├── docs/index.md                     # Full curriculum — start here
 ├── pyproject.toml                    # Python dependencies (uv)
 ├── podman-compose.yml                # Local infrastructure services
 ├── .env.example                      # API key template → copy to .env

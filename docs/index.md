@@ -78,10 +78,18 @@ Capstone                              [needs all phases]
 | LLM API client | `openai` SDK | OpenAI-compatible; works with Ollama, vLLM, LlamaStack |
 | Local model serving | Ollama | Zero-config; GGUF format; OpenAI-compatible API |
 | Default vector store | pgvector | Production-ready; lives in existing PostgreSQL |
-| Orchestration | LangGraph | Stateful, checkpointed, multi-agent |
-| Model serving (prod) | vLLM on OpenShift AI | PagedAttention; OpenAI-compatible; GPU-efficient |
-| Fine-tuning | QLoRA + TRL | Memory-efficient; works on single consumer GPU |
-| Observability | LangSmith + MLflow | Tracing for agents; experiment tracking for training |
+| Orchestration | LangGraph | Stateful, checkpointed, multi-agent; CrewAI/AutoGen covered for comparison |
+| Model serving (prod) | vLLM on OpenShift AI | PagedAttention; OpenAI-compatible; GPU-efficient; Triton covered for comparison |
+| Fine-tuning | QLoRA + TRL + Axolotl | TRL for programmatic control; Axolotl for YAML-driven reproducible runs |
+| Prompt optimization | DSPy | Declarative, metric-driven prompt programs; replaces hand-crafted strings |
+| Experiment tracking | MLflow + W&B | MLflow for model registry; W&B for training visualization |
+| Data versioning | DVC | Git for datasets and model artifacts; S3/MinIO backend |
+| Agent observability | LangSmith + OpenTelemetry | LangSmith for dev tracing; OTel for production, vendor-neutral |
+| ML drift monitoring | Evidently AI | Data drift and LLM output quality over time |
+| Tool protocol | MCP + A2A | MCP: agent ↔ tool; A2A: agent ↔ agent |
+| Security testing | Garak | LLM vulnerability scanning; runs as CI gate before model promotion |
+| Pipeline orchestration | KFP v2 (OpenShift AI) | K8s-native; Airflow covered for comparison and integration |
+| Model packaging (alt) | BentoML | Non-K8s model serving; know for client conversations |
 
 ---
 

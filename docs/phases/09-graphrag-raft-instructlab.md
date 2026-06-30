@@ -173,6 +173,50 @@ ilab model chat
 
 **Evaluation:** `ilab model evaluate` runs MT-Bench and an MMLU subset. For custom domain evaluation, use `lm-evaluation-harness`: https://github.com/EleutherAI/lm-evaluation-harness
 
+### Week 5-6: Production Monitoring and Drift Detection
+
+Fine-tuned models and RAG pipelines degrade over time as data distributions shift. This is distinct from infrastructure metrics (latency, throughput — covered in Phase 8 with Prometheus/Grafana). Drift monitoring watches for *quality degradation* in the model's outputs and the data feeding it.
+
+**Evidently AI** — open-source ML monitoring and data quality toolkit:
+```python
+from evidently import ColumnMapping
+from evidently.report import Report
+from evidently.metric_preset import DataDriftPreset, TextEvals
+
+# Data drift report — detect when retrieved chunks shift from training distribution
+report = Report(metrics=[DataDriftPreset()])
+report.run(reference_data=train_df, current_data=prod_df, column_mapping=ColumnMapping())
+report.save_html("drift_report.html")
+
+# LLM output quality monitoring
+from evidently.descriptors import TextLength, Sentiment, SemanticSimilarity
+llm_report = Report(metrics=[TextEvals(column_name="answer", descriptors=[
+    Sentiment(),
+    TextLength(),
+    SemanticSimilarity(with_column="ground_truth"),
+])])
+```
+
+**What to monitor in a RAG + fine-tuned model pipeline:**
+
+| Signal | Tool | Alert condition |
+|--------|------|----------------|
+| Retrieved chunk embedding drift | Evidently `DataDriftPreset` on embeddings | Drift score > threshold → retrigger indexing |
+| RAGAS scores over time | Evidently custom metric or MLflow | Faithfulness drops >5% week-over-week |
+| Answer length / toxicity distribution | Evidently `TextEvals` | Sudden distribution shift |
+| Input query distribution | Evidently `DataDriftPreset` on queries | Query topics shifting → may need new training data |
+| Inference latency | Prometheus (Phase 8) | p95 > SLA threshold |
+
+**Integration pattern — continuous evaluation loop:**
+```
+Production traffic (sampled) → log (query, retrieved_docs, answer) to S3/MinIO
+    → nightly Evidently batch job (KFP component) → drift report → MLflow artifact
+    → alert if RAGAS or drift score crosses threshold
+    → trigger InstructLab/RAFT fine-tuning pipeline if quality gate fails
+```
+
+**Evidently Cloud vs. self-hosted:** Evidently is fully open-source; run the monitoring dashboard self-hosted alongside your existing Grafana/MLflow stack. The cloud offering is optional.
+
 ### Week 6: Multi-Modal Awareness
 
 Practical overview of vision-language models — enough to make architectural decisions, not a full deep dive. Invest more here only if your documents are image-heavy.
@@ -226,6 +270,11 @@ HumanMessage(content=[
 - RHEL AI docs: https://docs.redhat.com/en/documentation/red_hat_enterprise_linux_ai
 - `lm-evaluation-harness`: https://github.com/EleutherAI/lm-evaluation-harness
 
+**Monitoring and Drift Detection**
+- Evidently AI docs: https://docs.evidentlyai.com/
+- Evidently GitHub: https://github.com/evidentlyai/evidently
+- Evidently LLM monitoring guide: https://docs.evidentlyai.com/user-guide/llm-evaluation
+
 **Multi-Modal**
 - Llama 3.2 Vision via Ollama: `ollama pull llama3.2-vision`
 - Docling image extraction: https://ds4sd.github.io/docling/usage/
@@ -243,7 +292,9 @@ HumanMessage(content=[
 
 4. **InstructLab Contribution** — Install `ilab`; write a knowledge contribution (≥5 Q&A pairs with a source document) for a domain you know; `ilab data generate`; inspect synthetic data quality and diversity; run abbreviated training (`--num-epochs 1`); evaluate with `ilab model evaluate`
 
-5. **Multi-Modal Document Q&A** — Use Docling to extract images from a PDF with charts; pass extracted images to `llama3.2-vision` via Ollama for text descriptions; build a RAG pipeline that retrieves from both text chunks and image descriptions; compare to text-only retrieval on image-anchored questions
+5. **Evidently AI Monitoring Pipeline** — Log a sample of production queries, retrieved documents, and answers to a JSONL file over a week of evaluation runs; run Evidently `DataDriftPreset` comparing week-1 vs. week-2 embeddings; run `TextEvals` on answers for semantic similarity to ground truth; produce a drift report and set a threshold that would trigger retraining
+
+6. **Multi-Modal Document Q&A** — Use Docling to extract images from a PDF with charts; pass extracted images to `llama3.2-vision` via Ollama for text descriptions; build a RAG pipeline that retrieves from both text chunks and image descriptions; compare to text-only retrieval on image-anchored questions
 
 ### Capstone: Domain-Adaptive Knowledge System
 
@@ -268,5 +319,7 @@ Deliverable: an **Architectural Decision Record (ADR)** in `projects/phase9-doma
 - [ ] RAFT dataset generated with oracle + distractor documents and chain-of-thought labels
 - [ ] RAFT-tuned model shows higher RAGAS faithfulness score than base model on the same retrieval pipeline
 - [ ] `ilab data generate` produces ≥50 synthetic Q&A pairs from 5 seed examples
+- [ ] Evidently drift report runs without errors on a sampled production log; at least one drift metric is above 0 (showing the tool is detecting signal, not noise)
+- [ ] A retraining threshold is defined and documented: "if metric X exceeds Y, trigger pipeline Z"
 - [ ] Multi-modal pipeline retrieves an image description chunk for an image-specific question
 - [ ] Capstone ADR filled in with scores for all four approaches and a justified recommendation

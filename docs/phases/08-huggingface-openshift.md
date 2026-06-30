@@ -88,6 +88,35 @@ merged = model.merge_and_unload()
 merged.save_pretrained("./my-merged-model")
 ```
 
+**Axolotl — the production fine-tuning launcher:**
+TRL `SFTTrainer` is the programmatic API; Axolotl wraps the entire pipeline into a single YAML config. It's the most popular open-source fine-tuning tool for practitioners — most community fine-tuning guides and Hugging Face blogs reference it.
+
+```yaml
+# axolotl config.yaml — replaces ~200 lines of TRL boilerplate
+base_model: meta-llama/Llama-3.2-3B-Instruct
+load_in_4bit: true
+adapter: qlora
+lora_r: 16
+lora_alpha: 32
+lora_target_modules:
+  - q_proj
+  - v_proj
+datasets:
+  - path: my_dataset.jsonl
+    type: alpaca
+output_dir: ./output
+num_epochs: 3
+micro_batch_size: 2
+gradient_accumulation_steps: 4
+```
+
+```bash
+axolotl train config.yaml   # handles everything: data prep, training, checkpointing
+axolotl merge-lora config.yaml  # merge adapter into base weights
+```
+
+**Axolotl vs. raw TRL:** Learn both — TRL for programmatic control and custom training loops; Axolotl for standard SFT/DPO jobs where YAML config is faster and more reproducible. Axolotl uses TRL under the hood.
+
 ### Week 3: Containerization with Podman
 
 - Podman: Docker-compatible, daemonless, rootless — Red Hat standard
@@ -116,6 +145,17 @@ merged.save_pretrained("./my-merged-model")
 - Serving LoRA adapters: `--lora-modules adapter_name=/path/to/adapter` — one base model, multiple adapters
 - vLLM + LlamaStack: configure a custom LlamaStack distribution pointing to the vLLM endpoint
 
+**Serving landscape — know the alternatives:**
+
+| Server | Strengths | Weaknesses | When to use |
+|--------|-----------|------------|-------------|
+| **vLLM** | PagedAttention, easy deployment, OpenAI-compatible, LoRA serving | LLM-focused only | Primary choice for LLM serving on OpenShift AI |
+| **Triton Inference Server** (NVIDIA) | Multi-framework (PyTorch, TF, ONNX, TensorRT), ensemble pipelines, mature enterprise tooling | Complex configuration; heavier ops burden | Non-LLM models, embedding servers at scale, enterprise NVIDIA GPU fleets |
+| **TGI** (HuggingFace) | Native HuggingFace integration, quantization out-of-the-box | Fewer optimization features than vLLM | HuggingFace-centric teams |
+| **Ray Serve** | Integrates with Ray ecosystem, custom pre/post-processing | Not LLM-optimized (no PagedAttention) | When you already have Ray and need model serving alongside data pipelines |
+
+Triton is the industry standard in enterprises with heterogeneous GPU workloads — you will encounter it in clients running both LLMs and traditional ML models on the same GPU fleet. Know enough to architect around it even if vLLM is your primary tool.
+
 ### Week 5-6: KubeFlow Pipelines v2
 
 - KFP v2 SDK: `@dsl.component` (Python function → container), `@dsl.pipeline` (workflow definition)
@@ -126,6 +166,22 @@ merged.save_pretrained("./my-merged-model")
 - Pipeline runs: submit via Python client or OpenShift AI console
 - S3/MinIO artifact storage: artifacts flow between components via object store paths
 - Caching: components cache outputs by default; skip unchanged upstream steps on reruns
+
+**Pipeline orchestration landscape — KFP vs. Airflow:**
+
+Most data teams you'll integrate with or migrate run Apache Airflow. Understanding how KFP compares to Airflow is essential for architectural conversations.
+
+| | KFP v2 (OpenShift AI) | Apache Airflow |
+|---|---|---|
+| **Mental model** | ML artifact graph — data flows through typed artifacts | Task DAG — tasks are arbitrary callables, arbitrary dependencies |
+| **Execution** | Kubernetes-native; each component is a container | Workers (Celery/K8s executors); broad deployment options |
+| **ML integration** | First-class: datasets, models, metrics are typed artifacts; built-in lineage | Data-agnostic; ML tracking requires plugins (mlflow, etc.) |
+| **Scheduling** | Manual triggers + cron via the Argo/Tekton layer | Cron-native; rich scheduling UI |
+| **Caching** | Component output caching built-in | No caching; idempotency is user's responsibility |
+| **Community** | Smaller; ML-focused | Massive; broad data engineering community |
+| **OpenShift AI** | First-class (Data Science Pipelines = managed KFP) | Requires self-managed deployment |
+
+**In practice:** If the data team already runs Airflow, an Airflow DAG that triggers a KFP pipeline run is a common integration pattern. You don't have to pick one or the other.
 
 ### Week 6-7: Ray
 
@@ -138,9 +194,32 @@ merged.save_pretrained("./my-merged-model")
 ### Week 8: MLOps
 
 - **MLflow**: `mlflow.start_run()` → log params, metrics, artifacts → `mlflow.register_model()` → stage transitions (None → Staging → Production → Archived)
+- **Weights & Biases (W&B)**: the other dominant experiment tracker; most open-source fine-tuning repos and Axolotl default to W&B; richer visualizations than MLflow for training loss curves, gradient norms, and system metrics; `wandb.init(project=...)`, `wandb.log({"train/loss": loss})`
+  - **MLflow vs. W&B:** MLflow is self-hostable, open-source, and production-registry-focused; W&B is cloud-first with a better UI for iterative research. Many teams use both: W&B during training exploration, MLflow for the model registry in production
+- **DVC (Data Version Control)**: git for data and model artifacts — tracks large files in remote storage (S3/MinIO, GCS, Azure Blob) with a small `.dvc` pointer file in git; enables reproducible ML experiments by pinning data version alongside code version
+  ```bash
+  dvc init
+  dvc add data/train.jsonl          # stages file; creates data/train.jsonl.dvc
+  dvc remote add -d s3remote s3://my-bucket/dvc
+  dvc push                          # uploads to S3
+  git add data/train.jsonl.dvc && git commit -m "add training data v1"
+  dvc repro                         # reruns only changed pipeline stages
+  ```
+  - **DVC pipelines**: `dvc.yaml` defines stages (prepare → train → evaluate) with tracked inputs/outputs — like KFP but file-based, works locally without Kubernetes
+  - **MLflow vs. DVC**: MLflow tracks experiment runs and metrics; DVC tracks the data and model files those runs consume and produce. They are complementary, not alternatives — use both
 - **Prometheus + Grafana on OpenShift**: `ServiceMonitor` CRD scrapes vLLM's `/metrics` endpoint; key vLLM metrics: `vllm:request_throughput`, `vllm:e2e_request_latency_seconds`, `vllm:gpu_cache_usage_perc`
 - **A/B testing**: OpenShift Service Mesh (Istio) `VirtualService` traffic splitting (e.g., 80% model-v1, 20% model-v2); compare RAGAS scores and latency across variants
 - **CI/CD for ML**: Tekton pipelines (OpenShift native) trigger KFP runs when new data arrives or code changes; quality gate in the pipeline promotes model version to Production in MLflow registry
+- **BentoML** — model packaging and serving framework popular outside the Kubernetes ecosystem: packages model + pre/post-processing code into a `Service` with a built-in HTTP server; useful to understand when evaluating alternatives to vLLM for non-LLM models or when clients are not on OpenShift
+  ```python
+  import bentoml
+  @bentoml.service
+  class MyEmbeddingService:
+      def __init__(self): self.model = load_model()
+      @bentoml.api
+      def embed(self, texts: list[str]) -> list[list[float]]:
+          return self.model.encode(texts).tolist()
+  ```
 
 ---
 
@@ -177,20 +256,38 @@ merged.save_pretrained("./my-merged-model")
 - Ray docs: https://docs.ray.io/en/latest/
 - KubeRay operator: https://github.com/ray-project/kuberay
 
+**Fine-tuning tooling**
+- Axolotl GitHub: https://github.com/axolotl-org/axolotl
+- Axolotl docs: https://axolotl-ai-cloud.github.io/axolotl/
+
+**Model serving**
+- Triton Inference Server docs: https://docs.nvidia.com/deeplearning/triton-inference-server/user-guide/
+- Triton GitHub: https://github.com/triton-inference-server/server
+- BentoML docs: https://docs.bentoml.com/en/latest/
+- BentoML GitHub: https://github.com/bentoml/BentoML
+
+**Pipeline orchestration**
+- Apache Airflow docs: https://airflow.apache.org/docs/
+- Airflow KFP provider: https://pypi.org/project/apache-airflow-providers-cncf-kubernetes/
+
 **MLflow / MLOps**
 - MLflow docs: https://mlflow.org/docs/latest/index.html
+- Weights & Biases docs: https://docs.wandb.ai/
+- W&B quickstart: https://docs.wandb.ai/quickstart
+- DVC docs: https://dvc.org/doc
+- DVC GitHub: https://github.com/iterative/dvc
 - Red Hat Developer YouTube: OpenShift AI demos
 
 ---
 
 ## Hands-on Projects
 
-1. **QLoRA Fine-tuning** — Fine-tune Llama 3.2 3B on a small instruction dataset using QLoRA + TRL `SFTTrainer`; compare base vs. fine-tuned on 10 held-out prompts; push adapter to HuggingFace Hub
+1. **QLoRA Fine-tuning — Two Ways** — Fine-tune Llama 3.2 3B on a small instruction dataset twice: once with TRL `SFTTrainer` programmatically, once with Axolotl YAML config; verify the adapter outputs are equivalent; push adapter to HuggingFace Hub; compare base vs. fine-tuned on 10 held-out prompts
 2. **Podman AI Service** — Containerize the Phase 3 RAG FastAPI service with Podman; multi-stage build; push to Quay.io; run with `podman-compose` (app + PostgreSQL)
 3. **vLLM Deployment** — Deploy Llama 3.1 8B with vLLM on Kubernetes (Kind locally); test OpenAI-compatible API; benchmark throughput at 10/50/100 concurrent requests; serve the QLoRA adapter from Project 1 with `--lora-modules`
 4. **KFP Pipeline** — 4-stage pipeline: data ingest → Docling parsing → embedding generation (Ray) → pgvector population; S3 artifacts between stages; run in OpenShift AI Data Science Pipelines
 5. **Ray Distributed Processing** — Ray Data preprocessing over a 10K-document corpus; Ray Serve autoscaling embedding model; test autoscaling by ramping request rate
-6. **MLflow + Prometheus** — Instrument the full RAG pipeline with MLflow tracking; Prometheus metrics on the FastAPI service; Grafana dashboard showing request rate, p95 latency, cache hit rate, and RAGAS score
+6. **MLflow + W&B + DVC + Prometheus** — Track the fine-tuning run in both MLflow and W&B simultaneously; use DVC to version the training dataset and model adapter with a `.dvc` pointer in git; Prometheus metrics on the FastAPI service; Grafana dashboard showing request rate, p95 latency, cache hit rate, and RAGAS score; write a 1-paragraph decision note on when you'd use MLflow vs. W&B vs. DVC for a given concern
 
 ### Capstone: Production RAG Platform on OpenShift AI
 End-to-end system:
@@ -207,7 +304,8 @@ End-to-end system:
 
 ## Completion Checklist
 
-- [ ] QLoRA fine-tuning runs to completion; adapter saved to HuggingFace Hub
+- [ ] QLoRA fine-tuning runs to completion via TRL `SFTTrainer`; adapter saved to HuggingFace Hub
+- [ ] Same fine-tuning job runs with Axolotl YAML config; adapter output matches TRL version
 - [ ] Fine-tuned model produces measurably better output on held-out prompts vs. base
 - [ ] Podman image builds and runs; `podman-compose up` starts app + database together
 - [ ] vLLM serves a model and responds to `curl` against `/v1/chat/completions`
@@ -215,5 +313,8 @@ End-to-end system:
 - [ ] KFP pipeline runs in OpenShift AI (or Kind) end-to-end; artifacts appear in S3/MinIO
 - [ ] Ray Data processes 10K documents without OOM on a single node (distributed across workers)
 - [ ] MLflow UI shows experiment runs with params, metrics, and registered model versions
+- [ ] W&B run visible at wandb.ai with training loss curve and system metrics
+- [ ] DVC-tracked dataset has a `.dvc` pointer committed to git; `dvc push` succeeds to S3/MinIO
+- [ ] `dvc repro` reruns only changed pipeline stages (verify by modifying only one stage)
 - [ ] Grafana dashboard displays live vLLM throughput and p95 latency
 - [ ] A/B test shows measurable quality or latency difference between retrieval strategies

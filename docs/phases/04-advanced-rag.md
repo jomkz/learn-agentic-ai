@@ -53,6 +53,50 @@
 - Refine: iteratively refine answer over each chunk — good for sequential reasoning
 - Summarize-then-query: compress long documents before adding to context
 
+### DSPy — Declarative, Optimizable Prompting
+
+DSPy (Stanford) replaces hand-crafted prompt strings with **typed signatures and learnable modules**. Instead of writing "Answer the question given the context", you declare what goes in and what comes out, then DSPy compiles + optimizes the prompt automatically against a metric.
+
+**Why this matters for RAG architectures:**
+- Hand-crafted prompts are brittle: changing the model or data distribution breaks them silently
+- DSPy treats prompts as a program to optimize, not a string to maintain
+- Enables systematic, metric-driven prompt improvement — the same workflow as hyperparameter tuning
+
+**Core primitives:**
+```python
+import dspy
+
+# 1. Define a typed signature — the contract, not the prompt
+class RAGSignature(dspy.Signature):
+    """Answer a question given retrieved context passages."""
+    context: list[str] = dspy.InputField(desc="retrieved passages")
+    question: str = dspy.InputField()
+    answer: str = dspy.OutputField(desc="concise, faithful answer")
+
+# 2. Use a module — DSPy generates and manages the prompt
+rag_module = dspy.ChainOfThought(RAGSignature)
+
+# 3. Define a metric — what "good" means
+def faithfulness_metric(example, pred, trace=None):
+    return example.answer.lower() in pred.answer.lower()
+
+# 4. Optimize — DSPy tries different prompt strategies to maximize the metric
+optimizer = dspy.BootstrapFewShot(metric=faithfulness_metric)
+optimized_rag = optimizer.compile(rag_module, trainset=train_examples)
+```
+
+**Key optimizers:**
+- `BootstrapFewShot`: automatically selects and labels few-shot examples
+- `MIPROv2`: full prompt optimization — instructions + examples; requires more data
+- `BetterTogether`: combines retrieval and generation optimization
+
+**When to use DSPy vs. hand-crafted prompts:**
+- Use DSPy when you have a measurable metric and a labeled eval set (which you do — RAGAS)
+- Use hand-crafted prompts for one-off tasks with no systematic evaluation loop
+- DSPy shines in production RAG where prompt quality needs to be maintained over time
+
+**DSPy + LangChain/LangGraph:** DSPy handles individual module optimization; LangGraph handles stateful orchestration. They compose naturally — use DSPy `Predict`/`ChainOfThought` inside LangGraph nodes.
+
 ---
 
 ## Resources
@@ -66,6 +110,10 @@
 - Redis semantic cache (LangChain): https://python.langchain.com/docs/integrations/llm_caching/
 - Anthropic prompt caching: https://docs.anthropic.com/en/docs/build-with-claude/prompt-caching
 - tiktoken: https://github.com/openai/tiktoken
+- DSPy docs: https://dspy.ai/
+- DSPy GitHub: https://github.com/stanfordnlp/dspy
+- DSPy paper (2023): https://arxiv.org/abs/2310.03714
+- DSPy + RAG tutorial: https://dspy.ai/tutorials/rag/
 
 ---
 
@@ -75,6 +123,8 @@
 2. **Reranker Integration** — BGE-reranker (local) + Cohere Rerank (API); measure precision@3 and precision@5 improvement; note latency cost of reranking
 3. **Semantic Cache** — Add Redis semantic cache to the Phase 3 documentation search; run a realistic query workload; report cache hit rate and cost savings estimate
 4. **Cost-Optimized Architecture** — Refactor the Phase 2 Research Agent to use model tiering: cheap model for tool routing decisions, expensive model only for final answer synthesis; measure cost reduction percentage
+
+5. **DSPy RAG Optimizer** — Take the Phase 3 RAGAS harness and 50 labeled QA pairs; define a `RAGSignature`; compile with `BootstrapFewShot` using faithfulness as the metric; compare RAGAS scores before and after optimization; inspect the auto-generated few-shot examples DSPy chose
 
 ---
 
@@ -86,3 +136,5 @@
 - [ ] Cache hit rate is measurable (instrumented with logging or metrics)
 - [ ] Model tiering reduces token cost by ≥30% vs. single-model approach on the same task
 - [ ] Token budget enforcer prevents any LLM call from exceeding a configured limit
+- [ ] DSPy `BootstrapFewShot` optimizer improves RAGAS faithfulness score vs. hand-crafted prompt baseline
+- [ ] DSPy auto-generated few-shot examples are inspectable and make sense for the domain

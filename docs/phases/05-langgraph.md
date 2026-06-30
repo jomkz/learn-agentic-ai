@@ -65,6 +65,38 @@
 - `InMemoryStore` → `PostgresStore`: stores facts that persist across threads (not just within one conversation)
 - Use for: user preferences, learned facts, cross-session context
 
+### Multi-Agent Framework Landscape
+
+LangGraph is not the only multi-agent framework. As an architect you will encounter these alternatives and need to know when each is appropriate.
+
+| Framework | Model | Strengths | Weaknesses | When to use |
+|-----------|-------|-----------|------------|-------------|
+| **LangGraph** | Graph with stateful nodes | Full control: custom topology, checkpointing, human-in-the-loop, streaming, production-grade | More code to write; steeper learning curve | Production systems needing durability, custom routing, or HIL |
+| **CrewAI** | Role-based crew of agents | Fast to get started; YAML-defined agents and tasks; built-in role/backstory/goal system | Less control over graph topology; limited checkpointing | Prototypes, role-oriented workflows, demos |
+| **AutoGen** (Microsoft) | Conversation-driven agents | Flexible conversational multi-agent patterns; good research tool; active community | Less production-hardened than LangGraph; Microsoft ecosystem bias | Research, flexible conversation topologies, teams already using Azure OpenAI |
+| **Semantic Kernel** (Microsoft) | Plugin-based orchestration | Strong .NET/C# story; enterprise Microsoft ecosystem | Python support secondary; opinionated enterprise patterns | Microsoft/Azure shops, .NET backends |
+
+**Key architectural takeaway:** LangGraph gives you the most control over state, routing, and failure recovery — which is why it's the right choice for production enterprise agents. CrewAI and AutoGen are faster for prototyping and exploration; they are not substitutes for production durability requirements.
+
+**Pattern to know — CrewAI quick comparison:**
+```python
+# CrewAI style — declarative, role-based
+from crewai import Agent, Task, Crew
+
+researcher = Agent(role="Research Analyst", goal="Find accurate information", ...)
+writer = Agent(role="Technical Writer", goal="Synthesize findings clearly", ...)
+crew = Crew(agents=[researcher, writer], tasks=[research_task, write_task])
+result = crew.kickoff()
+
+# LangGraph equivalent — imperative, stateful, checkpointed
+graph = StateGraph(ResearchState)
+graph.add_node("researcher", researcher_node)
+graph.add_node("writer", writer_node)
+graph.add_edge("researcher", "writer")
+app = graph.compile(checkpointer=PostgresSaver(...))
+result = app.invoke({"query": "..."}, config={"thread_id": "123"})
+```
+
 ---
 
 ## Resources
@@ -75,6 +107,10 @@
 - DeepLearning.AI "AI Agents in LangGraph" (free): https://learn.deeplearning.ai/courses/ai-agents-in-langgraph
 - Plan-and-Solve paper: https://arxiv.org/abs/2305.04091
 - Autonomous Agents survey: https://arxiv.org/abs/2308.11432
+- CrewAI docs: https://docs.crewai.com/
+- CrewAI GitHub: https://github.com/crewAIInc/crewAI
+- AutoGen docs: https://microsoft.github.io/autogen/
+- AutoGen GitHub: https://github.com/microsoft/autogen
 
 ---
 
@@ -89,6 +125,8 @@
 2. **Multi-Agent Code Review Pipeline** — Supervisor routes code review tasks to specialized subagents (security, performance, style); each streams findings; supervisor synthesizes a final report with overall verdict
 
 3. **Human-in-the-Loop Content Workflow** — Agent drafts content → human approves or edits in-place → agent revises and "publishes"; full interrupt/resume/state-persistence cycle
+
+4. **Framework Comparison** — Implement the same two-agent (research + write) workflow in both CrewAI and LangGraph; document the tradeoffs: lines of code, checkpointing support, streaming support, observability; write a 1-page ADR recommending which to use in a production enterprise context and why
 
 ### Capstone: Autonomous Research Pipeline
 Multi-agent system where a supervisor orchestrates:
@@ -110,3 +148,4 @@ Requirements: `PostgresSaver` checkpointing, streams via SSE endpoint, LangSmith
 - [ ] Swarm pattern: at least one agent uses `Command(goto=...)` to hand off directly
 - [ ] Capstone pipeline runs end-to-end with all three agents and produces a report
 - [ ] LangSmith shows the full multi-agent trace with per-node timing
+- [ ] CrewAI comparison: same workflow implemented in CrewAI and LangGraph; ADR documents the tradeoffs with specific, observable differences
