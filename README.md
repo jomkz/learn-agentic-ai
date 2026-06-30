@@ -118,6 +118,7 @@ podman-compose down -v
 
 ## Project Structure
 
+```
 .
 ├── README.md                         # This file
 ├── docs/index.md                     # Full curriculum — start here
