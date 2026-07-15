@@ -1,0 +1,132 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vllm-server
+  namespace: ai-platform
+  labels:
+    app: vllm-server
+    component: inference
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: vllm-server
+  template:
+    metadata:
+      labels:
+        app: vllm-server
+        component: inference
+    spec:
+      containers:
+        - name: vllm-server
+          image: vllm/vllm-openai:latest
+          args:
+            - --model
+            - meta-llama/Llama-3.1-8B-Instruct
+            - --port
+            - "8000"
+            - --lora-modules
+            - raft-adapter=/adapters/raft
+            - --enable-lora
+            - --max-lora-rank
+            - "16"
+            - --tensor-parallel-size
+            - "1"
+            - --gpu-memory-utilization
+            - "0.90"
+            - --max-model-len
+            - "8192"
+          ports:
+            - containerPort: 8000
+              name: http
+              protocol: TCP
+          resources:
+            requests:
+              nvidia.com/gpu: "1"
+              memory: 20Gi
+              cpu: "2"
+            limits:
+              nvidia.com/gpu: "1"
+              memory: 24Gi
+              cpu: "4"
+          env:
+            - name: HUGGING_FACE_HUB_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: huggingface-credentials
+                  key: token
+            - name: VLLM_LOGGING_LEVEL
+              value: INFO
+          volumeMounts:
+            - name: adapters
+              mountPath: /adapters
+              readOnly: true
+            - name: model-cache
+              mountPath: /root/.cache/huggingface
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 120
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 6
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 180
+            periodSeconds: 30
+            timeoutSeconds: 10
+            failureThreshold: 3
+      volumes:
+        - name: adapters
+          persistentVolumeClaim:
+            claimName: lora-adapters-pvc
+        - name: model-cache
+          persistentVolumeClaim:
+            claimName: model-cache-pvc
+      nodeSelector:
+        nvidia.com/gpu.present: "true"
+      tolerations:
+        - key: nvidia.com/gpu
+          operator: Exists
+          effect: NoSchedule
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: vllm-server
+  namespace: ai-platform
+  labels:
+    app: vllm-server
+    component: inference
+spec:
+  type: ClusterIP
+  selector:
+    app: vllm-server
+  ports:
+    - name: http
+      port: 8000
+      targetPort: 8000
+      protocol: TCP
+---
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: vllm-server
+  namespace: ai-platform
+  labels:
+    app: vllm-server
+    component: inference
+spec:
+  to:
+    kind: Service
+    name: vllm-server
+    weight: 100
+  port:
+    targetPort: http
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect
+  wildcardPolicy: None
