@@ -1,0 +1,83 @@
+version: 3
+domain: openshift
+document_outline: "OpenShift AI overview for machine learning workloads"
+document:
+  repo: https://github.com/opendatahub-io/opendatahub-operator
+  commit: main
+  patterns:
+    - README.md
+seed_examples:
+  - context: >
+      OpenShift AI provides a managed MLOps platform built on top of
+      Open Data Hub (ODH). It enables data scientists and ML engineers
+      to build, train, serve, and monitor machine learning models in a
+      production-ready OpenShift environment. OpenShift AI integrates
+      tools such as JupyterHub, vLLM, KubeFlow Pipelines, and Ray.
+    questions_and_answers:
+      - question: "What is OpenShift AI?"
+        answer: >
+          OpenShift AI is Red Hat's managed MLOps platform built on Open
+          Data Hub. It provides an integrated environment for building,
+          training, serving, and monitoring machine learning models on
+          OpenShift, with tools like JupyterHub, vLLM, KubeFlow Pipelines,
+          and Ray included out of the box.
+
+  - context: >
+      Open Data Hub (ODH) is an open-source MLOps platform for running
+      large AI and ML experiments on OpenShift. ODH is the upstream
+      community project that Red Hat curates and productizes as
+      OpenShift AI. It provides a blueprint for building AI/ML
+      platforms using open-source tools on Kubernetes.
+    questions_and_answers:
+      - question: "What is Open Data Hub (ODH)?"
+        answer: >
+          Open Data Hub is the upstream open-source project that underlies
+          OpenShift AI. It is a community-driven MLOps platform for running
+          AI and ML workloads on OpenShift and Kubernetes, providing a
+          blueprint for integrating tools like Jupyter, MLflow, and Ray.
+
+  - context: >
+      vLLM is a high-throughput large language model (LLM) serving
+      library that uses PagedAttention to manage the KV cache
+      efficiently. It achieves 20-24x higher throughput than naive
+      HuggingFace implementations. OpenShift AI uses vLLM as the
+      default model server for deploying LLMs in production, supporting
+      continuous batching and LoRA adapters.
+    questions_and_answers:
+      - question: "What is vLLM and how is it used in OpenShift AI?"
+        answer: >
+          vLLM is an efficient LLM serving library using PagedAttention for
+          KV-cache management, enabling high-throughput inference. In
+          OpenShift AI it is the default production model server, supporting
+          continuous batching, LoRA adapters, and an OpenAI-compatible API.
+
+  - context: >
+      KubeFlow Pipelines (KFP) is a platform for building and deploying
+      portable and scalable ML workflows on Kubernetes. It uses
+      Directed Acyclic Graphs (DAGs) to define pipeline steps, supports
+      caching of pipeline steps, and provides a UI for visualizing
+      pipeline runs. OpenShift AI ships KFP as its pipeline
+      orchestration layer.
+    questions_and_answers:
+      - question: "What is KubeFlow Pipelines (KFP) and what role does it play in OpenShift AI?"
+        answer: >
+          KubeFlow Pipelines is a Kubernetes-native ML workflow orchestration
+          platform that uses DAGs to define training, evaluation, and deployment
+          steps. In OpenShift AI it serves as the pipeline layer for automating
+          reproducible ML workflows with step caching and a visual run dashboard.
+
+  - context: >
+      Ray is a distributed computing framework for scaling Python
+      workloads. Ray Train enables distributed model training across
+      multiple GPUs and nodes. Ray Serve provides scalable model
+      serving. OpenShift AI integrates Ray via the KubeRay operator,
+      allowing data scientists to run large-scale training jobs and
+      hyperparameter tuning directly on OpenShift clusters.
+    questions_and_answers:
+      - question: "What is Ray and how does OpenShift AI use it?"
+        answer: >
+          Ray is an open-source distributed computing framework for scaling
+          Python and ML workloads. OpenShift AI integrates Ray through the
+          KubeRay operator, enabling distributed model training with Ray Train,
+          hyperparameter tuning with Ray Tune, and scalable inference with
+          Ray Serve — all running natively on OpenShift clusters.
