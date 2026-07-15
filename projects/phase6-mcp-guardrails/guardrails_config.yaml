@@ -1,0 +1,15 @@
+# This file configures NeMo Guardrails rails
+# See: https://github.com/NVIDIA/NeMo-Guardrails
+
+models:
+  - type: main
+    engine: ollama
+    model: llama3.2
+
+rails:
+  input:
+    flows:
+      - check off topic
+  output:
+    flows:
+      - check factual claims
