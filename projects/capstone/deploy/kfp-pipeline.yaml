@@ -1,0 +1,195 @@
+# Compiled KFP v2 pipeline — generate with: uv run python projects/phase8-openshift/kfp_pipeline.py
+pipelineInfo:
+  name: rag-ingestion-pipeline
+  description: Ingest domain documents into the RAG corpus (fetch, parse, embed, upsert).
+
+schemaVersion: 2.1.0
+
+root:
+  dag:
+    tasks:
+      fetch-documents:
+        cachingOptions:
+          enableCache: true
+        componentRef:
+          name: comp-fetch-documents
+        inputs:
+          parameters:
+            source_uri:
+              componentInputParameter: source_uri
+            max_docs:
+              componentInputParameter: max_docs
+        taskInfo:
+          name: fetch-documents
+
+      parse-documents:
+        cachingOptions:
+          enableCache: true
+        componentRef:
+          name: comp-parse-documents
+        dependentTasks:
+          - fetch-documents
+        inputs:
+          artifacts:
+            raw_docs:
+              taskOutputArtifact:
+                outputArtifactKey: raw_docs
+                producerTask: fetch-documents
+          parameters:
+            chunk_size:
+              componentInputParameter: chunk_size
+            chunk_overlap:
+              componentInputParameter: chunk_overlap
+        taskInfo:
+          name: parse-documents
+
+      generate-embeddings:
+        cachingOptions:
+          enableCache: false
+        componentRef:
+          name: comp-generate-embeddings
+        dependentTasks:
+          - parse-documents
+        inputs:
+          artifacts:
+            parsed_chunks:
+              taskOutputArtifact:
+                outputArtifactKey: parsed_chunks
+                producerTask: parse-documents
+          parameters:
+            embedding_model:
+              componentInputParameter: embedding_model
+            batch_size:
+              runtimeValue:
+                constant: 64
+        taskInfo:
+          name: generate-embeddings
+
+  inputDefinitions:
+    parameters:
+      source_uri:
+        parameterType: STRING
+        defaultValue: s3://ai-platform-docs/corpus/
+      max_docs:
+        parameterType: NUMBER_INTEGER
+        defaultValue: 1000
+      chunk_size:
+        parameterType: NUMBER_INTEGER
+        defaultValue: 512
+      chunk_overlap:
+        parameterType: NUMBER_INTEGER
+        defaultValue: 64
+      embedding_model:
+        parameterType: STRING
+        defaultValue: text-embedding-3-small
+
+components:
+  comp-fetch-documents:
+    executorLabel: exec-fetch-documents
+    inputDefinitions:
+      parameters:
+        source_uri:
+          parameterType: STRING
+        max_docs:
+          parameterType: NUMBER_INTEGER
+    outputDefinitions:
+      artifacts:
+        raw_docs:
+          artifactType:
+            schemaTitle: system.Dataset
+            schemaVersion: 0.0.1
+
+  comp-parse-documents:
+    executorLabel: exec-parse-documents
+    inputDefinitions:
+      artifacts:
+        raw_docs:
+          artifactType:
+            schemaTitle: system.Dataset
+            schemaVersion: 0.0.1
+      parameters:
+        chunk_size:
+          parameterType: NUMBER_INTEGER
+        chunk_overlap:
+          parameterType: NUMBER_INTEGER
+    outputDefinitions:
+      artifacts:
+        parsed_chunks:
+          artifactType:
+            schemaTitle: system.Dataset
+            schemaVersion: 0.0.1
+
+  comp-generate-embeddings:
+    executorLabel: exec-generate-embeddings
+    inputDefinitions:
+      artifacts:
+        parsed_chunks:
+          artifactType:
+            schemaTitle: system.Dataset
+            schemaVersion: 0.0.1
+      parameters:
+        embedding_model:
+          parameterType: STRING
+        batch_size:
+          parameterType: NUMBER_INTEGER
+    outputDefinitions:
+      artifacts:
+        embedded_chunks:
+          artifactType:
+            schemaTitle: system.Dataset
+            schemaVersion: 0.0.1
+
+deploymentSpec:
+  executors:
+    exec-fetch-documents:
+      container:
+        image: quay.io/ai-platform/rag-pipeline:latest
+        command:
+          - python
+          - -m
+          - phase8_openshift.pipeline.fetch
+        args:
+          - --source-uri
+          - "{{$.inputs.parameters['source_uri']}}"
+          - --max-docs
+          - "{{$.inputs.parameters['max_docs']}}"
+          - --output-path
+          - "{{$.outputs.artifacts['raw_docs'].path}}"
+
+    exec-parse-documents:
+      container:
+        image: quay.io/ai-platform/rag-pipeline:latest
+        command:
+          - python
+          - -m
+          - phase8_openshift.pipeline.parse
+        args:
+          - --input-path
+          - "{{$.inputs.artifacts['raw_docs'].path}}"
+          - --chunk-size
+          - "{{$.inputs.parameters['chunk_size']}}"
+          - --chunk-overlap
+          - "{{$.inputs.parameters['chunk_overlap']}}"
+          - --output-path
+          - "{{$.outputs.artifacts['parsed_chunks'].path}}"
+
+    exec-generate-embeddings:
+      container:
+        image: quay.io/ai-platform/rag-pipeline:latest
+        command:
+          - python
+          - -m
+          - phase8_openshift.pipeline.embed
+        args:
+          - --input-path
+          - "{{$.inputs.artifacts['parsed_chunks'].path}}"
+          - --embedding-model
+          - "{{$.inputs.parameters['embedding_model']}}"
+          - --batch-size
+          - "{{$.inputs.parameters['batch_size']}}"
+          - --output-path
+          - "{{$.outputs.artifacts['embedded_chunks'].path}}"
+        resources:
+          accelerator:
+            type: NVIDIA_TESLA_T4
+            count: 1

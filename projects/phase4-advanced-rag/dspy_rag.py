@@ -3,17 +3,17 @@
 from __future__ import annotations
 
 try:
-    import dspy
+    import dspy  # pragma: no cover
 
-    _DSPY_AVAILABLE = True
+    _DSPY_AVAILABLE = True  # pragma: no cover
 except ImportError:
     dspy = None  # type: ignore[assignment]
     _DSPY_AVAILABLE = False
 
 
-if _DSPY_AVAILABLE:
+if _DSPY_AVAILABLE:  # pragma: no cover
 
-    class RAGSignature(dspy.Signature):
+    class RAGSignature(dspy.Signature):  # pragma: no cover
         """Answer a question given retrieved context passages."""
 
         context: list[str] = dspy.InputField()

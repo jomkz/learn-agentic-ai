@@ -102,7 +102,21 @@ dev = [
     "deepeval>=1.0",
     "ruff>=0.7",
     "mypy>=1.13",
+    "pytest-cov>=7.1.0",
+    "pytest-xdist>=3.8.0",
 ]
+
+[tool.coverage.run]
+branch = false
+omit = ["*/conftest.py", "*/tests/*", "*/__init__.py"]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    'if __name__ == "__main__":',
+    "if __name__ == '__main__':",
+]
+show_missing = true
 
 [tool.pytest.ini_options]
 asyncio_mode = "auto"

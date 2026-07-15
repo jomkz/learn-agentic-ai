@@ -1,0 +1,127 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: llamastack-config
+  namespace: ai-platform
+data:
+  ollama-dist.yaml: |
+    version: 2
+    image_name: ollama
+    providers:
+      inference:
+        - provider_id: ollama
+          provider_type: remote::ollama
+          config:
+            url: http://ollama:11434
+      memory:
+        - provider_id: faiss
+          provider_type: inline::faiss
+          config:
+            kvstore:
+              type: sqlite
+              namespace: null
+              db_path: /tmp/faiss_store.db
+      safety:
+        - provider_id: llama-guard
+          provider_type: inline::llama-guard
+          config: {}
+      agents:
+        - provider_id: meta-reference
+          provider_type: inline::meta-reference
+          config:
+            persistence_store:
+              type: sqlite
+              namespace: null
+              db_path: /tmp/agents_store.db
+      telemetry:
+        - provider_id: meta-reference
+          provider_type: inline::meta-reference
+          config: {}
+    metadata_store:
+      type: sqlite
+      db_path: /tmp/registry.db
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: llamastack-server
+  namespace: ai-platform
+  labels:
+    app: llamastack-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: llamastack-server
+  template:
+    metadata:
+      labels:
+        app: llamastack-server
+    spec:
+      containers:
+        - name: llamastack-server
+          image: registry.redhat.io/rhel9/llamastack:latest
+          args:
+            - --config
+            - /config/ollama-dist.yaml
+            - --port
+            - "5001"
+          env:
+            - name: LLAMASTACK_LOG_LEVEL
+              value: INFO
+          envFrom:
+            - configMapRef:
+                name: llamastack-config
+          ports:
+            - name: http
+              containerPort: 5001
+              protocol: TCP
+          resources:
+            requests:
+              cpu: "2"
+              memory: 4Gi
+            limits:
+              cpu: "4"
+              memory: 8Gi
+          volumeMounts:
+            - name: config-volume
+              mountPath: /config
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 5001
+            initialDelaySeconds: 15
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 5001
+            initialDelaySeconds: 30
+            periodSeconds: 20
+      volumes:
+        - name: config-volume
+          configMap:
+            name: llamastack-config
+            items:
+              - key: ollama-dist.yaml
+                path: ollama-dist.yaml
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: llamastack-server
+  namespace: ai-platform
+  labels:
+    app: llamastack-server
+spec:
+  type: ClusterIP
+  selector:
+    app: llamastack-server
+  ports:
+    - name: http
+      port: 5001
+      targetPort: 5001
+      protocol: TCP

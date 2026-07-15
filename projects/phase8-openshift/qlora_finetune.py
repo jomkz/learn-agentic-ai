@@ -21,30 +21,38 @@ class FinetuneConfig(BaseModel):
 
 def load_model_and_tokenizer(config: FinetuneConfig):
     try:
-        import torch
-        from peft import LoraConfig, get_peft_model, prepare_model_for_kbit_training
-        from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
+        import torch  # pragma: no cover
+        from peft import (  # pragma: no cover
+            LoraConfig,
+            get_peft_model,
+            prepare_model_for_kbit_training,
+        )
+        from transformers import (  # pragma: no cover
+            AutoModelForCausalLM,
+            AutoTokenizer,
+            BitsAndBytesConfig,
+        )
     except ImportError:
         return (None, None)
 
-    bnb_config = BitsAndBytesConfig(
+    bnb_config = BitsAndBytesConfig(  # pragma: no cover
         load_in_4bit=config.load_in_4bit,
         bnb_4bit_use_double_quant=True,
         bnb_4bit_quant_type="nf4",
         bnb_4bit_compute_dtype=torch.bfloat16,
     )
 
-    model = AutoModelForCausalLM.from_pretrained(
+    model = AutoModelForCausalLM.from_pretrained(  # pragma: no cover
         config.base_model,
         quantization_config=bnb_config,
         device_map="auto",
     )
-    tokenizer = AutoTokenizer.from_pretrained(config.base_model)
-    tokenizer.pad_token = tokenizer.eos_token
+    tokenizer = AutoTokenizer.from_pretrained(config.base_model)  # pragma: no cover
+    tokenizer.pad_token = tokenizer.eos_token  # pragma: no cover
 
-    model = prepare_model_for_kbit_training(model)
+    model = prepare_model_for_kbit_training(model)  # pragma: no cover
 
-    lora_config = LoraConfig(
+    lora_config = LoraConfig(  # pragma: no cover
         r=config.lora_r,
         lora_alpha=config.lora_alpha,
         lora_dropout=config.lora_dropout,
@@ -52,9 +60,9 @@ def load_model_and_tokenizer(config: FinetuneConfig):
         bias="none",
         task_type="CAUSAL_LM",
     )
-    model = get_peft_model(model, lora_config)
+    model = get_peft_model(model, lora_config)  # pragma: no cover
 
-    return (model, tokenizer)
+    return (model, tokenizer)  # pragma: no cover
 
 
 def build_sft_trainer(model, tokenizer, dataset, config: FinetuneConfig):

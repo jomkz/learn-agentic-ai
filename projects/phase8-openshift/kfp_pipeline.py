@@ -5,10 +5,10 @@ from __future__ import annotations
 import os
 
 try:
-    from kfp import compiler
-    from kfp.dsl import InputPath, OutputPath, component, pipeline
+    from kfp import compiler  # pragma: no cover
+    from kfp.dsl import InputPath, OutputPath, component, pipeline  # pragma: no cover
 
-    _KFP_AVAILABLE = True
+    _KFP_AVAILABLE = True  # pragma: no cover
 except ImportError:
     _KFP_AVAILABLE = False
 
