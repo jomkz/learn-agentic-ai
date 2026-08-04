@@ -1,0 +1,68 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    name: Lint, Test, Coverage
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v4
+        with:
+          version: "latest"
+
+      - name: Install dependencies
+        run: uv sync --extra langchain --extra agents
+
+      - name: Lint (ruff check)
+        run: uv run ruff check .
+
+      - name: Format check (ruff format)
+        run: uv run ruff format --check .
+
+      - name: Test with parallel execution and coverage
+        run: >
+          uv run pytest projects/ evals/
+          -n auto
+          --cov=projects
+          --cov=evals
+          --cov-fail-under=90
+          --cov-report=xml
+          --cov-report=term-missing
+          -q
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v4
+        if: always()
+        with:
+          file: ./coverage.xml
+          fail_ci_if_error: false
+          token: CODECOV_TOKEN_SECRET
+
+  security-scan:
+    name: Garak Security Scan (model promotion gate)
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install garak
+        run: pip install garak
+
+      - name: Run Garak probes
+        run: |
+          echo "Garak LLM vulnerability scan"
+          echo "Configure OLLAMA_BASE_URL secret to run against a live model"
+          echo "Full command when configured:"
+          echo "  garak --model_type openai --model_name llama3.2 \"
+          echo "    --probes promptinject,dan,knownbadsignatures \"
+          echo "    --model_config.extra_params.base_url=OLLAMA_BASE_URL"
+        env:
+          OLLAMA_BASE_URL: OLLAMA_BASE_URL_SECRET

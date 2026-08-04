@@ -121,6 +121,7 @@ show_missing = true
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
 testpaths = ["projects", "evals"]
+addopts = "--import-mode=importlib"
 
 [tool.ruff]
 line-length = 100
