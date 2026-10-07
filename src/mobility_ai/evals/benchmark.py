@@ -112,7 +112,11 @@ def capture_one(db: Path, question: dict, top_k: int, client: RecordingClient) -
         "evidence": question["evidence"],
         "status": "ok" if error is None else "error",
         "error": error,
-        "answer": result["answer"] if result else client.raw_answer,
+        # Rejected payloads remain auditable but are not scored as answer prose.
+        "answer": result["answer"] if result else "",
+        "abstained": result["abstained"] if result else None,
+        "citations": result["citations"] if result else None,
+        "raw_response": client.raw_answer,
         "contexts": [c["text"] for c in result["retrieved"]] if result else client.contexts,
         "latency_ms": (time.perf_counter() - started) * 1000,
         "result": result,
@@ -120,11 +124,18 @@ def capture_one(db: Path, question: dict, top_k: int, client: RecordingClient) -
     }
 
 
+def is_abstention(row: dict) -> bool:
+    # Frozen v1 records predate explicit state; never infer new-record state from prose.
+    if "abstained" in row:
+        return row["abstained"] is True
+    return row["answer"] == ABSTENTION
+
+
 def summarize(rows: list[dict]) -> dict:
     answerable = [r for r in rows if r["answerable"]]
     unknown = [r for r in rows if not r["answerable"]]
     latencies = sorted(r["latency_ms"] for r in rows)
-    supported = [r for r in rows if r["status"] == "ok" and r["answer"] != ABSTENTION]
+    supported = [r for r in rows if r["status"] == "ok" and not is_abstention(r)]
     hits = sum(
         all(normalize(e["text"]) in normalize(" ".join(r["contexts"])) for e in r["evidence"])
         for r in answerable
@@ -135,9 +146,9 @@ def summarize(rows: list[dict]) -> dict:
         "answerable_total": len(answerable),
         "unanswerable_total": len(unknown),
         "answerable_with_all_reference_evidence": hits,
-        "answerable_abstentions": sum(r["answer"] == ABSTENTION for r in answerable),
+        "answerable_abstentions": sum(is_abstention(r) for r in answerable),
         "unanswerable_exact_abstentions": sum(
-            r["status"] == "ok" and r["answer"] == ABSTENTION for r in unknown
+            r["status"] == "ok" and is_abstention(r) for r in unknown
         ),
         "accepted_nonabstaining_answers": len(supported),
         "mean_latency_ms": statistics.mean(latencies),
@@ -154,7 +165,9 @@ def sample(row: dict) -> EvalSample:
         **{
             key: row[key]
             for key in ("question", "ground_truth", "contexts", "answer", "latency_ms")
-        }
+        },
+        abstained=row.get("abstained"),
+        citations=row.get("citations"),
     )
 
 
@@ -300,7 +313,7 @@ def judge(output: Path, endpoint: str, model: str, embedding: str) -> None:
         for row in runs[top_k]:
             result = {"id": row["id"], "top_k": top_k, "status": "not_applicable"}
             # Judge answerable, non-abstaining outputs. Report exclusions explicitly.
-            if row["answerable"] and row["answer"] and row["answer"] != ABSTENTION:
+            if row["answerable"] and row["answer"] and not is_abstention(row):
                 try:
                     report = compute_report(
                         [sample(row)],

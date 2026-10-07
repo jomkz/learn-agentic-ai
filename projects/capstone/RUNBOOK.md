@@ -26,8 +26,8 @@ uv run python -m mobility_ai.capstone.app ask \
 ```
 
 The response includes the answer, numbered citations mapped to source/chunk identifiers,
-retrieved passages, total query latency, and generation mode. The offline mode quotes
-retrieved text; it is not an LLM. Queries with no matching evidence return an explicit
+an `abstained` boolean, retrieved passages, total query latency, and generation mode. The
+offline mode quotes retrieved text; it is not an LLM. Queries with no matching evidence return an explicit
 abstention. Citation validation checks identifiers, not whether every generated claim is true.
 
 ## Run with Ollama
@@ -48,6 +48,19 @@ experiments and re-ingest after an embedding change. Server failures are surface
 by fabricated answers or a silent change of provider. Local LLM execution requires enough RAM
 for the chosen models; a GPU is optional and affects latency.
 
+The `structured-rag-v2` prompt uses Ollama's
+[JSON schema output format](https://docs.ollama.com/capabilities/structured-outputs).
+The model returns `answer` text, a `citations` list of unique positive integer document IDs,
+and an `abstain` boolean. The application checks the schema and retrieved IDs, then appends
+the citation markers to the answer. The model must leave bracketed citation markers out of
+the answer text. A non-abstaining answer needs text and at least one citation. An abstention
+must have no citations; the application renders the canonical abstention message regardless
+of the model's wording. Malformed or contradictory responses fail explicitly.
+
+Citation markers refer to the answer as a whole. Valid IDs do not prove that a passage supports
+each claim. The [development checks](../../evals/development/structured-responses/README.md)
+exercise this contract with a real local model.
+
 ## Capture and evaluate outputs
 
 ```bash
@@ -59,8 +72,11 @@ uv run python -m mobility_ai.capstone.app evaluate \
 
 The four-question fixture checks the workflow, including an unanswerable question. It is
 not a production quality benchmark. `records` retains actual answers, retrieved contexts,
-references, and measured total query latency. The report includes per-question scores,
-configuration, timestamps, and hashes. Missing cost is null, not assumed zero.
+references, citation mappings, abstention state, and measured total query latency. The report
+includes per-question scores, configuration, timestamps, and hashes. Missing cost is null,
+not assumed zero.
+Legacy records still load with null citation/abstention metadata. Evaluator version 3 includes
+the added metadata in dataset hashes; hashes from earlier evaluator versions are not comparable.
 
 For RAGAS judging of recorded model outputs:
 
@@ -95,12 +111,19 @@ uv run python -m mobility_ai.evals.benchmark judge --output outputs/documentatio
 The answer generator and judge are separate models. CPU judging can take tens of minutes.
 The [recorded run](../../evals/benchmarks/project-docs-v1/results/2026-09-23/README.md) includes
 known failure cases; these small-sample results do not establish production readiness.
+The September artifacts remain frozen. Running the current code captures the new structured
+contract rather than reproducing the original prompt; use the recorded source revision for
+historical reproduction. New captures retain `raw_response` even on validation failure. Rejected
+payloads have an empty scored answer and null citation/abstention state; they remain in the
+error and latency denominators and are excluded from LLM judging. Historical records retain
+their original scoring behavior.
 
 ## Troubleshooting and rollback
 
 - Missing database: run `ingest`; `ask` never silently creates a new corpus.
 - Ollama connection/model error: check the endpoint and `ollama list`, then repeat the command.
-- Missing/invalid citation: inspect the captured output and prompt/model; the command fails.
+- Invalid response schema or citation: inspect the benchmark's `raw_response` and the prompt/model;
+  the command fails. Plain-text model responses are no longer accepted by the Ollama adapter.
 - Invalid vector dimensions: re-ingest with the intended embedding model.
 - Bad corpus update: preserve a copy of the previous SQLite database before replacing a
   corpus, or re-ingest the previous version of the source files. Do not copy while ingestion
