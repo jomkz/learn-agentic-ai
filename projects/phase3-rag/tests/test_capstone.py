@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from fastapi.testclient import TestClient
 
-from capstone import SAMPLE_DOCS, DocSearchService, app, service
+from mobility_ai.phase3.capstone import SAMPLE_DOCS, DocSearchService, app, service
 
 
 def test_sample_docs_count() -> None:

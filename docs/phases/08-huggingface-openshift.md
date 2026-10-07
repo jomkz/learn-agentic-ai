@@ -1,5 +1,8 @@
 # Phase 8: HuggingFace + LoRA/QLoRA + OpenShift AI + vLLM + KFP + Ray + MLOps
 
+Implementation status and measurable completion criteria: [status matrix](../status.md).
+This phase includes optional exercises; verify the status before treating examples as integrations.
+
 **Duration: 8 weeks** | [← Phase 7](07-llamastack.md) | [Phase 9 →](09-graphrag-raft-instructlab.md)
 
 **Project directory:** [`projects/phase8-openshift/`](../../projects/phase8-openshift/)

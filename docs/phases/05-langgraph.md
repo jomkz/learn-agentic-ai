@@ -1,5 +1,8 @@
 # Phase 5: LangGraph — Stateful Agents and Multi-Agent Workflows
 
+Implementation status and measurable completion criteria: [status matrix](../status.md).
+This phase includes optional exercises; verify the status before treating examples as integrations.
+
 **Duration: 4 weeks** | [← Phase 4](04-advanced-rag.md) | [Phase 6 →](06-agentic-patterns-mcp.md)
 
 **Project directory:** [`projects/phase5-langgraph/`](../../projects/phase5-langgraph/)

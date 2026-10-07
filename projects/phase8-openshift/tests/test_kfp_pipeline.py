@@ -1,53 +1,31 @@
-"""Tests for kfp_pipeline module."""
+import sys
+from unittest.mock import patch
 
-from __future__ import annotations
+import pytest
 
-import tempfile
-
-from kfp_pipeline import (
-    _KFP_AVAILABLE,
-    fetch_documents,
-    generate_embeddings,
-    parse_documents,
-    rag_ingestion_pipeline,
-)
+from mobility_ai.phase8.kfp_pipeline import build_pipeline, main
 
 
-def test_kfp_available_is_bool():
-    assert isinstance(_KFP_AVAILABLE, bool)
+def test_missing_kfp_fails_explicitly():
+    with patch.dict(sys.modules, {"kfp": None}):
+        with pytest.raises(RuntimeError, match="pipelines extra"):
+            build_pipeline("example.test/mobility-ai:test")
 
 
-def test_fetch_documents_is_callable():
-    assert callable(fetch_documents)
+def test_real_pipeline_compiles(tmp_path, monkeypatch):
+    pytest.importorskip("kfp")
+    import yaml
 
-
-def test_parse_documents_is_callable():
-    assert callable(parse_documents)
-
-
-def test_generate_embeddings_is_callable():
-    assert callable(generate_embeddings)
-
-
-def test_pipeline_is_callable():
-    assert callable(rag_ingestion_pipeline)
-
-
-def test_fetch_documents_runs_without_kfp():
-    if _KFP_AVAILABLE:
-        # When kfp is present, fetch_documents is a kfp component; skip runtime call.
-        assert callable(fetch_documents)
-        return
-    with tempfile.TemporaryDirectory() as d:
-        fetch_documents("s3://test", d)
-
-
-def test_pipeline_function_name():
-    if not _KFP_AVAILABLE:
-        assert rag_ingestion_pipeline.__name__ == "rag_ingestion_pipeline"
-    else:
-        assert callable(rag_ingestion_pipeline)
-
-
-def test_kfp_component_decorator_passthrough():
-    assert fetch_documents is not None and callable(fetch_documents)
+    output = tmp_path / "pipeline.yaml"
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        ["compile", "--output", str(output), "--image", "example.test/mobility-ai:test"],
+    )
+    main()
+    spec = yaml.safe_load(output.read_text())
+    executors = spec["deploymentSpec"]["executors"]
+    containers = [value["container"] for value in executors.values() if "container" in value]
+    assert len(containers) == 2
+    assert all(c["image"] == "example.test/mobility-ai:test" for c in containers)
+    assert {c["command"][-1] for c in containers} == {"ingest", "evaluate"}

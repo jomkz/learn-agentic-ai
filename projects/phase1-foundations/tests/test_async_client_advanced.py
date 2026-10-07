@@ -5,7 +5,12 @@ from __future__ import annotations
 import asyncio
 from unittest.mock import AsyncMock, MagicMock
 
-from async_client import CompletionResult, _AnthropicAsOpenAI, build_clients, complete
+from mobility_ai.phase1.async_client import (
+    CompletionResult,
+    _AnthropicAsOpenAI,
+    build_clients,
+    complete,
+)
 
 
 def _mock_openai_completion(text: str = "Test response", tokens: int = 42) -> MagicMock:

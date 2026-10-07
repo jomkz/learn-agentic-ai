@@ -1,6 +1,11 @@
 from __future__ import annotations
 
-from integration import SystemComponent, SystemHealthReport, check_component, run_health_check
+from mobility_ai.capstone.integration import (
+    SystemComponent,
+    SystemHealthReport,
+    check_component,
+    run_health_check,
+)
 
 
 def test_system_component_ok():

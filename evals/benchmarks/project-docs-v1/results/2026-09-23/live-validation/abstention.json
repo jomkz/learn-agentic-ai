@@ -1,0 +1,27 @@
+{
+  "question": "Name Jupiter's moons.",
+  "answer": "The supplied documents do not contain enough information to answer.",
+  "citations": {},
+  "retrieved": [
+    {
+      "source": "rag.txt",
+      "index": 0,
+      "text": "Retrieval-Augmented Generation (RAG) retrieves relevant documents and supplies them as context when generating an answer. Source citations let a reader inspect the retrieved evidence.",
+      "score": 0.3832887103272154
+    },
+    {
+      "source": "chunking.txt",
+      "index": 0,
+      "text": "Chunking splits documents into smaller pieces before retrieval. An overlap preserves some context across chunk boundaries. The local capstone measures chunk size in characters, not tokens.",
+      "score": 0.3551508287053747
+    },
+    {
+      "source": "pgvector.txt",
+      "index": 0,
+      "text": "pgvector adds vector similarity search to PostgreSQL. Vectors and document metadata can be stored together and retrieved using distance operators.",
+      "score": 0.33820527788628446
+    }
+  ],
+  "latency_ms": 1874.3957940023392,
+  "generation_model": "llama3.2:3b"
+}

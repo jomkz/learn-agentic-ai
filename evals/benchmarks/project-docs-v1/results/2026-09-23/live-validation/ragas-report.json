@@ -1,0 +1,45 @@
+{
+  "backend": "ragas",
+  "metrics": {
+    "faithfulness": 1.0,
+    "answer_relevancy": 0.9758811671343065,
+    "context_precision": 0.9999999999
+  },
+  "sample_count": 1,
+  "dataset_sha256": "17f33ef7b81aa42d45f8cecbbd5972abd68ad7e33d8ed17820e964053b7f5d20",
+  "generated_at": "2026-09-23T14:48:52.343581+00:00",
+  "configuration": {
+    "purpose": "live smoke test, not benchmark",
+    "seed": "0",
+    "num_ctx": "8192",
+    "num_predict": "1024",
+    "format": "JSON requested by RAGAS prompts; native output unconstrained",
+    "python": "3.12.14",
+    "evaluator_version": "1",
+    "judge": "qwen2.5:7b",
+    "embeddings": "nomic-embed-text:v1.5",
+    "ragas": "0.3.1"
+  },
+  "per_sample": [
+    {
+      "sample": {
+        "question": "What does pgvector add to PostgreSQL?",
+        "ground_truth": "pgvector adds vector similarity search to PostgreSQL.",
+        "contexts": [
+          "pgvector adds vector similarity search to PostgreSQL. Vectors and document metadata can be stored together and retrieved using distance operators.",
+          "Retrieval-Augmented Generation (RAG) retrieves relevant documents and supplies them as context when generating an answer. Source citations let a reader inspect the retrieved evidence.",
+          "Chunking splits documents into smaller pieces before retrieval. An overlap preserves some context across chunk boundaries. The local capstone measures chunk size in characters, not tokens."
+        ],
+        "answer": "According to document [1], pgvector adds vector similarity search to PostgreSQL.",
+        "latency_ms": 5347.771072993055,
+        "cost_usd": null
+      },
+      "metrics": {
+        "faithfulness": 1.0,
+        "answer_relevancy": 0.9758811671343065,
+        "context_precision": 0.9999999999
+      }
+    }
+  ],
+  "limitations": "LLM judge scores depend on the recorded model and evaluation configuration."
+}

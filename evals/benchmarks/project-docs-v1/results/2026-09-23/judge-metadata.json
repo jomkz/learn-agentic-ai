@@ -1,0 +1,70 @@
+{
+  "started_at": "2026-09-23T14:50:29.498145+00:00",
+  "models": {
+    "qwen2.5:7b": {
+      "name": "qwen2.5:7b",
+      "model": "qwen2.5:7b",
+      "modified_at": "2026-09-23T09:45:25.343243297-05:00",
+      "size": 4683087332,
+      "digest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e",
+      "details": {
+        "parent_model": "",
+        "format": "gguf",
+        "family": "qwen2",
+        "families": [
+          "qwen2"
+        ],
+        "parameter_size": "7.6B",
+        "quantization_level": "Q4_K_M",
+        "context_length": 32768,
+        "embedding_length": 3584
+      },
+      "capabilities": [
+        "completion",
+        "tools"
+      ]
+    },
+    "nomic-embed-text:v1.5": {
+      "name": "nomic-embed-text:v1.5",
+      "model": "nomic-embed-text:v1.5",
+      "modified_at": "2026-09-23T09:23:57.780107966-05:00",
+      "size": 274302450,
+      "digest": "0a109f422b47e3a30ba2b10eca18548e944e8a23073ee3f3e947efcf3c45e59f",
+      "details": {
+        "parent_model": "",
+        "format": "gguf",
+        "family": "nomic-bert",
+        "families": [
+          "nomic-bert"
+        ],
+        "parameter_size": "137M",
+        "quantization_level": "F16",
+        "context_length": 2048,
+        "embedding_length": 768
+      },
+      "capabilities": [
+        "embedding"
+      ]
+    }
+  },
+  "endpoint": "http://127.0.0.1:11434",
+  "input_sha256": {
+    "top1.jsonl": "1d0b1234a70f97648da07fb892e17c04d2f1400177ae438e99fd2747e735fa5f",
+    "top3.jsonl": "41c7ff2fff09892d83106cf87b4ffca035cd1db2c953fe78bafc2cd5a74e8b3f"
+  },
+  "packages": {
+    "ragas": "0.3.1",
+    "langchain-ollama": "1.1.0",
+    "langchain-community": "0.4.1"
+  },
+  "seed": 0,
+  "num_ctx": 8192,
+  "num_predict": 1024,
+  "format": "JSON requested by RAGAS prompts; native output unconstrained",
+  "temperature_policy": "RAGAS 0.3.1 wrapper: 1e-8 for single completion; 0.3 for multiple completions",
+  "max_workers": 1,
+  "timeout_seconds": 600,
+  "max_retries": 1,
+  "generator_judge_same_digest": false,
+  "completed_at": "2026-09-23T15:37:22.047740+00:00"
+}

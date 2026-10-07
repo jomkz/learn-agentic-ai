@@ -1,0 +1,1 @@
+Chunking splits documents into smaller pieces before retrieval. An overlap preserves some context across chunk boundaries. The local capstone measures chunk size in characters, not tokens.

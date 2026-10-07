@@ -1,0 +1,24 @@
+{
+  "judge": "qwen2.5:7b",
+  "cases": [
+    {
+      "id": "supported-smoke",
+      "expected_min": 0.8,
+      "faithfulness": 1.0
+    },
+    {
+      "id": "unsupported-claim",
+      "sample": {
+        "question": "What does pgvector add to PostgreSQL?",
+        "contexts": [
+          "pgvector adds vector similarity search to PostgreSQL."
+        ],
+        "ground_truth": "pgvector adds vector similarity search to PostgreSQL.",
+        "answer": "pgvector automatically emails daily billing reports."
+      },
+      "expected_max": 0.2,
+      "faithfulness": 0.0
+    }
+  ],
+  "passed": true
+}

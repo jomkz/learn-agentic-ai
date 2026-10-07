@@ -2,7 +2,12 @@
 
 from __future__ import annotations
 
-from config import AgentConfig, AnthropicProviderConfig, OllamaProviderConfig, OpenAIProviderConfig
+from mobility_ai.phase1.config import (
+    AgentConfig,
+    AnthropicProviderConfig,
+    OllamaProviderConfig,
+    OpenAIProviderConfig,
+)
 
 
 def test_provider_name_ollama() -> None:

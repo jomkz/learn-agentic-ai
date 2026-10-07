@@ -1,0 +1,22 @@
+{
+  "top1": {
+    "scored": 17,
+    "errors": 0,
+    "not_applicable": 7,
+    "conditional_mean_metrics": {
+      "faithfulness": 0.7647058823529411,
+      "answer_relevancy": 0.47932126637496686,
+      "context_precision": 0.47058823524705884
+    }
+  },
+  "top3": {
+    "scored": 16,
+    "errors": 0,
+    "not_applicable": 8,
+    "conditional_mean_metrics": {
+      "faithfulness": 0.59375,
+      "answer_relevancy": 0.826942934305583,
+      "context_precision": 0.5677083332815104
+    }
+  }
+}

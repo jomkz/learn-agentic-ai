@@ -1,6 +1,9 @@
 # ADR-005 — Retrieval Strategy
 
-**Status:** Accepted
+This is a design exercise. See [implemented architecture](../architecture.md); performance
+figures below are targets/illustrations, not measured results from this repository.
+
+**Status:** Proposed; integration not verified
 **Date:** 2026-07-15
 **Deciders:** Platform AI team
 
@@ -93,10 +96,10 @@ GraphRAG local search (Option D) results appended to the standard reranked chunk
 **What becomes easier:**
 - Hybrid retrieval handles both keyword-heavy (BM25 wins) and concept-heavy (dense wins) queries without
   tuning per-query-type retrieval parameters.
-- Cross-encoder reranking raises faithfulness on the evaluation set by approximately 8–12 percentage
-  points vs. dense-only, based on Phase 3 ablation results.
-- Redis semantic cache reduces average per-query LLM token cost by 30–40% at scale (empirical estimate
-  from similar production deployments).
+- Cross-encoder reranking is a candidate for improving retrieval precision. Its effect on
+  faithfulness must be measured on held-out outputs; no Phase 3 ablation establishes a gain here.
+- A response cache can avoid repeated generation calls. Measure its hit rate, answer validity,
+  and serving cost before claiming savings; the implemented cache uses exact matching.
 - GraphRAG global search is available for the class of queries that cannot be answered by any chunk
   retrieval strategy, without adding cost to the standard path.
 

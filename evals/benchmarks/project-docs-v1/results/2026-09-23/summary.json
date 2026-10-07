@@ -1,0 +1,30 @@
+{
+  "top1": {
+    "total": 24,
+    "application_errors": 9,
+    "answerable_total": 20,
+    "unanswerable_total": 4,
+    "answerable_with_all_reference_evidence": 6,
+    "answerable_abstentions": 3,
+    "unanswerable_exact_abstentions": 3,
+    "accepted_nonabstaining_answers": 9,
+    "mean_latency_ms": 2697.8006113349693,
+    "median_latency_ms": 2653.8253244943917,
+    "p95_latency_ms": 4963.692002987955,
+    "latency_definition": "sequential warm requests; total client wall time; nearest-rank p95; errors included"
+  },
+  "top3": {
+    "total": 24,
+    "application_errors": 2,
+    "answerable_total": 20,
+    "unanswerable_total": 4,
+    "answerable_with_all_reference_evidence": 12,
+    "answerable_abstentions": 4,
+    "unanswerable_exact_abstentions": 3,
+    "accepted_nonabstaining_answers": 15,
+    "mean_latency_ms": 5593.177136339364,
+    "median_latency_ms": 4992.927377985325,
+    "p95_latency_ms": 8595.489506027661,
+    "latency_definition": "sequential warm requests; total client wall time; nearest-rank p95; errors included"
+  }
+}

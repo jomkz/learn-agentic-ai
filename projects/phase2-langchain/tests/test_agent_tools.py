@@ -2,7 +2,9 @@
 
 from __future__ import annotations
 
-from agent import calculate, get_current_time, search_web
+import pytest
+
+from mobility_ai.phase2.agent import calculate, get_current_time, search_web
 
 
 def test_search_web_returns_string():
@@ -43,3 +45,26 @@ def test_tool_descriptions_non_empty():
 def test_tool_names():
     names = {t.name for t in [search_web, calculate, get_current_time]}
     assert names == {"search_web", "calculate", "get_current_time"}
+
+
+@pytest.mark.parametrize(
+    "expression",
+    [
+        "().__class__.__mro__[1].__subclasses__()",
+        "sqrt.__call__(9)",
+        "[x for x in (1,2)]",
+        "'x' * 1000000",
+        "2 ** 1000000000",
+        "1e309",
+        "sqrt(x=9)",
+        "True + 1",
+        "[1][0]",
+        "1+" * 300 + "1",
+    ],
+)
+def test_calculator_rejects_non_arithmetic_and_unbounded_work(expression):
+    assert calculate.invoke(expression).startswith("Error")
+
+
+def test_calculator_supported_expression():
+    assert float(calculate.invoke("sqrt(9) + 2 * (4 - 1)")) == 9

@@ -1,0 +1,1 @@
+Retrieval-Augmented Generation (RAG) retrieves relevant documents and supplies them as context when generating an answer. Source citations let a reader inspect the retrieved evidence.

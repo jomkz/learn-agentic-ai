@@ -1,0 +1,42 @@
+{
+  "reviewer": "Codex inspection of recorded answers and retrieved passages; not an independent human evaluation",
+  "examples": [
+    {
+      "top_k": 1,
+      "id": "q02",
+      "finding": "Correct chunk-size facts, but no numeric citation; the application rejected the output."
+    },
+    {
+      "top_k": 1,
+      "id": "q01",
+      "finding": "Used singular document in the abstention sentence, violating the exact response contract; the application rejected it."
+    },
+    {
+      "top_k": 3,
+      "id": "q13",
+      "finding": "Misclassified time to first token as an unmeasured cost, despite the mean-query-latency definition appearing in a retrieved passage.",
+      "judge_metrics": {
+        "faithfulness": 1.0,
+        "answer_relevancy": 0.0,
+        "context_precision": 0.49999999995
+      },
+      "judge_limit": "The judge gave full faithfulness despite the unsupported claim that time to first token is a cost. Treat automated scores as fallible diagnostics, not a correctness gate."
+    },
+    {
+      "top_k": 3,
+      "id": "q18",
+      "finding": "Invented model/dataset namespace identifiers after retrieval cut the actual list at a chunk boundary. Citation [2] exists, but does not support the claimed list."
+    },
+    {
+      "top_k": 3,
+      "id": "q08",
+      "finding": "The answer gives the correct ingest recovery action but cites [1]; the supporting instruction is in passage [2]. The application accepts the valid identifier without checking support. The automated judge returned faithfulness 0; this case should not be treated as a clean grounded answer just because its factual recommendation is correct."
+    },
+    {
+      "top_k": 1,
+      "id": "q01",
+      "finding": "RAGAS faithfulness is 1.0 and answer relevancy is 0.0 for this alternate-wording abstention. High faithfulness alone does not measure whether the task was answered."
+    }
+  ],
+  "interpretation": "Three passages improve retrieval coverage and reduce application errors in this run, but do not establish reliable grounded answers. Exact excerpt recall is a strict lower-bound diagnostic, not semantic recall."
+}

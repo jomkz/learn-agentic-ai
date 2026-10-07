@@ -4,10 +4,16 @@ from __future__ import annotations
 
 from unittest.mock import MagicMock, patch
 
-from agent import calculate, get_current_time, search_web
-from chains import FactCheck, build_parallel_chain, build_qa_chain, build_structured_chain
 from langchain_core.language_models.fake_chat_models import FakeListChatModel
 from langchain_core.runnables import RunnableLambda
+
+from mobility_ai.phase2.agent import calculate, get_current_time, search_web
+from mobility_ai.phase2.chains import (
+    FactCheck,
+    build_parallel_chain,
+    build_qa_chain,
+    build_structured_chain,
+)
 
 
 def test_qa_chain_returns_string():
@@ -26,7 +32,7 @@ def test_structured_chain_returns_pydantic():
     fake_inner_chain.invoke = MagicMock(return_value=fake_fact_check)
     fake_structured_model.with_structured_output = MagicMock(return_value=fake_inner_chain)
 
-    with patch("chains.ChatPromptTemplate.from_template") as mock_prompt:
+    with patch("mobility_ai.phase2.chains.ChatPromptTemplate.from_template") as mock_prompt:
         mock_prompt_instance = MagicMock()
         mock_prompt.return_value = mock_prompt_instance
         mock_prompt_instance.__or__ = MagicMock(return_value=fake_inner_chain)

@@ -1,7 +1,9 @@
 from __future__ import annotations
 
-from monitoring import compute_text_drift
-from raft_dataset import (
+import pytest
+
+from mobility_ai.phase9.monitoring import compute_text_drift
+from mobility_ai.phase9.raft_dataset import (
     RAFTExample,
     build_raft_example,
     generate_raft_dataset,
@@ -18,14 +20,16 @@ ALL_DOCS = [
 
 
 def test_build_raft_example_has_distractors() -> None:
-    ex = build_raft_example("What is OpenShift AI?", ALL_DOCS[0], ALL_DOCS)
+    ex = build_raft_example(
+        "What is OpenShift AI?", ALL_DOCS[0], ALL_DOCS, answer="A managed MLOps platform."
+    )
     assert isinstance(ex, RAFTExample)
     assert len(ex.distractor_docs) > 0
 
 
 def test_raft_example_fields_populated() -> None:
-    ex = build_raft_example("What is vLLM?", ALL_DOCS[1], ALL_DOCS)
-    assert ex.chain_of_thought
+    ex = build_raft_example("What is vLLM?", ALL_DOCS[1], ALL_DOCS, answer="PagedAttention.")
+    assert ex.answer
     assert ex.question
     assert ex.oracle_doc
 
@@ -61,3 +65,38 @@ def test_drift_result_detects_drift() -> None:
     production = ["very very very long detailed document with many many words and concepts"] * 10
     result = compute_text_drift(reference, production)
     assert result.has_drift is True
+
+
+@pytest.mark.parametrize("probability", [0, 1])
+def test_oracle_inclusion_and_gold_target(probability):
+    oracle = "UNIQUE_ORACLE"
+    example = build_raft_example(
+        "Question?",
+        oracle,
+        [oracle, "distractor"],
+        include_oracle_prob=probability,
+        answer="GOLD_ANSWER",
+    )
+    row = to_sft_format([example])[0]
+    assert (oracle in row["messages"][0]["content"]) == bool(probability)
+    assert "GOLD_ANSWER" in row["messages"][1]["content"]
+    assert "not found" not in row["messages"][1]["content"]
+
+
+def test_seed_reproduces_document_selection_and_order():
+    pairs = [("Question?", ALL_DOCS[0], "Gold answer") for _ in range(10)]
+    first = generate_raft_dataset(pairs, ALL_DOCS, seed=42, include_oracle_prob=1)
+    assert first == generate_raft_dataset(pairs, ALL_DOCS, seed=42, include_oracle_prob=1)
+    assert len({ex.context_docs.index(ex.oracle_doc) for ex in first}) > 1
+
+
+def test_empty_duplicate_and_absent_oracle_candidates():
+    for docs in [[], ["oracle", "oracle"], ["other", "other"]]:
+        ex = build_raft_example("Question?", "oracle", docs, answer="answer")
+        assert len(ex.context_docs) == len(set(ex.context_docs))
+
+
+@pytest.mark.parametrize("kwargs", [{"k_distractors": -1}, {"include_oracle_prob": 1.1}])
+def test_invalid_sampling_parameters(kwargs):
+    with pytest.raises(ValueError):
+        build_raft_example("Question?", "oracle", [], answer="answer", **kwargs)

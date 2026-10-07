@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from context_budget import ContextBudget, trim_to_budget
+from mobility_ai.phase6.context_budget import ContextBudget, trim_to_budget
 
 
 def test_add_and_remaining():

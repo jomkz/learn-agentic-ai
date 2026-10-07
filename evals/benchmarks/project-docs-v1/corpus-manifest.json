@@ -1,0 +1,34 @@
+{
+  "overview.md": {
+    "source": "README.md",
+    "sha256": "35aab7344d741aaa15ba74159115024043c9d680def8e77bb6f6f6f2f6cd7b23"
+  },
+  "runbook.md": {
+    "source": "projects/capstone/RUNBOOK.md",
+    "sha256": "d04673a2ed0352b295d7d64c70b0c7be3b00e29b4793fd2df7e29f3a991db420"
+  },
+  "status.md": {
+    "source": "docs/status.md",
+    "sha256": "9d857fa63d7db6a0c99b5fd5e5227e2b9e1f72051e1fb18b761f1af08f9c8f23"
+  },
+  "architecture.md": {
+    "source": "projects/capstone/docs/architecture.md",
+    "sha256": "e24c73a3a52d6d330ac0e9a984cddf1acb2a67239dcd76d72e4ccdbbb773f86e"
+  },
+  "evaluation.md": {
+    "source": "projects/capstone/evaluation/ragas_comparison.md",
+    "sha256": "48e20b4a4cc315900cffdc56ef8ad9dac798e42da47c3d00b9d59c338d4d4c4b"
+  },
+  "deployment.md": {
+    "source": "projects/capstone/deploy/README.md",
+    "sha256": "a06f3e67684e9c848ef8cf6e855a78ec698b3aef3a39289c4778faa862e6099f"
+  },
+  "records.md": {
+    "source": "evals/data/README.md",
+    "sha256": "e9dcff264272629c56f70609f9cc6bbd4e2d97f0ef12e6693d012c5ed69ad84e"
+  },
+  "adaptation.md": {
+    "source": "projects/capstone/docs/adrs/ADR-002-domain-adaptation.md",
+    "sha256": "2ccd7872b1578f586fa5eaff0ee83ce38cc66d80f2ce75cafe187cea7cb463f2"
+  }
+}

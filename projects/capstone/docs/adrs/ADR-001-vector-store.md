@@ -1,6 +1,9 @@
 # ADR-001: Vector Store Selection
 
-**Status**: Accepted
+This is a design exercise. See [implemented architecture](../architecture.md); performance
+figures below are targets/illustrations, not measured results from this repository.
+
+**Status**: Proposed — integration not verified
 **Date**: 2026-01-15
 **Deciders**: Platform team
 

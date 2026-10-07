@@ -3,7 +3,12 @@ from __future__ import annotations
 import asyncio
 from unittest.mock import patch
 
-from capstone import DVC_PIPELINE_YAML, ExperimentTracker, ModelVersion, VLLMClient
+from mobility_ai.phase8.capstone import (
+    DVC_PIPELINE_YAML,
+    ExperimentTracker,
+    ModelVersion,
+    VLLMClient,
+)
 
 
 def test_model_version_default_status():
@@ -28,16 +33,20 @@ def test_tracker_empty_best():
 
 
 def test_tracker_track_run():
-    with patch("capstone.log_finetuning_run", return_value="run-abc"), \
-         patch("capstone.register_model", return_value="1"):
+    with (
+        patch("mobility_ai.phase8.capstone.log_finetuning_run", return_value="run-abc"),
+        patch("mobility_ai.phase8.capstone.register_model", return_value="1"),
+    ):
         t = ExperimentTracker()
         mv = t.track_run("r1", {"lr": 0.001}, {"eval_loss": 0.4})
         assert isinstance(mv, ModelVersion)
 
 
 def test_tracker_best_run():
-    with patch("capstone.log_finetuning_run", side_effect=["run-1", "run-2"]), \
-         patch("capstone.register_model", side_effect=["1", "2"]):
+    with (
+        patch("mobility_ai.phase8.capstone.log_finetuning_run", side_effect=["run-1", "run-2"]),
+        patch("mobility_ai.phase8.capstone.register_model", side_effect=["1", "2"]),
+    ):
         t = ExperimentTracker()
         t.track_run("r1", {}, {"eval_loss": 0.4})
         t.track_run("r2", {}, {"eval_loss": 0.3})

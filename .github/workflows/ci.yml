@@ -5,64 +5,103 @@ on:
     branches: [main]
   pull_request:
     branches: [main]
+  workflow_dispatch:
+    inputs:
+      optional_phases:
+        description: Install and check heavyweight optional phase dependencies
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+env:
+  UV_PYTHON: '3.12'
 
 jobs:
   test:
-    name: Lint, Test, Coverage
+    name: Lint, types, tests, and local capstone
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
-      - uses: astral-sh/setup-uv@v4
+      - uses: astral-sh/setup-uv@v6
         with:
-          version: "latest"
-
-      - name: Install dependencies
-        run: uv sync --extra langchain --extra agents
-
-      - name: Lint (ruff check)
-        run: uv run ruff check .
-
-      - name: Format check (ruff format)
-        run: uv run ruff format --check .
-
-      - name: Test with parallel execution and coverage
-        run: >
-          uv run pytest projects/ evals/
-          -n auto
-          --cov=projects
-          --cov=evals
-          --cov-fail-under=90
-          --cov-report=xml
-          --cov-report=term-missing
-          -q
-
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v4
+          version: '0.12.15'
+      - run: uv sync --locked --extra agents --extra pipelines --extra evaluation
+      - run: uv run --no-sync ruff check .
+      - run: uv run --no-sync ruff format --check .
+      - run: uv run --no-sync mypy
+      - run: uv run --no-sync pytest --cov=mobility_ai --cov-fail-under=90 --cov-report=xml -q
+      - name: Exercise documented capstone commands
+        run: |
+          uv run --no-sync python -m mobility_ai.capstone.app ingest --corpus projects/capstone/data/corpus --db outputs/capstone.db --provider lexical
+          uv run --no-sync python -m mobility_ai.capstone.app ask --db outputs/capstone.db --question "What does pgvector add to PostgreSQL?"
+          uv run --no-sync python -m mobility_ai.capstone.app evaluate --db outputs/capstone.db --eval-set evals/data/capstone-questions.jsonl --records outputs/run.jsonl --output outputs/report.json --backend lexical --revision "$GITHUB_SHA"
+      - uses: actions/upload-artifact@v4
         if: always()
         with:
-          file: ./coverage.xml
-          fail_ci_if_error: false
-          token: CODECOV_TOKEN_SECRET
+          name: verification-results
+          path: |
+            coverage.xml
+            outputs/*.json
+            outputs/*.jsonl
 
-  security-scan:
-    name: Garak Security Scan (model promotion gate)
+  installed-package:
+    name: Installed package outside the source tree
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
-    continue-on-error: true
     steps:
       - uses: actions/checkout@v4
-
-      - name: Install garak
-        run: pip install garak
-
-      - name: Run Garak probes
+      - uses: astral-sh/setup-uv@v6
+        with:
+          version: '0.12.15'
+      - run: uv sync --locked --no-dev --no-editable
+      - name: Exercise the installed CLI without source-path imports
+        working-directory: ${{ runner.temp }}
         run: |
-          echo "Garak LLM vulnerability scan"
-          echo "Configure OLLAMA_BASE_URL secret to run against a live model"
-          echo "Full command when configured:"
-          echo "  garak --model_type openai --model_name llama3.2 \"
-          echo "    --probes promptinject,dan,knownbadsignatures \"
-          echo "    --model_config.extra_params.base_url=OLLAMA_BASE_URL"
+          "$GITHUB_WORKSPACE/.venv/bin/python" -I -c 'from pathlib import Path; import mobility_ai; assert "site-packages" in Path(mobility_ai.__file__).parts'
+          "$GITHUB_WORKSPACE/.venv/bin/python" -I -m mobility_ai.capstone.app ingest --corpus "$GITHUB_WORKSPACE/projects/capstone/data/corpus" --db installed-capstone.db --provider lexical
+          "$GITHUB_WORKSPACE/.venv/bin/python" -I -m mobility_ai.capstone.app ask --db installed-capstone.db --question "What does pgvector add to PostgreSQL?"
+          "$GITHUB_WORKSPACE/.venv/bin/python" -I -m mobility_ai.capstone.app evaluate --db installed-capstone.db --eval-set "$GITHUB_WORKSPACE/evals/data/capstone-questions.jsonl" --records "$GITHUB_WORKSPACE/outputs/installed-run.jsonl" --output "$GITHUB_WORKSPACE/outputs/installed-report.json" --backend lexical --revision "$GITHUB_SHA"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: installed-package-results
+          path: outputs/installed-*.json*
+
+  phase-installs:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - extra: langchain
+            tests: projects/phase2-langchain
+          - extra: agents
+            tests: projects/phase5-langgraph projects/phase6-mcp-guardrails
+          - extra: pipelines
+            tests: projects/phase8-openshift/tests/test_kfp_pipeline.py
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          version: '0.12.15'
+      - run: uv sync --locked --extra "${{ matrix.extra }}"
+      - run: uv run --no-sync pytest -q ${{ matrix.tests }}
+
+  optional-phase-installs:
+    if: github.event_name == 'workflow_dispatch' && inputs.optional_phases
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        extra: [rag, advanced-rag, llamastack, ml, advanced, evaluation]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          version: '0.12.15'
+      - run: uv sync --locked --extra "${{ matrix.extra }}"
+      - name: Check installed phase integrations without downloading models
         env:
-          OLLAMA_BASE_URL: OLLAMA_BASE_URL_SECRET
+          PHASE_EXTRA: ${{ matrix.extra }}
+        run: uv run --no-sync python -m mobility_ai.check_install

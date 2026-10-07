@@ -1,14 +1,15 @@
 """Tests for the Phase 1 Pydantic v2 agent configuration models."""
 
 import pytest
-from config import (
+from pydantic import ValidationError
+
+from mobility_ai.phase1.config import (
     AgentConfig,
     AnthropicProviderConfig,
     OllamaProviderConfig,
     OpenAIProviderConfig,
     RetryConfig,
 )
-from pydantic import ValidationError
 
 # ── Provider-specific config construction ────────────────────────────────────
 

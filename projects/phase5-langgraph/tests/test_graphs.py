@@ -2,8 +2,8 @@
 
 from __future__ import annotations
 
-from graphs import build_research_graph
-from multi_agent import build_supervisor_graph
+from mobility_ai.phase5.graphs import build_research_graph
+from mobility_ai.phase5.multi_agent import build_supervisor_graph
 
 
 def _initial_research_state() -> dict:

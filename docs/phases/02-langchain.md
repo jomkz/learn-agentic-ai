@@ -1,5 +1,8 @@
 # Phase 2: LangChain + LCEL + LangSmith + Streaming + Testing
 
+Implementation status and measurable completion criteria: [status matrix](../status.md).
+This phase includes optional exercises; verify the status before treating examples as integrations.
+
 **Duration: 5 weeks** | [← Phase 1](01-foundations.md) | [Phase 3 →](03-rag-fundamentals.md)
 
 **Project directory:** [`projects/phase2-langchain/`](../../projects/phase2-langchain/)

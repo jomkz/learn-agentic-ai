@@ -1,0 +1,474 @@
+{
+  "backend": "lexical",
+  "metrics": {
+    "answer_exact_match": 0.125,
+    "answer_token_f1": 0.40513421408611733,
+    "reference_context_token_recall": 0.7035198597698598
+  },
+  "sample_count": 24,
+  "dataset_sha256": "6d82979256905a232781bb11ae28164b8a8cdcf1ccbe8ac59928024109873c04",
+  "generated_at": "2026-09-23T14:45:06.770606+00:00",
+  "configuration": {
+    "python": "3.12.14",
+    "evaluator_version": "1"
+  },
+  "per_sample": [
+    {
+      "sample": {
+        "question": "Which Python version is supported by this workspace?",
+        "ground_truth": "Python 3.12 is the supported runtime.",
+        "contexts": [
+          "# Agentic AI & MLOps learning workspace\n\nA Python learning path from LLM fundamentals to RAG, agents, and OpenShift AI.\nStart with the [curriculum](docs/index.md) and [implementation status](docs/status.md).\nAdvanced deployment and training materials include exercises that require additional work;\nthe runnable local capstone is documented separately from the proposed enterprise architecture.\n\n## Quick start — no API key or GPU required\n\nInstall Git and [uv](https://docs.astral.sh/uv/getting-started/installa",
+          "scan suitable\nfor small local corpora; pgvector remains a future production integration exercise.\n\nFor LLM-generated answers, install [Ollama](https://ollama.com), pull `llama3.2` and\n`nomic-embed-text`, and ingest with `--provider ollama`. Re-ingest when switching embedding\nmodels. See the [capstone runbook](projects/capstone/RUNBOOK.md).\n\n## Dependencies by phase\n\nPython 3.12 is the supported runtime, pinned in `.python-version`. The lockfile is committed.\nPhase extras include their prerequisites: `rag` i",
+          " Git and [uv](https://docs.astral.sh/uv/getting-started/installation/), then run from this repository:\n\n```bash\nuv python install 3.12\nuv sync --locked\nuv run python -m mobility_ai.capstone.app ingest \\\n  --corpus projects/capstone/data/corpus --db outputs/capstone.db --provider lexical\nuv run python -m mobility_ai.capstone.app ask \\\n  --db outputs/capstone.db --question \"What does pgvector add to PostgreSQL?\"\nuv run python -m mobility_ai.capstone.app evaluate \\\n  --db outputs/capstone.db --eval-set evals/d"
+        ],
+        "answer": "According to document [1], the supported Python runtime is Python 3.12.",
+        "latency_ms": 4569.032816973049,
+        "cost_usd": null
+      },
+      "metrics": {
+        "answer_exact_match": 0.0,
+        "answer_token_f1": 0.7368421052631579,
+        "reference_context_token_recall": 1.0
+      }
+    },
+    {
+      "sample": {
+        "question": "What are the default chunk size and overlap, and what unit are they measured in?",
+        "ground_truth": "Chunks default to 512 characters with 64 characters of overlap.",
+        "contexts": [
+          " JSON reporting three chunks and `provider: lexical`. The corpus consists of\nUTF-8 `.txt` or `.md` files; a single file is also accepted. Defaults are 512 **characters** per\nchunk and 64 characters overlap. Ingestion replaces the corpus atomically, removes deleted\nsources, and does not duplicate chunks when repeated. Embedding failures preserve the old\ncorpus. SQLite vectors are for this local lab, not a scalable production vector index.\n\n## Query and inspect sources\n\n```bash\nuv run python -m mobility_ai.ca",
+          "ndaries\n\nUnit tests use explicit mocks for optional SDKs. KFP compilation runs with the real SDK when\ninstalled. Full cluster deployment, GPU training, and live-model quality are not implied by\nunit-test coverage. The model security workflow evaluates an explicitly supplied endpoint;\na successful scan only covers its selected probes and detector configuration.",
+          "# Implemented local architecture\n\nStatus: local workflow covered by automated tests. Live Ollama, GPU training, and OpenShift\nexecution require separate integration verification.\n\n```mermaid\nflowchart LR\n    Documents[Text / Markdown corpus] --> Chunk[Character chunking]\n    Chunk --> Embed[Lexical vectors or Ollama embeddings]\n    Embed --> Store[(SQLite vectors + metadata)]\n    Question --> QueryVector[Same embedding configuration]\n    QueryVector --> Retrieve[Exact cosine retrieval]\n    Store --> Retriev"
+        ],
+        "answer": "The default chunk size is 512 characters, and the default overlap is 64 characters. The chunk size and overlap are measured in characters.",
+        "latency_ms": 5428.860400046688,
+        "cost_usd": null
+      },
+      "metrics": {
+        "answer_exact_match": 0.0,
+        "answer_token_f1": 0.36363636363636365,
+        "reference_context_token_recall": 0.7777777777777778
+      }
+    },
+    {
+      "sample": {
+        "question": "Which document formats can the local capstone ingest?",
+        "ground_truth": "UTF-8 .txt and .md files; a single file is also accepted.",
+        "contexts": [
+          "# Local knowledge assistant runbook\n\nStatus: runnable local application; see [deployment exercises](deploy/README.md) for KFP and\nOpenShift prerequisites. This runbook only lists commands implemented in the repository.\n\n## Install and ingest\n\n```bash\nuv python install 3.12\nuv sync --locked\nuv run python -m mobility_ai.capstone.app ingest \\\n  --corpus projects/capstone/data/corpus --db outputs/capstone.db --provider lexical\n```\n\nExpected result: JSON reporting three chunks and `provider: lexical`. The corpus",
+          "# Implemented local architecture\n\nStatus: local workflow covered by automated tests. Live Ollama, GPU training, and OpenShift\nexecution require separate integration verification.\n\n```mermaid\nflowchart LR\n    Documents[Text / Markdown corpus] --> Chunk[Character chunking]\n    Chunk --> Embed[Lexical vectors or Ollama embeddings]\n    Embed --> Store[(SQLite vectors + metadata)]\n    Question --> QueryVector[Same embedding configuration]\n    QueryVector --> Retrieve[Exact cosine retrieval]\n    Store --> Retriev",
+          "Local chain/API demos; simulated search | Pass API/tool tests; show a cited model response | LangChain extra; Ollama for live generation |\n| 3 | Chunking/retrieval exercises | Ingest and query persisted documents through the capstone | RAG extra for optional parsing/vector integrations |\n| 4 | Exact cache, retrieval patterns, DSPy exercise | Reject unrelated cache hits; run async HyDE; compare actual outputs | Advanced RAG extra; Redis for shared cache |\n| 5 | Graph orchestration demo with placeholder resea"
+        ],
+        "answer": "The supplied documents do not contain enough information to answer.",
+        "latency_ms": 4106.172383995727,
+        "cost_usd": null
+      },
+      "metrics": {
+        "answer_exact_match": 0.0,
+        "answer_token_f1": 0.0,
+        "reference_context_token_recall": 0.25
+      }
+    },
+    {
+      "sample": {
+        "question": "If I ingest the same corpus twice, will duplicate chunks accumulate?",
+        "ground_truth": "No. Ingestion replaces the corpus atomically and does not duplicate chunks when repeated.",
+        "contexts": [
+          " JSON reporting three chunks and `provider: lexical`. The corpus consists of\nUTF-8 `.txt` or `.md` files; a single file is also accepted. Defaults are 512 **characters** per\nchunk and 64 characters overlap. Ingestion replaces the corpus atomically, removes deleted\nsources, and does not duplicate chunks when repeated. Embedding failures preserve the old\ncorpus. SQLite vectors are for this local lab, not a scalable production vector index.\n\n## Query and inspect sources\n\n```bash\nuv run python -m mobility_ai.ca",
+          "figuration metadata in one database transaction.\nRepeating ingestion replaces the corpus instead of appending duplicate chunks. Failed\nembedding calls leave the previous database intact. Retrieval rejects incompatible vectors.\n\nThe offline mode uses an explicit token vocabulary and count vectors. It demonstrates the\nsame persistence and retrieval path without claiming semantic understanding. Ollama mode\nuses model embeddings and generated answers; failures are propagated. Citation validation\nrejects nonexis",
+          "es a new corpus.\n- Ollama connection/model error: check the endpoint and `ollama list`, then repeat the command.\n- Missing/invalid citation: inspect the captured output and prompt/model; the command fails.\n- Invalid vector dimensions: re-ingest with the intended embedding model.\n- Bad corpus update: preserve a copy of the previous SQLite database before replacing a\n  corpus, or re-ingest the previous version of the source files. Do not copy while ingestion\n  is writing; stop writers or use SQLite's backup A"
+        ],
+        "answer": "According to the documents, the ingestion process does not duplicate chunks when repeated. This is stated in the following sentence:\n\n\"Ingestion replaces the corpus atomically, removes deleted sources, and does not duplicate chunks when repeated.\" [1]",
+        "latency_ms": 6004.813909996301,
+        "cost_usd": null
+      },
+      "metrics": {
+        "answer_exact_match": 0.0,
+        "answer_token_f1": 0.4897959183673469,
+        "reference_context_token_recall": 0.9230769230769231
+      }
+    },
+    {
+      "sample": {
+        "question": "What happens to the existing corpus if embedding fails during an update?",
+        "ground_truth": "Embedding failures preserve the old corpus.",
+        "contexts": [
+          ".2 --embedding-model nomic-embed-text \\\n  --revision YOUR_COMMIT --output outputs/ragas-report.json\n```\n\nUse separate training and evaluation questions for actual model comparisons. Configure both\njudge and embedder explicitly. RAGAS failures stop the run. See the\n[evaluation status](evaluation/ragas_comparison.md) before drawing strategy conclusions.\n\n## Troubleshooting and rollback\n\n- Missing database: run `ingest`; `ask` never silently creates a new corpus.\n- Ollama connection/model error: check the endp",
+          "es a new corpus.\n- Ollama connection/model error: check the endpoint and `ollama list`, then repeat the command.\n- Missing/invalid citation: inspect the captured output and prompt/model; the command fails.\n- Invalid vector dimensions: re-ingest with the intended embedding model.\n- Bad corpus update: preserve a copy of the previous SQLite database before replacing a\n  corpus, or re-ingest the previous version of the source files. Do not copy while ingestion\n  is writing; stop writers or use SQLite's backup A",
+          "ama-url` on each command for a different endpoint. The\nembedding and generation model identifiers are saved with the corpus; `ingest` accepts\n`--embedding-model` and `--generation-model`. Use immutable model tags/digests for reproducible\nexperiments and re-ingest after an embedding change. Server failures are surfaced, not hidden\nby fabricated answers or a silent change of provider. Local LLM execution requires enough RAM\nfor the chosen models; a GPU is optional and affects latency.\n\n## Capture and evaluate"
+        ],
+        "answer": "According to document [2], if an embedding fails during an update, the existing corpus is not updated. Instead, the command fails.",
+        "latency_ms": 4964.021596009843,
+        "cost_usd": null
+      },
+      "metrics": {
+        "answer_exact_match": 0.0,
+        "answer_token_f1": 0.2222222222222222,
+        "reference_context_token_recall": 0.8333333333333334
+      }
+    },
+    {
+      "sample": {
+        "question": "Is the SQLite vector store intended for scalable production vector search?",
+        "ground_truth": "No. It uses a linear vector scan intended for small local corpora.",
+        "contexts": [
+          "one.app evaluate \\\n  --db outputs/capstone.db --eval-set evals/data/capstone-questions.jsonl \\\n  --records outputs/local-run.jsonl --output outputs/local-report.json --backend lexical\n```\n\nThis is a complete offline exercise: lexical count vectors are persisted in SQLite, cosine\nsearch retrieves chunks, and extractive answers cite the source files. Lexical evaluation\nmeasures token overlap, not factual faithfulness. SQLite uses a linear vector scan suitable\nfor small local corpora; pgvector remains a future",
+          "le ingestion\n  is writing; stop writers or use SQLite's backup API.\n\n`mobility_ai.capstone.integration` checks importable symbols only. It is not a model-server,\ndatabase, or deployment health check. Training, promotion, monitoring dashboards, and\nmulti-service failover are optional exercises, not operational capabilities of this lab.",
+          "ector --> Retrieve[Exact cosine retrieval]\n    Store --> Retrieve\n    Retrieve --> Answer[Extractive answer or Ollama generation]\n    Answer --> Citations[Source identifiers checked]\n    Citations --> Records[Per-question outputs + timings]\n    Records --> Eval[Explicit lexical or RAGAS evaluation]\n```\n\n`src/mobility_ai/capstone/app.py` implements this workflow. Ingestion saves source identifiers,\nchunk text, vectors, corpus hash, and model/configuration metadata in one database transaction.\nRepeating inges"
+        ],
+        "answer": "The supplied documents do not contain enough information to answer.",
+        "latency_ms": 4830.634838959668,
+        "cost_usd": null
+      },
+      "metrics": {
+        "answer_exact_match": 0.0,
+        "answer_token_f1": 0.0,
+        "reference_context_token_recall": 0.8333333333333334
+      }
+    },
+    {
+      "sample": {
+        "question": "What should I do to the corpus when switching embedding models?",
+        "ground_truth": "Re-ingest the corpus when switching embedding models.",
+        "contexts": [
+          "ama-url` on each command for a different endpoint. The\nembedding and generation model identifiers are saved with the corpus; `ingest` accepts\n`--embedding-model` and `--generation-model`. Use immutable model tags/digests for reproducible\nexperiments and re-ingest after an embedding change. Server failures are surfaced, not hidden\nby fabricated answers or a silent change of provider. Local LLM execution requires enough RAM\nfor the chosen models; a GPU is optional and affects latency.\n\n## Capture and evaluate",
+          "es a new corpus.\n- Ollama connection/model error: check the endpoint and `ollama list`, then repeat the command.\n- Missing/invalid citation: inspect the captured output and prompt/model; the command fails.\n- Invalid vector dimensions: re-ingest with the intended embedding model.\n- Bad corpus update: preserve a copy of the previous SQLite database before replacing a\n  corpus, or re-ingest the previous version of the source files. Do not copy while ingestion\n  is writing; stop writers or use SQLite's backup A",
+          ".2 --embedding-model nomic-embed-text \\\n  --revision YOUR_COMMIT --output outputs/ragas-report.json\n```\n\nUse separate training and evaluation questions for actual model comparisons. Configure both\njudge and embedder explicitly. RAGAS failures stop the run. See the\n[evaluation status](evaluation/ragas_comparison.md) before drawing strategy conclusions.\n\n## Troubleshooting and rollback\n\n- Missing database: run `ingest`; `ask` never silently creates a new corpus.\n- Ollama connection/model error: check the endp"
+        ],
+        "answer": "According to document [2], when switching embedding models, you should re-ingest the source files.",
+        "latency_ms": 5021.833159960806,
+        "cost_usd": null
+      },
+      "metrics": {
+        "answer_exact_match": 0.0,
+        "answer_token_f1": 0.6086956521739131,
+        "reference_context_token_recall": 0.75
+      }
+    },
+    {
+      "sample": {
+        "question": "What should I do if asking a question fails because the corpus database is missing?",
+        "ground_truth": "Run ingest first; ask does not silently create a new corpus.",
+        "contexts": [
+          "es a new corpus.\n- Ollama connection/model error: check the endpoint and `ollama list`, then repeat the command.\n- Missing/invalid citation: inspect the captured output and prompt/model; the command fails.\n- Invalid vector dimensions: re-ingest with the intended embedding model.\n- Bad corpus update: preserve a copy of the previous SQLite database before replacing a\n  corpus, or re-ingest the previous version of the source files. Do not copy while ingestion\n  is writing; stop writers or use SQLite's backup A",
+          ".2 --embedding-model nomic-embed-text \\\n  --revision YOUR_COMMIT --output outputs/ragas-report.json\n```\n\nUse separate training and evaluation questions for actual model comparisons. Configure both\njudge and embedder explicitly. RAGAS failures stop the run. See the\n[evaluation status](evaluation/ragas_comparison.md) before drawing strategy conclusions.\n\n## Troubleshooting and rollback\n\n- Missing database: run `ingest`; `ask` never silently creates a new corpus.\n- Ollama connection/model error: check the endp",
+          "```\n\nFor model evaluation, record one JSON object per question with `question`, `ground_truth`,\n`contexts`, and the actual `answer`. Optional `latency_ms` is total retrieval and generation\nwall time, not time to first token; `cost_usd` must come from actual usage and a dated price\nconfiguration. Missing measurements remain null. Do not use training questions as held-out\nquality evidence. Version the corpus, questions, model, prompts, and code revision with each run.\n\nThe capstone runbook describes how to ca"
+        ],
+        "answer": "According to document [1], if asking a question fails because the corpus database is missing, you should run `ingest`.",
+        "latency_ms": 7065.38496905705,
+        "cost_usd": null
+      },
+      "metrics": {
+        "answer_exact_match": 0.0,
+        "answer_token_f1": 0.26666666666666666,
+        "reference_context_token_recall": 0.8181818181818182
+      }
+    },
+    {
+      "sample": {
+        "question": "Does successful citation validation establish that every generated claim is true?",
+        "ground_truth": "No. It checks source identifiers, not the truth of every generated claim.",
+        "contexts": [
+          "ery and inspect sources\n\n```bash\nuv run python -m mobility_ai.capstone.app ask \\\n  --db outputs/capstone.db --question \"What does pgvector add to PostgreSQL?\"\n```\n\nThe response includes the answer, numbered citations mapped to source/chunk identifiers,\nretrieved passages, total query latency, and generation mode. The offline mode quotes\nretrieved text; it is not an LLM. Queries with no matching evidence return an explicit\nabstention. Citation validation checks identifiers, not whether every generated claim ",
+          "rs; failures are propagated. Citation validation\nrejects nonexistent identifiers but does not establish factual correctness. Judge-based\nRAGAS evaluation is an explicit, separately configured operation.\n\nThe KFP compiler wraps the same CLI in two container components and produces real database,\nrecord, and report artifacts. Cluster execution is unverified. SQLite and linear vector\nsearch are deliberately limited to a small local corpus and one writer.\n\n## Proposed extensions\n\nThe ADRs and deployment templat",
+          "alidation checks identifiers, not whether every generated claim is true.\n\n## Run with Ollama\n\n```bash\nollama pull nomic-embed-text\nollama pull llama3.2\nuv run python -m mobility_ai.capstone.app ingest \\\n  --corpus projects/capstone/data/corpus --db outputs/ollama.db --provider ollama\nuv run python -m mobility_ai.capstone.app ask \\\n  --db outputs/ollama.db --question \"What does pgvector add to PostgreSQL?\"\n```\n\nOllama must be running. Use `--ollama-url` on each command for a different endpoint. The\nembedding"
+        ],
+        "answer": "The supplied documents do not contain enough information to answer.",
+        "latency_ms": 4505.760591011494,
+        "cost_usd": null
+      },
+      "metrics": {
+        "answer_exact_match": 0.0,
+        "answer_token_f1": 0.18181818181818182,
+        "reference_context_token_recall": 0.8333333333333334
+      }
+    },
+    {
+      "sample": {
+        "question": "Which embedding and generation models does the Ollama runbook tell me to pull?",
+        "ground_truth": "Pull nomic-embed-text for embeddings and llama3.2 for generation.",
+        "contexts": [
+          "scan suitable\nfor small local corpora; pgvector remains a future production integration exercise.\n\nFor LLM-generated answers, install [Ollama](https://ollama.com), pull `llama3.2` and\n`nomic-embed-text`, and ingest with `--provider ollama`. Re-ingest when switching embedding\nmodels. See the [capstone runbook](projects/capstone/RUNBOOK.md).\n\n## Dependencies by phase\n\nPython 3.12 is the supported runtime, pinned in `.python-version`. The lockfile is committed.\nPhase extras include their prerequisites: `rag` i",
+          "ama-url` on each command for a different endpoint. The\nembedding and generation model identifiers are saved with the corpus; `ingest` accepts\n`--embedding-model` and `--generation-model`. Use immutable model tags/digests for reproducible\nexperiments and re-ingest after an embedding change. Server failures are surfaced, not hidden\nby fabricated answers or a silent change of provider. Local LLM execution requires enough RAM\nfor the chosen models; a GPU is optional and affects latency.\n\n## Capture and evaluate",
+          "-8 `.txt` or `.md` files; questions are JSONL. `provider=lexical` exercises the\ncomplete pipeline without a model server. `provider=ollama` additionally requires a reachable\nOllama endpoint with the documented models pulled. Evaluation in this pipeline is explicitly\nlexical; use the evaluation extra and the runbook for RAGAS judging of recorded outputs.\n\nCompilation is tested independently of cluster execution. Confirm artifact staging, image\npull access, permissions, and network connectivity in your own Op"
+        ],
+        "answer": "According to document [2], the Ollama runbook tells you to pull `llama3.2` and `nomic-embed-text`.",
+        "latency_ms": 7681.081257003825,
+        "cost_usd": null
+      },
+      "metrics": {
+        "answer_exact_match": 0.0,
+        "answer_token_f1": 0.5,
+        "reference_context_token_recall": 0.9
+      }
+    },
+    {
+      "sample": {
+        "question": "Can I interpret lexical token-overlap scores as factual faithfulness?",
+        "ground_truth": "No. Lexical exact-match and token-overlap metrics are not faithfulness.",
+        "contexts": [
+          "one.app evaluate \\\n  --db outputs/capstone.db --eval-set evals/data/capstone-questions.jsonl \\\n  --records outputs/local-run.jsonl --output outputs/local-report.json --backend lexical\n```\n\nThis is a complete offline exercise: lexical count vectors are persisted in SQLite, cosine\nsearch retrieves chunks, and extractive answers cite the source files. Lexical evaluation\nmeasures token overlap, not factual faithfulness. SQLite uses a linear vector scan suitable\nfor small local corpora; pgvector remains a future",
+          "selecting `ragas`. Both judge and embedding\nmodels are explicit; missing dependencies and judge failures stop the evaluation. The lexical\nbackend runs offline, but its exact-match and token-overlap metrics are **not faithfulness**.\n\nReports retain per-question answers, contexts, scores, dataset hashes, configuration, evaluator\nversion, and timestamps. Latency is reported only when captured in the input records; it is\nmean total query latency, not p95 or time to first token. Local inference does not establis",
+          " JSON reporting three chunks and `provider: lexical`. The corpus consists of\nUTF-8 `.txt` or `.md` files; a single file is also accepted. Defaults are 512 **characters** per\nchunk and 64 characters overlap. Ingestion replaces the corpus atomically, removes deleted\nsources, and does not duplicate chunks when repeated. Embedding failures preserve the old\ncorpus. SQLite vectors are for this local lab, not a scalable production vector index.\n\n## Query and inspect sources\n\n```bash\nuv run python -m mobility_ai.ca"
+        ],
+        "answer": "According to source [2], lexical evaluation measures token overlap, not factual faithfulness. Therefore, the answer is:\n\nNo, lexical token-overlap scores cannot be interpreted as factual faithfulness.",
+        "latency_ms": 5874.596752983052,
+        "cost_usd": null
+      },
+      "metrics": {
+        "answer_exact_match": 0.0,
+        "answer_token_f1": 0.3157894736842105,
+        "reference_context_token_recall": 0.9090909090909091
+      }
+    },
+    {
+      "sample": {
+        "question": "Which fields are required in each recorded evaluation JSON object?",
+        "ground_truth": "question, ground_truth, contexts, and answer are required.",
+        "contexts": [
+          "# Evaluation inputs\n\n`lexical-demo.jsonl` contains three hand-authored examples for exercising the report format.\nThe answers are fixtures, not captured model outputs or a held-out quality benchmark.\nNo latency or cost is invented for these records.\n\nRun the offline format check:\n\n```bash\nuv run python -m mobility_ai.evals.ragas_harness \\\n  --eval-set evals/data/lexical-demo.jsonl --backend lexical \\\n  --output outputs/lexical-demo-report.json\n```\n\nFor model evaluation, record one JSON object per question w",
+          "```\n\nFor model evaluation, record one JSON object per question with `question`, `ground_truth`,\n`contexts`, and the actual `answer`. Optional `latency_ms` is total retrieval and generation\nwall time, not time to first token; `cost_usd` must come from actual usage and a dated price\nconfiguration. Missing measurements remain null. Do not use training questions as held-out\nquality evidence. Version the corpus, questions, model, prompts, and code revision with each run.\n\nThe capstone runbook describes how to ca",
+          "nchmark. `records` retains actual answers, retrieved contexts,\nreferences, and measured total query latency. The report includes per-question scores,\nconfiguration, timestamps, and hashes. Missing cost is null, not assumed zero.\n\nFor RAGAS judging of recorded model outputs:\n\n```bash\nuv sync --locked --extra evaluation\nuv run python -m mobility_ai.evals.ragas_harness \\\n  --eval-set outputs/local-run.jsonl --backend ragas \\\n  --judge-model llama3.2 --embedding-model nomic-embed-text \\\n  --revision YOUR_COMMIT"
+        ],
+        "answer": "According to [2], the required fields in each recorded evaluation JSON object are:\n\n1. `question`\n2. `ground_truth`\n3. `contexts`\n4. `answer`\n\nNote that `latency_ms` and `cost_usd` are optional, and if missing, they are set to null.",
+        "latency_ms": 9319.443345011678,
+        "cost_usd": null
+      },
+      "metrics": {
+        "answer_exact_match": 0.0,
+        "answer_token_f1": 0.32558139534883723,
+        "reference_context_token_recall": 0.8571428571428571
+      }
+    },
+    {
+      "sample": {
+        "question": "Does the comparison report latency represent p95 or time to first token?",
+        "ground_truth": "Neither. It is mean total query latency when captured in input records.",
+        "contexts": [
+          "ot p95 or time to first token. Local inference does not establish a\nzero infrastructure cost, so unmeasured costs remain null.",
+          "selecting `ragas`. Both judge and embedding\nmodels are explicit; missing dependencies and judge failures stop the evaluation. The lexical\nbackend runs offline, but its exact-match and token-overlap metrics are **not faithfulness**.\n\nReports retain per-question answers, contexts, scores, dataset hashes, configuration, evaluator\nversion, and timestamps. Latency is reported only when captured in the input records; it is\nmean total query latency, not p95 or time to first token. Local inference does not establis",
+          "```\n\nFor model evaluation, record one JSON object per question with `question`, `ground_truth`,\n`contexts`, and the actual `answer`. Optional `latency_ms` is total retrieval and generation\nwall time, not time to first token; `cost_usd` must come from actual usage and a dated price\nconfiguration. Missing measurements remain null. Do not use training questions as held-out\nquality evidence. Version the corpus, questions, model, prompts, and code revision with each run.\n\nThe capstone runbook describes how to ca"
+        ],
+        "answer": "The comparison report does not represent p95 or time to first token. According to [1], \"Local inference does not establish a zero infrastructure cost, so unmeasured costs remain null.\" This implies that the comparison report does not include time to first token, which is an unmeasured cost.",
+        "latency_ms": 7278.537017002236,
+        "cost_usd": null
+      },
+      "metrics": {
+        "answer_exact_match": 0.0,
+        "answer_token_f1": 0.03389830508474576,
+        "reference_context_token_recall": 0.9166666666666666
+      }
+    },
+    {
+      "sample": {
+        "question": "What value is used for infrastructure cost when it has not been measured?",
+        "ground_truth": "Unmeasured cost remains null, rather than being assumed zero.",
+        "contexts": [
+          "ot p95 or time to first token. Local inference does not establish a\nzero infrastructure cost, so unmeasured costs remain null.",
+          "```\n\nFor model evaluation, record one JSON object per question with `question`, `ground_truth`,\n`contexts`, and the actual `answer`. Optional `latency_ms` is total retrieval and generation\nwall time, not time to first token; `cost_usd` must come from actual usage and a dated price\nconfiguration. Missing measurements remain null. Do not use training questions as held-out\nquality evidence. Version the corpus, questions, model, prompts, and code revision with each run.\n\nThe capstone runbook describes how to ca",
+          "# Retrieval strategy evaluation status\n\nNo verified cross-strategy benchmark is included in this repository. The previous numerical\ncomparison could not be regenerated from the supplied code and has been withdrawn. It must\nnot be used to justify model promotion, architecture selection, or production quality claims.\n\nThe Phase 9 comparison now requires actual per-question outputs for each strategy, evaluated\nagainst identical questions and reference answers. It applies the same evaluator to all runs;\nthere a"
+        ],
+        "answer": "According to document [1], when infrastructure cost has not been measured, it is set to null.",
+        "latency_ms": 4632.35634600278,
+        "cost_usd": null
+      },
+      "metrics": {
+        "answer_exact_match": 0.0,
+        "answer_token_f1": 0.16,
+        "reference_context_token_recall": 0.4444444444444444
+      }
+    },
+    {
+      "sample": {
+        "question": "What happens if the RAGAS judge fails or a dependency is missing?",
+        "ground_truth": "The evaluation stops; it does not silently switch scoring methods.",
+        "contexts": [
+          ".2 --embedding-model nomic-embed-text \\\n  --revision YOUR_COMMIT --output outputs/ragas-report.json\n```\n\nUse separate training and evaluation questions for actual model comparisons. Configure both\njudge and embedder explicitly. RAGAS failures stop the run. See the\n[evaluation status](evaluation/ragas_comparison.md) before drawing strategy conclusions.\n\n## Troubleshooting and rollback\n\n- Missing database: run `ingest`; `ask` never silently creates a new corpus.\n- Ollama connection/model error: check the endp",
+          "selecting `ragas`. Both judge and embedding\nmodels are explicit; missing dependencies and judge failures stop the evaluation. The lexical\nbackend runs offline, but its exact-match and token-overlap metrics are **not faithfulness**.\n\nReports retain per-question answers, contexts, scores, dataset hashes, configuration, evaluator\nversion, and timestamps. Latency is reported only when captured in the input records; it is\nmean total query latency, not p95 or time to first token. Local inference does not establis",
+          "rs; failures are propagated. Citation validation\nrejects nonexistent identifiers but does not establish factual correctness. Judge-based\nRAGAS evaluation is an explicit, separately configured operation.\n\nThe KFP compiler wraps the same CLI in two container components and produces real database,\nrecord, and report artifacts. Cluster execution is unverified. SQLite and linear vector\nsearch are deliberately limited to a small local corpus and one writer.\n\n## Proposed extensions\n\nThe ADRs and deployment templat"
+        ],
+        "answer": "According to document [2], if the RAGAS judge fails or a dependency is missing, the evaluation stops.",
+        "latency_ms": 4506.600240012631,
+        "cost_usd": null
+      },
+      "metrics": {
+        "answer_exact_match": 0.0,
+        "answer_token_f1": 0.2222222222222222,
+        "reference_context_token_recall": 0.6
+      }
+    },
+    {
+      "sample": {
+        "question": "Which evaluation backend does the compiled KFP pipeline use?",
+        "ground_truth": "The KFP pipeline uses lexical evaluation.",
+        "contexts": [
+          "LlamaStack server or provider credentials |\n| 8 | KFP compilation; training/deployment exercises | Compile the pipeline; separately capture a cluster run | Pipelines extra; GPU/cluster for training and serving |\n| 9 | Seeded RAFT data and recorded-run comparison | Check gold targets; compare held-out outputs without score bonuses | Graph/ML extras and services for advanced experiments |\n| Capstone | Runnable local workflow | Reopen database, retrieve, cite, record outputs, evaluate | None for lexical mode; ",
+          "n pytest\nuv run pytest projects/phase3-rag/\n```\n\nUnit tests mock optional backends explicitly. The KFP compilation test runs when its extra\nis installed. Service and GPU execution remain separate integration checks. CI tests the\ncore, phase installations, and capstone commands; heavyweight extras can be checked through\nthe CI workflow's manual `optional_phases` input.\n\nThe separate **Model security gate** workflow runs real Garak probes against an explicitly\nconfigured Ollama endpoint and fails on missing/i",
+          "ndaries\n\nUnit tests use explicit mocks for optional SDKs. KFP compilation runs with the real SDK when\ninstalled. Full cluster deployment, GPU training, and live-model quality are not implied by\nunit-test coverage. The model security workflow evaluates an explicitly supplied endpoint;\na successful scan only covers its selected probes and detector configuration."
+        ],
+        "answer": "The supplied documents do not contain enough information to answer.",
+        "latency_ms": 5319.098203035537,
+        "cost_usd": null
+      },
+      "metrics": {
+        "answer_exact_match": 0.0,
+        "answer_token_f1": 0.125,
+        "reference_context_token_recall": 0.6666666666666666
+      }
+    },
+    {
+      "sample": {
+        "question": "Does the offline learning track require a GPU?",
+        "ground_truth": "No. The offline track requires no GPU.",
+        "contexts": [
+          "trieve, cite, record outputs, evaluate | None for lexical mode; Ollama for model-backed mode |\n\nThe offline track requires no GPU and only small text fixtures. Model-backed RAM/VRAM needs\nare determined by model size, quantization, and context length; measure them on your machine.\nGPU training and OpenShift exercises need separately provisioned infrastructure and should\nbe scheduled after the local completion criteria pass.\n\n## Verification boundaries\n\nUnit tests use explicit mocks for optional SDKs. KFP co",
+          "separate training from evaluation data,\nand record the random seed. Adapter compatibility must be checked against the exact base\nmodel revision; do not assume adapters transfer across base model releases.\n\nTrack actual training duration, resource use, general-capability regressions, and retrieval\nquality. The evaluation report under `../../evaluation/ragas_comparison.md` describes the\nrequired artifacts. GPU training and model promotion remain optional, unverified exercises.",
+          "oks | `uv sync --locked --extra notebooks --extra agents` |\n\nGPU/ML extras are large. Install only the track you need; do not use `--all-extras` for the\ncore learning path. Optional cloud credentials can be configured with `cp .env.example .env`;\nleave keys empty for local work. Tracing is disabled by default.\n\n## Checks\n\n```bash\nuv sync --locked --extra agents --extra pipelines\nuv run ruff check .\nuv run ruff format --check .\nuv run mypy\nuv run pytest\nuv run pytest projects/phase3-rag/\n```\n\nUnit tests mock"
+        ],
+        "answer": "According to document [1], the offline track does not require a GPU.",
+        "latency_ms": 4612.004397029523,
+        "cost_usd": null
+      },
+      "metrics": {
+        "answer_exact_match": 0.0,
+        "answer_token_f1": 0.42105263157894735,
+        "reference_context_token_recall": 1.0
+      }
+    },
+    {
+      "sample": {
+        "question": "Which identifiers should a shared Redis response-cache namespace include?",
+        "ground_truth": "The model, prompt, corpus version, and tenant.",
+        "contexts": [
+          "Local chain/API demos; simulated search | Pass API/tool tests; show a cited model response | LangChain extra; Ollama for live generation |\n| 3 | Chunking/retrieval exercises | Ingest and query persisted documents through the capstone | RAG extra for optional parsing/vector integrations |\n| 4 | Exact cache, retrieval patterns, DSPy exercise | Reject unrelated cache hits; run async HyDE; compare actual outputs | Advanced RAG extra; Redis for shared cache |\n| 5 | Graph orchestration demo with placeholder resea",
+          "ge. There are no phase-specific `sys.path` workarounds.\n\n## Optional local services\n\nInstall Podman and `podman-compose` for the service exercises. Published ports bind to\nlocalhost. Development credentials are examples; cluster credentials use Secrets.\n\n```bash\npodman-compose up -d postgres qdrant\npodman-compose up -d redis\npodman-compose up -d neo4j\npodman-compose down\n```\n\nThe offline capstone does not require these services. Redis response caching uses exact\nqueries and a namespace identifying the model",
+          "rs; failures are propagated. Citation validation\nrejects nonexistent identifiers but does not establish factual correctness. Judge-based\nRAGAS evaluation is an explicit, separately configured operation.\n\nThe KFP compiler wraps the same CLI in two container components and produces real database,\nrecord, and report artifacts. Cluster execution is unverified. SQLite and linear vector\nsearch are deliberately limited to a small local corpus and one writer.\n\n## Proposed extensions\n\nThe ADRs and deployment templat"
+        ],
+        "answer": "The proposed shared Redis response-cache namespace should include the following identifiers:\n\n* Model name\n* Model version\n* Dataset name\n* Dataset version\n\nThese identifiers are mentioned in [2] as being used to identify the model and dataset in the Redis response caching system.",
+        "latency_ms": 8595.489506027661,
+        "cost_usd": null
+      },
+      "metrics": {
+        "answer_exact_match": 0.0,
+        "answer_token_f1": 0.16666666666666666,
+        "reference_context_token_recall": 0.5714285714285714
+      }
+    },
+    {
+      "sample": {
+        "question": "What file-access paths do the MCP tools reject?",
+        "ground_truth": "Absolute paths outside the approved root, parent traversal, and symlinks.",
+        "contexts": [
+          "caching uses exact\nqueries and a namespace identifying the model, prompt, corpus version, and tenant. MCP file\ntools default to `data/mcp`; create that directory or set `MCP_ALLOWED_ROOT` to an approved\nfolder. Absolute paths outside that folder, parent traversal, and symlinks are rejected.",
+          "ge. There are no phase-specific `sys.path` workarounds.\n\n## Optional local services\n\nInstall Podman and `podman-compose` for the service exercises. Published ports bind to\nlocalhost. Development credentials are examples; cluster credentials use Secrets.\n\n```bash\npodman-compose up -d postgres qdrant\npodman-compose up -d redis\npodman-compose up -d neo4j\npodman-compose down\n```\n\nThe offline capstone does not require these services. Redis response caching uses exact\nqueries and a namespace identifying the model",
+          "components instead:\n\n```bash\nuv sync --locked --extra pipelines\npodman build -f Containerfile -t YOUR_REGISTRY/mobility-ai:YOUR_TAG .\n# Push to your registry before submitting the pipeline to a cluster.\nuv run python -m mobility_ai.phase8.kfp_pipeline \\\n  --image YOUR_REGISTRY/mobility-ai:YOUR_TAG --output outputs/kfp-pipeline.yaml\n```\n\nSupply `corpus_uri` and `questions_uri` as accessible KFP artifact URIs. The corpus artifact\nmust contain UTF-8 `.txt` or `.md` files; questions are JSONL. `provider=lexical"
+        ],
+        "answer": "According to document [1], the MCP tools reject the following file-access paths:\n\n* Absolute paths outside the `data/mcp` folder\n* Parent traversal\n* Symlinks",
+        "latency_ms": 6238.474133017007,
+        "cost_usd": null
+      },
+      "metrics": {
+        "answer_exact_match": 0.0,
+        "answer_token_f1": 0.42424242424242425,
+        "reference_context_token_recall": 0.9
+      }
+    },
+    {
+      "sample": {
+        "question": "How should RAFT training and evaluation data be separated?",
+        "ground_truth": "Use separate training and evaluation data, validate examples, and record the random seed.",
+        "contexts": [
+          "separate training from evaluation data,\nand record the random seed. Adapter compatibility must be checked against the exact base\nmodel revision; do not assume adapters transfer across base model releases.\n\nTrack actual training duration, resource use, general-capability regressions, and retrieval\nquality. The evaluation report under `../../evaluation/ragas_comparison.md` describes the\nrequired artifacts. GPU training and model promotion remain optional, unverified exercises.",
+          "# ADR-002: Domain adaptation experiments\n\nStatus: **Proposed**\n\nThe runnable local baseline is RAG. RAFT and InstructLab are learning extensions; the\nrepository contains no verified evidence that either improves this baseline. Evaluate them\non a held-out dataset before selecting or promoting a model.\n\nUse the Phase 9 dataset builder to create supervised examples with explicit oracle inclusion\nand complete answer targets. Validate each example, separate training from evaluation data,\nand record the random se",
+          "LlamaStack server or provider credentials |\n| 8 | KFP compilation; training/deployment exercises | Compile the pipeline; separately capture a cluster run | Pipelines extra; GPU/cluster for training and serving |\n| 9 | Seeded RAFT data and recorded-run comparison | Check gold targets; compare held-out outputs without score bonuses | Graph/ML extras and services for advanced experiments |\n| Capstone | Runnable local workflow | Reopen database, retrieve, cite, record outputs, evaluate | None for lexical mode; "
+        ],
+        "answer": "According to [2], RAFT training and evaluation data should be separated, and validation should be performed on a held-out dataset before selecting or promoting a model.",
+        "latency_ms": 6583.619515993632,
+        "cost_usd": null
+      },
+      "metrics": {
+        "answer_exact_match": 0.0,
+        "answer_token_f1": 0.25,
+        "reference_context_token_recall": 1.0
+      }
+    },
+    {
+      "sample": {
+        "question": "What exact requests-per-second throughput has this capstone achieved on OpenShift?",
+        "ground_truth": "The supplied documents do not contain enough information to answer.",
+        "contexts": [
+          "ull access, permissions, and network connectivity in your own OpenShift AI installation.",
+          " a GPU is optional and affects latency.\n\n## Capture and evaluate outputs\n\n```bash\nuv run python -m mobility_ai.capstone.app evaluate \\\n  --db outputs/capstone.db --eval-set evals/data/capstone-questions.jsonl \\\n  --records outputs/local-run.jsonl --output outputs/local-report.json \\\n  --backend lexical --revision YOUR_COMMIT\n```\n\nThe four-question fixture checks the workflow, including an unanswerable question. It is\nnot a production quality benchmark. `records` retains actual answers, retrieved contexts,\nr",
+          "trieve, cite, record outputs, evaluate | None for lexical mode; Ollama for model-backed mode |\n\nThe offline track requires no GPU and only small text fixtures. Model-backed RAM/VRAM needs\nare determined by model size, quantization, and context length; measure them on your machine.\nGPU training and OpenShift exercises need separately provisioned infrastructure and should\nbe scheduled after the local completion criteria pass.\n\n## Verification boundaries\n\nUnit tests use explicit mocks for optional SDKs. KFP co"
+        ],
+        "answer": "The supplied documents do not contain enough information to answer.",
+        "latency_ms": 4194.420893036295,
+        "cost_usd": null
+      },
+      "metrics": {
+        "answer_exact_match": 1.0,
+        "answer_token_f1": 1.0,
+        "reference_context_token_recall": 0.2
+      }
+    },
+    {
+      "sample": {
+        "question": "How many gigabytes of GPU VRAM were measured for llama3.2 in this repository?",
+        "ground_truth": "The supplied documents do not contain enough information to answer.",
+        "contexts": [
+          "trieve, cite, record outputs, evaluate | None for lexical mode; Ollama for model-backed mode |\n\nThe offline track requires no GPU and only small text fixtures. Model-backed RAM/VRAM needs\nare determined by model size, quantization, and context length; measure them on your machine.\nGPU training and OpenShift exercises need separately provisioned infrastructure and should\nbe scheduled after the local completion criteria pass.\n\n## Verification boundaries\n\nUnit tests use explicit mocks for optional SDKs. KFP co",
+          "LlamaStack server or provider credentials |\n| 8 | KFP compilation; training/deployment exercises | Compile the pipeline; separately capture a cluster run | Pipelines extra; GPU/cluster for training and serving |\n| 9 | Seeded RAFT data and recorded-run comparison | Check gold targets; compare held-out outputs without score bonuses | Graph/ML extras and services for advanced experiments |\n| Capstone | Runnable local workflow | Reopen database, retrieve, cite, record outputs, evaluate | None for lexical mode; ",
+          " a GPU is optional and affects latency.\n\n## Capture and evaluate outputs\n\n```bash\nuv run python -m mobility_ai.capstone.app evaluate \\\n  --db outputs/capstone.db --eval-set evals/data/capstone-questions.jsonl \\\n  --records outputs/local-run.jsonl --output outputs/local-report.json \\\n  --backend lexical --revision YOUR_COMMIT\n```\n\nThe four-question fixture checks the workflow, including an unanswerable question. It is\nnot a production quality benchmark. `records` retains actual answers, retrieved contexts,\nr"
+        ],
+        "answer": "The supplied documents do not contain enough information to answer.",
+        "latency_ms": 4916.8502850225195,
+        "cost_usd": null
+      },
+      "metrics": {
+        "answer_exact_match": 1.0,
+        "answer_token_f1": 1.0,
+        "reference_context_token_recall": 0.2
+      }
+    },
+    {
+      "sample": {
+        "question": "What is the password for the production PostgreSQL database?",
+        "ground_truth": "The supplied documents do not contain enough information to answer.",
+        "contexts": [
+          " Git and [uv](https://docs.astral.sh/uv/getting-started/installation/), then run from this repository:\n\n```bash\nuv python install 3.12\nuv sync --locked\nuv run python -m mobility_ai.capstone.app ingest \\\n  --corpus projects/capstone/data/corpus --db outputs/capstone.db --provider lexical\nuv run python -m mobility_ai.capstone.app ask \\\n  --db outputs/capstone.db --question \"What does pgvector add to PostgreSQL?\"\nuv run python -m mobility_ai.capstone.app evaluate \\\n  --db outputs/capstone.db --eval-set evals/d",
+          "alidation checks identifiers, not whether every generated claim is true.\n\n## Run with Ollama\n\n```bash\nollama pull nomic-embed-text\nollama pull llama3.2\nuv run python -m mobility_ai.capstone.app ingest \\\n  --corpus projects/capstone/data/corpus --db outputs/ollama.db --provider ollama\nuv run python -m mobility_ai.capstone.app ask \\\n  --db outputs/ollama.db --question \"What does pgvector add to PostgreSQL?\"\n```\n\nOllama must be running. Use `--ollama-url` on each command for a different endpoint. The\nembedding",
+          "ery and inspect sources\n\n```bash\nuv run python -m mobility_ai.capstone.app ask \\\n  --db outputs/capstone.db --question \"What does pgvector add to PostgreSQL?\"\n```\n\nThe response includes the answer, numbered citations mapped to source/chunk identifiers,\nretrieved passages, total query latency, and generation mode. The offline mode quotes\nretrieved text; it is not an LLM. Queries with no matching evidence return an explicit\nabstention. Citation validation checks identifiers, not whether every generated claim "
+        ],
+        "answer": "The supplied documents do not contain enough information to answer the question.",
+        "latency_ms": 4835.306556953583,
+        "cost_usd": null
+      },
+      "metrics": {
+        "answer_exact_match": 0.0,
+        "answer_token_f1": 0.9090909090909091,
+        "reference_context_token_recall": 0.4
+      }
+    },
+    {
+      "sample": {
+        "question": "What is the measured monthly infrastructure cost in dollars for this capstone?",
+        "ground_truth": "The supplied documents do not contain enough information to answer.",
+        "contexts": [
+          "ot p95 or time to first token. Local inference does not establish a\nzero infrastructure cost, so unmeasured costs remain null.",
+          "# Implementation status and completion criteria\n\nThe curriculum is a learning plan. A technology appearing in a phase is not evidence that\nits production integration is implemented. Code is under `src/mobility_ai`; phase tests and\nsupporting material remain under `projects`.\n\n## Core track\n\nComplete Phases 1–3, the bounded tools in Phase 6, and the local capstone first. This covers\nprovider calls, typed data, retrieval, source attribution, tool boundaries, persistence, and\nevaluation. Then add Phase 4 optim",
+          "evision with each run.\n\nThe capstone runbook describes how to capture outputs from a runnable pipeline."
+        ],
+        "answer": "The supplied documents do not contain enough information to answer.",
+        "latency_ms": 3151.858158002142,
+        "cost_usd": null
+      },
+      "metrics": {
+        "answer_exact_match": 1.0,
+        "answer_token_f1": 1.0,
+        "reference_context_token_recall": 0.3
+      }
+    }
+  ],
+  "limitations": "Lexical diagnostics only; these do not measure factual faithfulness."
+}

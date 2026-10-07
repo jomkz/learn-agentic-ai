@@ -1,117 +1,84 @@
-from __future__ import annotations
-
-import time
+from unittest.mock import MagicMock
 
 import pytest
-from cache import CacheConfig, SemanticCache, build_redis_cache
+from pydantic import ValidationError
+
+from mobility_ai.phase4.cache import CacheConfig, ExactMatchCache, RedisExactMatchCache
 
 
-def test_cache_config_defaults():
-    assert CacheConfig().similarity_threshold == 0.85
+def test_unrelated_query_regression():
+    cache = ExactMatchCache()
+    cache.set("What is the capital of France?", "Paris")
+    assert cache.get("How do I configure TLS?") is None
+    assert cache.get("What is the capital of France?") == "Paris"
 
 
-def test_cache_initially_empty():
-    assert SemanticCache().stats()["cache_size"] == 0
+def test_matching_preserves_case_and_whitespace():
+    cache = ExactMatchCache()
+    cache.set("US", "United States")
+    assert cache.get("us") is None
+    assert cache.get(" US") is None
 
 
-def test_set_increases_size():
-    cache = SemanticCache()
+def test_ttl_pruning_without_sleep():
+    now = [0.0]
+    cache = ExactMatchCache(CacheConfig(ttl_seconds=2), clock=lambda: now[0])
     cache.set("q", "r")
+    now[0] = 2.0
+    assert cache.get("q") is None
+    assert cache.stats()["cache_size"] == 0
+
+
+def test_update_does_not_duplicate_entries():
+    cache = ExactMatchCache()
+    cache.set("q", "old")
+    cache.set("q", "new")
+    assert cache.get("q") == "new"
     assert cache.stats()["cache_size"] == 1
 
 
-def test_get_miss_returns_none():
-    cache = SemanticCache()
-    assert cache.get("anything") is None
+def test_lru_eviction():
+    cache = ExactMatchCache(CacheConfig(max_entries=2))
+    cache.set("a", "A")
+    cache.set("b", "B")
+    cache.get("a")
+    cache.set("c", "C")
+    assert cache.get("b") is None
+    assert cache.get("a") == "A"
 
 
-def test_get_miss_increments_misses():
-    cache = SemanticCache()
-    cache.get("anything")
-    assert cache.stats()["misses"] == 1
-
-
-def test_exact_query_hit():
-    cache = SemanticCache()
-    cache.set("hello", "world")
-    assert cache.get("hello") == "world"
-
-
-def test_hit_increments_hits():
-    cache = SemanticCache()
-    cache.set("hello", "world")
-    cache.get("hello")
-    assert cache.stats()["hits"] == 1
-
-
-def test_hit_rate_after_one_hit_one_miss():
-    cache = SemanticCache()
-    cache.set("hello", "world")
-    cache.get("hello")  # hit
-    cache.get("zzzzz")  # miss (dissimilar enough to not match)
-    assert cache.stats()["hit_rate"] == pytest.approx(0.5)
-
-
-def test_clear_resets_all():
-    cache = SemanticCache()
-    cache.set("hello", "world")
-    cache.get("hello")
+def test_stats_and_clear():
+    cache = ExactMatchCache()
+    cache.set("q", "r")
+    cache.get("q")
+    cache.get("missing")
+    assert cache.stats()["hit_rate"] == 0.5
     cache.clear()
-    s = cache.stats()
-    assert s["cache_size"] == 0
-    assert s["hits"] == 0
-    assert s["misses"] == 0
+    assert cache.stats()["cache_size"] == cache.stats()["hits"] == 0
 
 
-def test_embed_is_deterministic():
-    cache = SemanticCache()
-    assert cache._embed("test") == cache._embed("test")
+@pytest.mark.parametrize("kwargs", [{"max_entries": 0}, {"ttl_seconds": 0}])
+def test_invalid_configuration(kwargs):
+    with pytest.raises(ValidationError):
+        CacheConfig(**kwargs)
 
 
-def test_embed_different_texts_differ():
-    cache = SemanticCache()
-    assert cache._embed("hello") != cache._embed("world")
+def test_redis_backing_store_is_shared_and_namespaced():
+    storage = {}
+    client = MagicMock()
+    client.set.side_effect = lambda key, value, **kwargs: storage.update({key: value})
+    client.get.side_effect = storage.get
+    writer = RedisExactMatchCache(client, namespace="model-v1:corpus-v1:tenant-a")
+    reader = RedisExactMatchCache(client, namespace="model-v1:corpus-v1:tenant-a")
+    other = RedisExactMatchCache(client, namespace="model-v1:corpus-v2:tenant-a")
+    writer.set("q", "answer")
+    assert reader.get("q") == "answer"
+    assert other.get("q") is None
+    assert client.set.call_args.kwargs["ex"] == 3600
 
 
-def test_cosine_similarity_same_vector():
-    cache = SemanticCache()
-    assert cache._cosine_similarity([1.0, 0.0], [1.0, 0.0]) == pytest.approx(1.0)
-
-
-def test_cosine_similarity_orthogonal():
-    cache = SemanticCache()
-    assert cache._cosine_similarity([1.0, 0.0], [0.0, 1.0]) == pytest.approx(0.0)
-
-
-def test_cosine_similarity_zero_vector():
-    cache = SemanticCache()
-    assert cache._cosine_similarity([0.0, 0.0], [1.0, 1.0]) == 0.0
-
-
-def test_max_entries_evicts_oldest():
-    config = CacheConfig(max_entries=2)
-    cache = SemanticCache(config=config)
-    cache.set("first", "a")
-    cache.set("second", "b")
-    cache.set("third", "c")
-    assert cache.stats()["cache_size"] == 2
-
-
-def test_build_redis_cache_returns_cache_or_none():
-    result = build_redis_cache("redis://localhost:6379")
-    assert result is None or isinstance(result, SemanticCache)
-
-
-def test_ttl_expiry():
-    config = CacheConfig(ttl_seconds=0)
-    cache = SemanticCache(config=config)
-    cache.set("expiring", "value")
-    time.sleep(0.01)
-    assert cache.get("expiring") is None
-
-
-def test_threshold_blocks_dissimilar():
-    config = CacheConfig(similarity_threshold=0.99)
-    cache = SemanticCache(config=config)
-    cache.set("apple pie", "a dessert")
-    assert cache.get("quantum physics") is None
+def test_redis_errors_are_not_hidden():
+    client = MagicMock()
+    client.get.side_effect = ConnectionError("offline")
+    with pytest.raises(ConnectionError):
+        RedisExactMatchCache(client, namespace="test").get("q")

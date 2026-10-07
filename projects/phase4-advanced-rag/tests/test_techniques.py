@@ -1,6 +1,11 @@
 from __future__ import annotations
 
-from techniques import TechniqueResult, hyde_retrieval, multi_query_retrieval, rerank_with_scores
+from mobility_ai.phase4.techniques import (
+    TechniqueResult,
+    hyde_retrieval,
+    multi_query_retrieval,
+    rerank_with_scores,
+)
 
 
 def test_technique_result_model() -> None:

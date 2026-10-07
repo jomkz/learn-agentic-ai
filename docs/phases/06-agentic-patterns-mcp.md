@@ -1,5 +1,8 @@
 # Phase 6: Agentic Patterns, MCP, Guardrails, and Context Management
 
+Implementation status and measurable completion criteria: [status matrix](../status.md).
+This phase includes optional exercises; verify the status before treating examples as integrations.
+
 **Duration: 3 weeks** | [← Phase 5](05-langgraph.md) | [Phase 7 →](07-llamastack.md)
 
 **Project directory:** [`projects/phase6-mcp-guardrails/`](../../projects/phase6-mcp-guardrails/)

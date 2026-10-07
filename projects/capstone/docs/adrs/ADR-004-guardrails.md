@@ -1,6 +1,9 @@
 # ADR-004 — Guardrails Strategy
 
-**Status:** Accepted
+This is a design exercise. See [implemented architecture](../architecture.md); performance
+figures below are targets/illustrations, not measured results from this repository.
+
+**Status:** Proposed; integration not verified
 **Date:** 2026-07-15
 **Deciders:** Platform AI team
 

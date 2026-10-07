@@ -27,7 +27,7 @@ def test_log_finetuning_run_with_mock_mlflow() -> None:
     with patch.dict(sys.modules, {"mlflow": mock_mlflow}):
         import importlib
 
-        import mlflow_tracking
+        from mobility_ai.phase8 import mlflow_tracking
 
         importlib.reload(mlflow_tracking)
 
@@ -52,7 +52,7 @@ def test_log_finetuning_run_with_tags() -> None:
     with patch.dict(sys.modules, {"mlflow": mock_mlflow}):
         import importlib
 
-        import mlflow_tracking
+        from mobility_ai.phase8 import mlflow_tracking
 
         importlib.reload(mlflow_tracking)
 
@@ -73,7 +73,7 @@ def test_register_model_with_mock_mlflow() -> None:
     with patch.dict(sys.modules, {"mlflow": mock_mlflow}):
         import importlib
 
-        import mlflow_tracking
+        from mobility_ai.phase8 import mlflow_tracking
 
         importlib.reload(mlflow_tracking)
 

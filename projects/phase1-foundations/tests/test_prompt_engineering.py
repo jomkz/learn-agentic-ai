@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from prompt_engineering import TRANSCRIPT, V1_USER, V2_SYSTEM, V3_SYSTEM, V3_USER
+from mobility_ai.phase1.prompt_engineering import TRANSCRIPT, V1_USER, V2_SYSTEM, V3_SYSTEM, V3_USER
 
 
 def test_transcript_is_non_empty() -> None:

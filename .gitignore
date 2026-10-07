@@ -43,3 +43,7 @@ runs/
 # OS
 .DS_Store
 Thumbs.db
+
+.garak-venv/
+coverage.xml
+data/mcp/

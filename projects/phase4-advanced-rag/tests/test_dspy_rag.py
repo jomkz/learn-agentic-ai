@@ -1,6 +1,11 @@
 from __future__ import annotations
 
-from dspy_rag import _DSPY_AVAILABLE, RAGModule, RAGSignature, compile_with_bootstrap
+from mobility_ai.phase4.dspy_rag import (
+    _DSPY_AVAILABLE,
+    RAGModule,
+    RAGSignature,
+    compile_with_bootstrap,
+)
 
 
 def test_rag_module_instantiates() -> None:

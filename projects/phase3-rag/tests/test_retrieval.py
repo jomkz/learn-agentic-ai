@@ -2,7 +2,8 @@ from __future__ import annotations
 
 import pytest
 from pydantic import ValidationError
-from retrieval import RetrievalResult, VectorStoreConfig, hybrid_rrf_fusion
+
+from mobility_ai.phase3.retrieval import RetrievalResult, VectorStoreConfig, hybrid_rrf_fusion
 
 
 def test_vector_store_config_defaults() -> None:

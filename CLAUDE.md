@@ -17,11 +17,12 @@ docs/
     ...
     10-capstone.md
 
-projects/               — hands-on code, one subdirectory per phase
+src/mobility_ai/         — importable code, phase1 through phase9, capstone, evals
+projects/               — phase tests and supporting resources
   phase1-foundations/
   ...
 
-evals/                  — reusable RAGAS evaluation harnesses (built in Phase 3, reused everywhere)
+evals/                  — evaluation fixtures/tests; harness code is in src/mobility_ai/evals
 notebooks/              — Jupyter notebooks for exploration
 
 pyproject.toml          — all Python dependencies (uv-managed, phase-gated extras)
@@ -33,7 +34,7 @@ podman-compose.yml      — local infrastructure (PostgreSQL+pgvector, Qdrant, R
 
 Each phase has three parts that must stay in sync:
 1. `docs/phases/NN-name.md` — curriculum doc (objectives, key concepts, resources, projects, checklist)
-2. `projects/phaseN-name/` — hands-on code directory
+2. `src/mobility_ai/phaseN/` — code; `projects/phaseN-name/` — tests/resources
 3. `pyproject.toml` `[project.optional-dependencies]` entry — phase-gated deps
 
 When adding a new phase or technology to an existing phase, update all three.
@@ -41,15 +42,15 @@ When adding a new phase or technology to an existing phase, update all three.
 ## Dependency management
 
 ```bash
-uv sync                          # base deps (Phase 1)
-uv sync --extra langchain        # Phase 2
-uv sync --extra rag              # Phase 3
-uv sync --extra advanced-rag     # Phase 4
-uv sync --extra agents           # Phases 5-6
-uv sync --extra llamastack       # Phase 7
-uv sync --extra ml               # Phase 8
-uv sync --extra advanced         # Phase 9
-uv sync --all-extras             # everything
+uv sync --locked                          # base deps (Phase 1)
+uv sync --locked --extra langchain        # Phase 2
+uv sync --locked --extra rag              # Phase 3
+uv sync --locked --extra advanced-rag     # Phase 4
+uv sync --locked --extra agents           # Phases 5-6
+uv sync --locked --extra llamastack       # Phase 7
+uv sync --locked --extra ml               # Phase 8
+uv sync --locked --extra advanced         # Phase 9
+uv sync --locked --extra pipelines        # KFP compilation without GPU training
 
 uv add <package>                 # add a new dependency (updates pyproject.toml + uv.lock)
 uv add --optional <group> <pkg>  # add to a phase-gated group
@@ -73,7 +74,7 @@ Service URLs: PostgreSQL `localhost:5432`, Qdrant `http://localhost:6333`, Redis
 ```bash
 uv run ruff check .          # lint
 uv run ruff format .         # format
-uv run mypy .                # type check
+uv run mypy                # type check
 uv run pytest                # all tests
 uv run pytest projects/phaseN-name/   # single phase
 uv run jupyter lab           # notebooks
@@ -88,7 +89,7 @@ Config lives in `pyproject.toml` under `[tool.ruff]`, `[tool.mypy]`, `[tool.pyte
 | Package manager | `uv` | Lockfile-based; faster than pip |
 | Container runtime | Podman | Red Hat default; Docker Compose compatible |
 | Local LLM | Ollama | No API key; OpenAI-compatible API |
-| Default vector store | pgvector | Production-ready; in existing PostgreSQL |
+| Local capstone store | SQLite vectors | Exact linear scan for small corpora; pgvector is a deployment exercise |
 | Agent orchestration | LangGraph | Stateful, checkpointed, multi-agent |
 | Model serving (prod) | vLLM on OpenShift AI | PagedAttention; LoRA serving |
 | Fine-tuning | QLoRA + TRL + Axolotl | PEFT-efficient; single consumer GPU |
@@ -103,3 +104,9 @@ Config lives in `pyproject.toml` under `[tool.ruff]`, `[tool.mypy]`, `[tool.pyte
 ## Secrets
 
 Never commit `.env`. Copy `.env.example` to `.env` and fill in keys. All API keys and service credentials are loaded via `python-dotenv`. Large model files (`*.gguf`, `*.safetensors`, `*.bin`) are gitignored.
+
+## Implementation status
+
+Consult `docs/status.md` and the capstone runbook. Deployment ADRs are proposals, not verified
+production behavior. Run examples as `python -m mobility_ai.phaseN.module`; never inject phase
+directories into `sys.path`. Tests must not contact real providers or download model weights.

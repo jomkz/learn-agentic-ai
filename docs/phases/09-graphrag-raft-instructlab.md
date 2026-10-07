@@ -1,5 +1,8 @@
 # Phase 9: GraphRAG, RAFT, InstructLab, and Multi-Modal Awareness
 
+Implementation status and measurable completion criteria: [status matrix](../status.md).
+This phase includes optional exercises; verify the status before treating examples as integrations.
+
 **Duration: 6 weeks** | [← Phase 8](08-huggingface-openshift.md) | [Capstone →](10-capstone.md)
 
 **Project directory:** [`projects/phase9-domain-adaptive/`](../../projects/phase9-domain-adaptive/)

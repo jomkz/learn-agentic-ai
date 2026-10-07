@@ -1,0 +1,9 @@
+{
+  "tests_passed": 402,
+  "coverage_percent": 91.5527950310559,
+  "python": "3.12.14",
+  "ruff": "passed",
+  "ruff_format": "passed",
+  "mypy": "passed; 52 source files",
+  "git_diff_check": "passed"
+}

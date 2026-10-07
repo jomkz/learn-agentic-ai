@@ -1,0 +1,6 @@
+{
+  "field": "temperature_policy",
+  "recorded_text": "RAGAS 0.3 wrapper: 0.01 for single completion; 0.3 for multiple completions",
+  "corrected_text": "RAGAS 0.3.1 wrapper: 1e-8 for single completion; 0.3 for multiple completions",
+  "reason": "The installed RAGAS 0.3.1 BaseRagasLLM.get_temperature uses 1e-8, while the 0.3.9 documentation inspected during preparation used 0.01. This corrects provenance text only; requests, model outputs, and scores are unchanged."
+}

@@ -4,7 +4,7 @@ from unittest.mock import MagicMock, patch
 
 from fastapi.testclient import TestClient
 
-from capstone import ResearchReport, app, build_llm
+from mobility_ai.phase2.capstone import ResearchReport, app, build_llm
 
 
 def test_research_report_model():
@@ -54,8 +54,9 @@ def test_report_endpoint_handles_offline():
     mock_llm = MagicMock()
     mock_llm.with_structured_output.return_value = MagicMock()
 
-    with patch("capstone.build_llm", return_value=mock_llm), patch(
-        "capstone.build_research_chain", return_value=mock_chain
+    with (
+        patch("mobility_ai.phase2.capstone.build_llm", return_value=mock_llm),
+        patch("mobility_ai.phase2.capstone.build_research_chain", return_value=mock_chain),
     ):
         client = TestClient(app)
         response = client.get("/report?query=AI")

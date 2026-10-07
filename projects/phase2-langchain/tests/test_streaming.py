@@ -5,7 +5,8 @@ from __future__ import annotations
 import asyncio
 
 from fastapi.testclient import TestClient
-from streaming import _event_generator, app
+
+from mobility_ai.phase2.streaming import _event_generator, app
 
 client = TestClient(app)
 
