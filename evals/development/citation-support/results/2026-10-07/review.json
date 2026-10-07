@@ -1,0 +1,297 @@
+{
+  "reviewer": "Codex inspection; provisional expectations, not independent human calibration.",
+  "limitations": "Inspected development cases; agreements are not accuracy estimates. Validator errors remain in total counts. Overall label agreement does not validate rationale or individual citations.",
+  "attempts": {
+    "v1": {
+      "source_commit": "dfa8e92",
+      "total": 11,
+      "comparison_counts": {
+        "label_agreement": 5,
+        "judge_error": 4,
+        "label_disagreement": 2
+      },
+      "cases": [
+        {
+          "id": "wrong-passage-ingest",
+          "status": "assessed",
+          "expected_answer_support": "unsupported",
+          "observed_answer_support": "unsupported",
+          "comparison": "label_agreement",
+          "prespecified_citation_comparisons": {
+            "1": {
+              "expected": "does_not_support",
+              "observed": "does_not_support",
+              "agrees": true
+            }
+          },
+          "error": null
+        },
+        {
+          "id": "unsupported-reasoning-latency",
+          "status": "assessed",
+          "expected_answer_support": "unsupported",
+          "observed_answer_support": "unsupported",
+          "comparison": "label_agreement",
+          "prespecified_citation_comparisons": {},
+          "error": null
+        },
+        {
+          "id": "extra-passage-chunk-size",
+          "status": "judge_error",
+          "expected_answer_support": "supported",
+          "observed_answer_support": null,
+          "comparison": "judge_error",
+          "prespecified_citation_comparisons": null,
+          "error": "ValueError: Judge must assess every cited passage exactly once and no others"
+        },
+        {
+          "id": "wrong-passage-namespace",
+          "status": "assessed",
+          "expected_answer_support": "unsupported",
+          "observed_answer_support": "unsupported",
+          "comparison": "label_agreement",
+          "prespecified_citation_comparisons": {
+            "3": {
+              "expected": "does_not_support",
+              "observed": "does_not_support",
+              "agrees": true
+            }
+          },
+          "error": null
+        },
+        {
+          "id": "unsupported-namespace",
+          "status": "assessed",
+          "expected_answer_support": "unsupported",
+          "observed_answer_support": "unsupported",
+          "comparison": "label_agreement",
+          "prespecified_citation_comparisons": {
+            "1": {
+              "expected": "does_not_support",
+              "observed": "does_not_support",
+              "agrees": true
+            }
+          },
+          "error": null
+        },
+        {
+          "id": "supported-vector-search",
+          "status": "judge_error",
+          "expected_answer_support": "supported",
+          "observed_answer_support": null,
+          "comparison": "judge_error",
+          "prespecified_citation_comparisons": null,
+          "error": "ValueError: Judge claim excerpt is absent from the recorded answer"
+        },
+        {
+          "id": "supported-missing-database",
+          "status": "assessed",
+          "expected_answer_support": "supported",
+          "observed_answer_support": "supported",
+          "comparison": "label_agreement",
+          "prespecified_citation_comparisons": {
+            "1": {
+              "expected": "supports_part",
+              "observed": "supports_part",
+              "agrees": true
+            }
+          },
+          "error": null
+        },
+        {
+          "id": "non-answer-throughput",
+          "status": "assessed",
+          "expected_answer_support": "non_answer",
+          "observed_answer_support": "unsupported",
+          "comparison": "label_disagreement",
+          "prespecified_citation_comparisons": {},
+          "error": null
+        },
+        {
+          "id": "corrected-namespace-citation",
+          "status": "assessed",
+          "expected_answer_support": "supported",
+          "observed_answer_support": "unsupported",
+          "comparison": "label_disagreement",
+          "prespecified_citation_comparisons": {
+            "2": {
+              "expected": "supports_part",
+              "observed": "does_not_support",
+              "agrees": false
+            }
+          },
+          "error": null
+        },
+        {
+          "id": "negation-overlap",
+          "status": "judge_error",
+          "expected_answer_support": "unsupported",
+          "observed_answer_support": null,
+          "comparison": "judge_error",
+          "prespecified_citation_comparisons": null,
+          "error": "ValueError: Judge claim excerpt is absent from the recorded answer"
+        },
+        {
+          "id": "split-support",
+          "status": "judge_error",
+          "expected_answer_support": "supported",
+          "observed_answer_support": null,
+          "comparison": "judge_error",
+          "prespecified_citation_comparisons": null,
+          "error": "ValueError: Judge claim excerpt is absent from the recorded answer"
+        }
+      ]
+    },
+    "v2": {
+      "source_commit": "1507292",
+      "total": 11,
+      "comparison_counts": {
+        "label_agreement": 6,
+        "judge_error": 3,
+        "label_disagreement": 2
+      },
+      "cases": [
+        {
+          "id": "wrong-passage-ingest",
+          "status": "assessed",
+          "expected_answer_support": "unsupported",
+          "observed_answer_support": "unsupported",
+          "comparison": "label_agreement",
+          "prespecified_citation_comparisons": {
+            "1": {
+              "expected": "does_not_support",
+              "observed": "does_not_support",
+              "agrees": true
+            }
+          },
+          "error": null
+        },
+        {
+          "id": "unsupported-reasoning-latency",
+          "status": "assessed",
+          "expected_answer_support": "unsupported",
+          "observed_answer_support": "unsupported",
+          "comparison": "label_agreement",
+          "prespecified_citation_comparisons": {},
+          "error": null
+        },
+        {
+          "id": "extra-passage-chunk-size",
+          "status": "assessed",
+          "expected_answer_support": "supported",
+          "observed_answer_support": "supported",
+          "comparison": "label_agreement",
+          "prespecified_citation_comparisons": {
+            "1": {
+              "expected": "supports_part",
+              "observed": "supports_part",
+              "agrees": true
+            },
+            "2": {
+              "expected": "does_not_support",
+              "observed": "does_not_support",
+              "agrees": true
+            }
+          },
+          "error": null
+        },
+        {
+          "id": "wrong-passage-namespace",
+          "status": "assessed",
+          "expected_answer_support": "unsupported",
+          "observed_answer_support": "unsupported",
+          "comparison": "label_agreement",
+          "prespecified_citation_comparisons": {
+            "3": {
+              "expected": "does_not_support",
+              "observed": "does_not_support",
+              "agrees": true
+            }
+          },
+          "error": null
+        },
+        {
+          "id": "unsupported-namespace",
+          "status": "assessed",
+          "expected_answer_support": "unsupported",
+          "observed_answer_support": "unsupported",
+          "comparison": "label_agreement",
+          "prespecified_citation_comparisons": {
+            "1": {
+              "expected": "does_not_support",
+              "observed": "does_not_support",
+              "agrees": true
+            }
+          },
+          "error": null
+        },
+        {
+          "id": "supported-vector-search",
+          "status": "judge_error",
+          "expected_answer_support": "supported",
+          "observed_answer_support": null,
+          "comparison": "judge_error",
+          "prespecified_citation_comparisons": null,
+          "error": "ValueError: Judge claim excerpt is absent from the recorded answer"
+        },
+        {
+          "id": "supported-missing-database",
+          "status": "assessed",
+          "expected_answer_support": "supported",
+          "observed_answer_support": "supported",
+          "comparison": "label_agreement",
+          "prespecified_citation_comparisons": {
+            "1": {
+              "expected": "supports_part",
+              "observed": "supports_part",
+              "agrees": true
+            }
+          },
+          "error": null
+        },
+        {
+          "id": "non-answer-throughput",
+          "status": "assessed",
+          "expected_answer_support": "non_answer",
+          "observed_answer_support": "unsupported",
+          "comparison": "label_disagreement",
+          "prespecified_citation_comparisons": {},
+          "error": null
+        },
+        {
+          "id": "corrected-namespace-citation",
+          "status": "assessed",
+          "expected_answer_support": "supported",
+          "observed_answer_support": "unsupported",
+          "comparison": "label_disagreement",
+          "prespecified_citation_comparisons": {
+            "2": {
+              "expected": "supports_part",
+              "observed": "does_not_support",
+              "agrees": false
+            }
+          },
+          "error": null
+        },
+        {
+          "id": "negation-overlap",
+          "status": "judge_error",
+          "expected_answer_support": "unsupported",
+          "observed_answer_support": null,
+          "comparison": "judge_error",
+          "prespecified_citation_comparisons": null,
+          "error": "ValueError: Judge claim excerpt is absent from the recorded answer"
+        },
+        {
+          "id": "split-support",
+          "status": "judge_error",
+          "expected_answer_support": "supported",
+          "observed_answer_support": null,
+          "comparison": "judge_error",
+          "prespecified_citation_comparisons": null,
+          "error": "ValueError: Judge claim excerpt is absent from the recorded answer"
+        }
+      ]
+    }
+  }
+}

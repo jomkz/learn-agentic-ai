@@ -59,10 +59,12 @@ Prioritize the following work using the recorded failure cases:
    record 456 passing tests and 20 development attempts. Keep expansion off by default:
    added context also exposed wrong citations, unsupported answers, abstention failures, and
    increased latency.
-3. **Citation support — next:** distinguish an existing source identifier from a passage that supports
-   the claim. Include the wrong-passage, extra-passage, and unsupported-reasoning examples in
-   development checks.
-4. **Judge calibration:** use a larger, manually reviewed set containing supported claims,
+3. **Citation support — complete (advisory):** recorded answers now have a separate audit for
+   identifier validity, whole-answer support, and each citation's contribution. Literal answer
+   excerpts and source quotes are validated. [Verification and both live attempts](verification/2026-10-07-citation-support.md)
+   record 503 passing tests and judge errors/disagreements on eleven inspected cases. The
+   audit is diagnostic; capstone acceptance behavior is unchanged.
+4. **Judge calibration — next:** use a larger, independently reviewed set containing supported claims,
    unsupported claims, non-answers, and incorrect citations. Report judge disagreements;
    the current judge is not a correctness gate.
 

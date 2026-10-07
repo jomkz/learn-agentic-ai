@@ -1,0 +1,60 @@
+{
+  "wrong-passage-ingest": {
+    "source": "benchmarks/project-docs-v1/results/2026-09-23/top3.jsonl",
+    "sha256": "41c7ff2fff09892d83106cf87b4ffca035cd1db2c953fe78bafc2cd5a74e8b3f",
+    "record_id": "q08",
+    "transformation": "Flatten recorded question, answer, contexts, citations, and abstention state."
+  },
+  "unsupported-reasoning-latency": {
+    "source": "benchmarks/project-docs-v1/results/2026-09-23/top3.jsonl",
+    "sha256": "41c7ff2fff09892d83106cf87b4ffca035cd1db2c953fe78bafc2cd5a74e8b3f",
+    "record_id": "q13",
+    "transformation": "Flatten recorded question, answer, contexts, citations, and abstention state."
+  },
+  "extra-passage-chunk-size": {
+    "source": "development/structured-responses/results/2026-10-07/top3.jsonl",
+    "sha256": "c51638ef9703de695ba07b2ab49cdac93e509a23f3be52e33fd9033cb329a799",
+    "record_id": "chunk-defaults",
+    "transformation": "Flatten recorded question, answer, contexts, citations, and abstention state."
+  },
+  "wrong-passage-namespace": {
+    "source": "development/chunk-boundaries/results/2026-10-07/on/top3.jsonl",
+    "sha256": "0768d898f8f6bd35e3dfd0bb64f07c5e56754c837e817d370e5f126383497df7",
+    "record_id": "q18",
+    "transformation": "Flatten recorded question, answer, contexts, citations, and abstention state."
+  },
+  "unsupported-namespace": {
+    "source": "development/chunk-boundaries/results/2026-10-07/on/top1.jsonl",
+    "sha256": "8b9f8bce2450e25cd4a67a547a82484bfe043e5a58e86d3c3f950f05a566e460",
+    "record_id": "q18",
+    "transformation": "Flatten recorded question, answer, contexts, citations, and abstention state."
+  },
+  "supported-vector-search": {
+    "source": "development/structured-responses/results/2026-10-07/top1.jsonl",
+    "sha256": "d5567e90294c3c8284908cd8404492ff6907fd060f22f10d04f830ac0f2d5f96",
+    "record_id": "vector-search",
+    "transformation": "Flatten recorded question, answer, contexts, citations, and abstention state."
+  },
+  "supported-missing-database": {
+    "source": "development/chunk-boundaries/results/2026-10-07/on/top1.jsonl",
+    "sha256": "8b9f8bce2450e25cd4a67a547a82484bfe043e5a58e86d3c3f950f05a566e460",
+    "record_id": "q08",
+    "transformation": "Flatten recorded question, answer, contexts, citations, and abstention state."
+  },
+  "non-answer-throughput": {
+    "source": "development/chunk-boundaries/results/2026-10-07/off/top3.jsonl",
+    "sha256": "b13723521dccf9315664dc509a6949f48f8c81c0954cfafbd6e3ebc886b37556",
+    "record_id": "q21",
+    "transformation": "Flatten recorded question, answer, contexts, citations, and abstention state."
+  },
+  "corrected-namespace-citation": {
+    "derived_from": "wrong-passage-namespace",
+    "transformation": "Controlled citation correction from [3] to [2]; answer words unchanged. Not a new model generation."
+  },
+  "negation-overlap": {
+    "transformation": "Synthetic negation counterexample."
+  },
+  "split-support": {
+    "transformation": "Synthetic distributed-evidence control."
+  }
+}

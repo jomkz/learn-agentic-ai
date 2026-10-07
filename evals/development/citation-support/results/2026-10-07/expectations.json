@@ -1,0 +1,69 @@
+{
+  "reviewer": "Provisional Codex labels; not independent human review or held-out calibration.",
+  "cases": {
+    "wrong-passage-ingest": {
+      "answer_support": "unsupported",
+      "citations": {
+        "1": "does_not_support"
+      }
+    },
+    "unsupported-reasoning-latency": {
+      "answer_support": "unsupported",
+      "citations": {}
+    },
+    "extra-passage-chunk-size": {
+      "answer_support": "supported",
+      "citations": {
+        "1": "supports_part",
+        "2": "does_not_support"
+      }
+    },
+    "wrong-passage-namespace": {
+      "answer_support": "unsupported",
+      "citations": {
+        "3": "does_not_support"
+      }
+    },
+    "unsupported-namespace": {
+      "answer_support": "unsupported",
+      "citations": {
+        "1": "does_not_support"
+      }
+    },
+    "supported-vector-search": {
+      "answer_support": "supported",
+      "citations": {
+        "1": "supports_part"
+      }
+    },
+    "supported-missing-database": {
+      "answer_support": "supported",
+      "citations": {
+        "1": "supports_part"
+      }
+    },
+    "non-answer-throughput": {
+      "answer_support": "non_answer",
+      "citations": {}
+    },
+    "corrected-namespace-citation": {
+      "answer_support": "supported",
+      "citations": {
+        "2": "supports_part"
+      }
+    },
+    "negation-overlap": {
+      "answer_support": "unsupported",
+      "citations": {
+        "1": "does_not_support"
+      }
+    },
+    "split-support": {
+      "answer_support": "supported",
+      "citations": {
+        "1": "supports_part",
+        "2": "supports_part"
+      }
+    }
+  }
+}

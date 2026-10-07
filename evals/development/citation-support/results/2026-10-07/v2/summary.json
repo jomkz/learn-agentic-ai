@@ -1,0 +1,16 @@
+{
+  "total": 11,
+  "status_counts": {
+    "assessed": 8,
+    "judge_error": 3
+  },
+  "advisory_verdict_counts": {
+    "unsupported": 6,
+    "supported": 2
+  },
+  "citation_verdict_counts": {
+    "does_not_support": 8,
+    "supports_part": 2
+  },
+  "limitations": "Advisory, uncalibrated model judgments, not a correctness gate. Quote presence establishes provenance, not entailment. Whole-answer support and each citation's contribution are assessed separately; claim coverage and reasoning can still be judged incorrectly."
+}
