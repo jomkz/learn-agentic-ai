@@ -22,3 +22,8 @@ and the canonical abstention message. Check that the chunk answer retains both 5
 and that the pgvector answer describes vector similarity search. The recorder preserves raw
 JSON, retrieved passages, model digests, source hashes, and timings. Lexical metrics are
 diagnostics only; no judge or broad quality claim is part of this check.
+
+The [October 7 verification](../../../docs/verification/2026-10-07-structured-responses.md)
+records eight valid structured responses and one citation-support failure: the top3 chunk-size
+answer also cited the unrelated pgvector passage. That result is retained for the later
+citation-support follow-up. Passing the response contract does not imply correct source selection.

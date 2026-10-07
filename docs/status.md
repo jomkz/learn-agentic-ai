@@ -49,12 +49,16 @@ installation, regression checks, isolated phase installs, and offline notebook e
 The local workflow and September 23 benchmark form the baseline for the next iteration.
 Prioritize the following work using the recorded failure cases:
 
-1. **Structured responses:** represent answers, citations, and abstention explicitly. Check
-   that missing citations and alternate abstention wording produce consistent outcomes.
-2. **Chunk boundaries:** compare sentence-aware chunking or adjacent-chunk expansion against
+1. **Structured responses — complete:** answers, citations, and abstention now have explicit
+   fields. Missing citations fail validation; alternate abstention wording renders consistently.
+   [October 7 verification](verification/2026-10-07-structured-responses.md) records 433 passing
+   tests and eight valid live responses. One live answer also cited an irrelevant passage;
+   citation support remains priority 3.
+2. **Chunk boundaries — next:** compare sentence-aware chunking or adjacent-chunk expansion against
    the truncated cache-namespace example, while retaining source provenance.
 3. **Citation support:** distinguish an existing source identifier from a passage that supports
-   the claim. Include the wrong-passage and unsupported-reasoning examples in development checks.
+   the claim. Include the wrong-passage, extra-passage, and unsupported-reasoning examples in
+   development checks.
 4. **Judge calibration:** use a larger, manually reviewed set containing supported claims,
    unsupported claims, non-answers, and incorrect citations. Report judge disagreements;
    the current judge is not a correctness gate.
