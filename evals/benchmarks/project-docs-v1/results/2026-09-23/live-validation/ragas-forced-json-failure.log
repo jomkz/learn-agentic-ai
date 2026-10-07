@@ -1,0 +1,114 @@
+Evaluating:   0%|          | 0/3 [00:00<?, ?it/s]Evaluating:   0%|          | 0/3 [00:21<?, ?it/s]
+Traceback (most recent call last):
+  File "/tmp/mobility-eval-venv/lib/python3.12/site-packages/langchain_core/output_parsers/json.py", line 88, in parse_result
+    return parse_json_markdown(text)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/mobility-eval-venv/lib/python3.12/site-packages/langchain_core/utils/json.py", line 163, in parse_json_markdown
+    return _parse_json(json_str, parser=parser)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/mobility-eval-venv/lib/python3.12/site-packages/langchain_core/utils/json.py", line 191, in _parse_json
+    return parser(json_str)
+           ^^^^^^^^^^^^^^^^
+  File "/tmp/mobility-eval-venv/lib/python3.12/site-packages/langchain_core/utils/json.py", line 136, in parse_partial_json
+    return json.loads(s, strict=strict)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/mobility-python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/json/__init__.py", line 359, in loads
+    return cls(**kw).decode(s)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/tmp/mobility-python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/json/decoder.py", line 338, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/mobility-python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/json/decoder.py", line 356, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/jomckenz/src/jomkz/learn-agentic-ai/outputs/live-validation/judge.py", line 11, in <module>
+    report=compute_report(load_samples('outputs/live-validation/sample.jsonl'), llm=llm, embeddings=embedder, judge_id='llama3.2:3b',embedding_id='nomic-embed-text:v1.5',run_config=RunConfig(timeout=600,max_retries=1,max_workers=1,seed=0),configuration={'purpose':'live smoke test, not benchmark','seed':'0','num_ctx':'8192','num_predict':'1024','format':'json'})
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jomckenz/src/jomkz/learn-agentic-ai/src/mobility_ai/evals/ragas_harness.py", line 105, in compute_report
+    result = evaluate(
+             ^^^^^^^^^
+  File "/tmp/mobility-eval-venv/lib/python3.12/site-packages/ragas/_analytics.py", line 227, in wrapper
+    result = func(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/mobility-eval-venv/lib/python3.12/site-packages/ragas/evaluation.py", line 318, in evaluate
+    raise e
+  File "/tmp/mobility-eval-venv/lib/python3.12/site-packages/ragas/evaluation.py", line 294, in evaluate
+    results = executor.results()
+              ^^^^^^^^^^^^^^^^^^
+  File "/tmp/mobility-eval-venv/lib/python3.12/site-packages/ragas/executor.py", line 213, in results
+    results = asyncio.run(self._process_jobs())
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/mobility-eval-venv/lib/python3.12/site-packages/nest_asyncio.py", line 30, in run
+    return loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/mobility-eval-venv/lib/python3.12/site-packages/nest_asyncio.py", line 98, in run_until_complete
+    return f.result()
+           ^^^^^^^^^^
+  File "/tmp/mobility-python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/asyncio/futures.py", line 202, in result
+    raise self._exception.with_traceback(self._exception_tb)
+  File "/tmp/mobility-python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/asyncio/tasks.py", line 314, in __step_run_and_handle_result
+    result = coro.send(None)
+             ^^^^^^^^^^^^^^^
+  File "/tmp/mobility-eval-venv/lib/python3.12/site-packages/ragas/executor.py", line 141, in _process_jobs
+    await self._process_coroutines(
+  File "/tmp/mobility-eval-venv/lib/python3.12/site-packages/ragas/executor.py", line 191, in _process_coroutines
+    result = await future
+             ^^^^^^^^^^^^
+  File "/tmp/mobility-python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/asyncio/tasks.py", line 631, in _wait_for_one
+    return f.result()  # May raise f.exception().
+           ^^^^^^^^^^
+  File "/tmp/mobility-python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/asyncio/futures.py", line 202, in result
+    raise self._exception.with_traceback(self._exception_tb)
+  File "/tmp/mobility-python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/asyncio/tasks.py", line 314, in __step_run_and_handle_result
+    result = coro.send(None)
+             ^^^^^^^^^^^^^^^
+  File "/tmp/mobility-eval-venv/lib/python3.12/site-packages/ragas/executor.py", line 48, in sema_coro
+    return await coro
+           ^^^^^^^^^^
+  File "/tmp/mobility-eval-venv/lib/python3.12/site-packages/ragas/executor.py", line 100, in wrapped_callable_async
+    raise e
+  File "/tmp/mobility-eval-venv/lib/python3.12/site-packages/ragas/executor.py", line 96, in wrapped_callable_async
+    result = await callable(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/mobility-eval-venv/lib/python3.12/site-packages/ragas/metrics/base.py", line 541, in single_turn_ascore
+    raise e
+  File "/tmp/mobility-eval-venv/lib/python3.12/site-packages/ragas/metrics/base.py", line 534, in single_turn_ascore
+    score = await asyncio.wait_for(
+            ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/mobility-python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/asyncio/tasks.py", line 520, in wait_for
+    return await fut
+           ^^^^^^^^^
+  File "/tmp/mobility-eval-venv/lib/python3.12/site-packages/ragas/metrics/_faithfulness.py", line 200, in _single_turn_ascore
+    return await self._ascore(row, callbacks)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/mobility-eval-venv/lib/python3.12/site-packages/ragas/metrics/_faithfulness.py", line 208, in _ascore
+    statements = await self._create_statements(row, callbacks)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/mobility-eval-venv/lib/python3.12/site-packages/ragas/metrics/_faithfulness.py", line 174, in _create_statements
+    statements = await self.statement_generator_prompt.generate(
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/mobility-eval-venv/lib/python3.12/site-packages/ragas/prompt/pydantic_prompt.py", line 129, in generate
+    output_single = await self.generate_multiple(
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/mobility-eval-venv/lib/python3.12/site-packages/ragas/prompt/pydantic_prompt.py", line 203, in generate_multiple
+    answer = await parser.parse_output_string(
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/mobility-eval-venv/lib/python3.12/site-packages/ragas/prompt/pydantic_prompt.py", line 421, in parse_output_string
+    result = super().parse(fixed_output_string.text)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/mobility-eval-venv/lib/python3.12/site-packages/langchain_core/output_parsers/pydantic.py", line 93, in parse
+    return self.parse_result([Generation(text=text)])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/mobility-eval-venv/lib/python3.12/site-packages/langchain_core/output_parsers/pydantic.py", line 77, in parse_result
+    json_object = super().parse_result(result, partial=partial)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/mobility-eval-venv/lib/python3.12/site-packages/langchain_core/output_parsers/json.py", line 91, in parse_result
+    raise OutputParserException(msg, llm_output=text) from e
+langchain_core.exceptions.OutputParserException: Invalid json output: Given a question and an answer, analyze the complexity of each sentence in the answer. Break down each sentence into one or more fully understandable statements. Ensure that no pronouns are used in any statement. Format the outputs in JSON.
+Please return the output in a JSON format that complies with the following schema as specified in JSON Schema:
+{\
+For troubleshooting, visit: https://docs.langchain.com/oss/python/langchain/errors/OUTPUT_PARSING_FAILURE 

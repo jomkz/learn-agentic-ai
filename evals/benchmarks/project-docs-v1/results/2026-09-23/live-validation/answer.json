@@ -1,0 +1,29 @@
+{
+  "question": "What does pgvector add to PostgreSQL?",
+  "answer": "According to document [1], pgvector adds vector similarity search to PostgreSQL.",
+  "citations": {
+    "1": "pgvector.txt#chunk-0"
+  },
+  "retrieved": [
+    {
+      "source": "pgvector.txt",
+      "index": 0,
+      "text": "pgvector adds vector similarity search to PostgreSQL. Vectors and document metadata can be stored together and retrieved using distance operators.",
+      "score": 0.8305075114868558
+    },
+    {
+      "source": "rag.txt",
+      "index": 0,
+      "text": "Retrieval-Augmented Generation (RAG) retrieves relevant documents and supplies them as context when generating an answer. Source citations let a reader inspect the retrieved evidence.",
+      "score": 0.4833602662469989
+    },
+    {
+      "source": "chunking.txt",
+      "index": 0,
+      "text": "Chunking splits documents into smaller pieces before retrieval. An overlap preserves some context across chunk boundaries. The local capstone measures chunk size in characters, not tokens.",
+      "score": 0.4475213000514668
+    }
+  ],
+  "latency_ms": 5347.771072993055,
+  "generation_model": "llama3.2:3b"
+}

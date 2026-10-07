@@ -1,0 +1,112 @@
+{
+  "timestamp": "2026-09-23T14:32:51.276870+00:00",
+  "checks": {
+    "ingested_three_chunks": true,
+    "embedding_dimensions": [
+      768
+    ],
+    "reingestion_idempotent": true,
+    "answer_cites_pgvector": true,
+    "unknown_question_abstains": true,
+    "missing_model_http_status": 404,
+    "failed_update_preserves_corpus": true,
+    "failed_update_preserves_database_bytes": true,
+    "database_sha256_before_and_after_failure": "ffa7d00ea6c6a44065cbd1aa2da86cc908f039cf19ec5ec43ae10eca440ec4fc"
+  },
+  "server": {
+    "version": {
+      "version": "0.34.3"
+    },
+    "tags": {
+      "models": [
+        {
+          "name": "llama3.2:3b",
+          "model": "llama3.2:3b",
+          "modified_at": "2026-09-23T09:25:58.275598622-05:00",
+          "size": 2019393189,
+          "digest": "a80c4f17acd55265feec403c7aef86be0c25983ab279d83f3bcd3abbcb5b8b72",
+          "details": {
+            "parent_model": "",
+            "format": "gguf",
+            "family": "llama",
+            "families": [
+              "llama"
+            ],
+            "parameter_size": "3.2B",
+            "quantization_level": "Q4_K_M",
+            "context_length": 131072,
+            "embedding_length": 3072
+          },
+          "capabilities": [
+            "completion",
+            "tools"
+          ]
+        },
+        {
+          "name": "nomic-embed-text:v1.5",
+          "model": "nomic-embed-text:v1.5",
+          "modified_at": "2026-09-23T09:23:57.780107966-05:00",
+          "size": 274302450,
+          "digest": "0a109f422b47e3a30ba2b10eca18548e944e8a23073ee3f3e947efcf3c45e59f",
+          "details": {
+            "parent_model": "",
+            "format": "gguf",
+            "family": "nomic-bert",
+            "families": [
+              "nomic-bert"
+            ],
+            "parameter_size": "137M",
+            "quantization_level": "F16",
+            "context_length": 2048,
+            "embedding_length": 768
+          },
+          "capabilities": [
+            "embedding"
+          ]
+        }
+      ]
+    },
+    "ps": {
+      "models": [
+        {
+          "name": "llama3.2:3b",
+          "model": "llama3.2:3b",
+          "size": 2561524365,
+          "digest": "a80c4f17acd55265feec403c7aef86be0c25983ab279d83f3bcd3abbcb5b8b72",
+          "details": {
+            "parent_model": "",
+            "format": "gguf",
+            "family": "llama",
+            "families": [
+              "llama"
+            ],
+            "parameter_size": "3.2B",
+            "quantization_level": "Q4_K_M"
+          },
+          "expires_at": "2026-09-23T10:02:51.256472691-05:00",
+          "size_vram": 0,
+          "context_length": 4096
+        },
+        {
+          "name": "nomic-embed-text:v1.5",
+          "model": "nomic-embed-text:v1.5",
+          "size": 376449269,
+          "digest": "0a109f422b47e3a30ba2b10eca18548e944e8a23073ee3f3e947efcf3c45e59f",
+          "details": {
+            "parent_model": "",
+            "format": "gguf",
+            "family": "nomic-bert",
+            "families": [
+              "nomic-bert"
+            ],
+            "parameter_size": "137M",
+            "quantization_level": "F16"
+          },
+          "expires_at": "2026-09-23T10:02:49.409569599-05:00",
+          "size_vram": 0,
+          "context_length": 2048
+        }
+      ]
+    }
+  }
+}

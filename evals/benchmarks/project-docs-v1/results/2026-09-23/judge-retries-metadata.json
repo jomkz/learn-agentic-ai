@@ -1,0 +1,12 @@
+{
+  "started_at": "2026-09-23T15:38:19.687703+00:00",
+  "reason": "Replay only first-pass judge errors after the evaluator version 2 numerical validation fix",
+  "source_sha256": "48142e3215c5b9f759a20b6e5491e20dfdb6cf0022d5be6da765b26e4dcba3e0",
+  "original_judgments_sha256": "b744f80ea6cf160fc9d22fe99966101f1c1e3f1231a1cbdee8f4da1593f12cd5",
+  "models": {
+    "qwen2.5:7b": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e",
+    "nomic-embed-text:v1.5": "0a109f422b47e3a30ba2b10eca18548e944e8a23073ee3f3e947efcf3c45e59f"
+  },
+  "completed_at": "2026-09-23T15:38:47.467314+00:00",
+  "attempted": 1
+}

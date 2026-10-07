@@ -1,0 +1,29 @@
+Evaluating:   0%|          | 0/3 [00:00<?, ?it/s]Evaluating:  33%|███▎      | 1/3 [00:17<00:35, 17.74s/it]Evaluating:  33%|███▎      | 1/3 [02:17<04:34, 137.18s/it]
+Traceback (most recent call last):
+  File "/home/jomckenz/src/jomkz/learn-agentic-ai/outputs/live-validation/judge.py", line 11, in <module>
+    report=compute_report(load_samples('outputs/live-validation/sample.jsonl'), llm=llm, embeddings=embedder, judge_id='llama3.2:3b',embedding_id='nomic-embed-text:v1.5',run_config=RunConfig(timeout=600,max_retries=1,max_workers=1,seed=0),configuration={'purpose':'live smoke test, not benchmark','seed':'0','num_ctx':'8192','num_predict':'1024','format':'JSON requested by RAGAS prompts; native output unconstrained'})
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jomckenz/src/jomkz/learn-agentic-ai/src/mobility_ai/evals/ragas_harness.py", line 105, in compute_report
+    result = evaluate(
+             ^^^^^^^^^
+  File "/tmp/mobility-eval-venv/lib/python3.12/site-packages/ragas/_analytics.py", line 227, in wrapper
+    result = func(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/mobility-eval-venv/lib/python3.12/site-packages/ragas/evaluation.py", line 294, in evaluate
+    results = executor.results()
+              ^^^^^^^^^^^^^^^^^^
+  File "/tmp/mobility-eval-venv/lib/python3.12/site-packages/ragas/executor.py", line 213, in results
+    results = asyncio.run(self._process_jobs())
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/mobility-eval-venv/lib/python3.12/site-packages/nest_asyncio.py", line 30, in run
+    return loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/mobility-eval-venv/lib/python3.12/site-packages/nest_asyncio.py", line 92, in run_until_complete
+    self._run_once()
+  File "/tmp/mobility-eval-venv/lib/python3.12/site-packages/nest_asyncio.py", line 115, in _run_once
+    event_list = self._selector.select(timeout)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/mobility-python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/selectors.py", line 468, in select
+    fd_event_list = self._selector.poll(timeout, max_ev)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+KeyboardInterrupt

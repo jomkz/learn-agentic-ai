@@ -1,0 +1,9 @@
+{
+  "release": "v0.34.3",
+  "archive_url": "https://github.com/ollama/ollama/releases/download/v0.34.3/ollama-linux-amd64.tar.zst",
+  "sha256_verified": "e83a089fd0cd2f79ee2933cca2085846a2065f497adbc6467c402177c68423f9",
+  "hardware": "Intel Core i7-11850H, 8 physical cores, 16 logical threads, CPU inference",
+  "binding": "127.0.0.1:11434",
+  "cloud_disabled": true,
+  "server_persistent_service_installed": false
+}
