@@ -1,0 +1,4 @@
+{"question":"What does pgvector add to PostgreSQL?","ground_truth":"pgvector adds vector similarity search to PostgreSQL."}
+{"question":"What does RAG retrieve?","ground_truth":"RAG retrieves relevant documents and supplies them as context when generating an answer."}
+{"question":"What does chunking do?","ground_truth":"Chunking splits documents into smaller pieces before retrieval."}
+{"question":"Name Jupiter's moons.","ground_truth":"The supplied documents do not contain enough information to answer."}

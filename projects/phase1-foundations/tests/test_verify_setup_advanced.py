@@ -5,7 +5,13 @@ from __future__ import annotations
 from unittest.mock import MagicMock, patch
 
 import pytest
-from verify_setup import check_langchain_available, check_ollama_models, check_ollama_running, main
+
+from mobility_ai.phase1.verify_setup import (
+    check_langchain_available,
+    check_ollama_models,
+    check_ollama_running,
+    main,
+)
 
 
 def _mock_ollama_response(model_names: list[str]) -> MagicMock:

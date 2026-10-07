@@ -5,7 +5,7 @@ import importlib
 
 
 def _reload_portable_app():
-    import portable_app
+    from mobility_ai.phase7 import portable_app
 
     importlib.reload(portable_app)
     return portable_app
@@ -27,7 +27,7 @@ def test_llamastack_provider_handles_offline(monkeypatch):
 
 
 def test_llamastack_config_defaults():
-    from llamastack_client import LlamaStackConfig
+    from mobility_ai.phase7.llamastack_client import LlamaStackConfig
 
     config = LlamaStackConfig()
     assert "5001" in config.base_url

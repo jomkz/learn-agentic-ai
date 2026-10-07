@@ -3,7 +3,8 @@
 from __future__ import annotations
 
 from langgraph.graph import END
-from multi_agent import (
+
+from mobility_ai.phase5.multi_agent import (
     AgentState,
     analyst_node,
     build_supervisor_graph,

@@ -4,7 +4,11 @@ from __future__ import annotations
 
 import asyncio
 
-from llamastack_client import LlamaStackConfig, chat_completion, create_agent_session
+from mobility_ai.phase7.llamastack_client import (
+    LlamaStackConfig,
+    chat_completion,
+    create_agent_session,
+)
 
 
 def test_config_model_id_default():

@@ -6,7 +6,8 @@ import asyncio
 from unittest.mock import AsyncMock, MagicMock
 
 import pytest
-from prompt_engineering import _divider, call, run_on_provider
+
+from mobility_ai.phase1.prompt_engineering import _divider, call, run_on_provider
 
 
 def _mock_client(text: str = "Action items listed.", tokens: int = 20) -> MagicMock:

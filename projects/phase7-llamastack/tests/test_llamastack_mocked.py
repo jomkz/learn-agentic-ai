@@ -38,7 +38,7 @@ def test_chat_completion_with_mocked_client() -> None:
     with patch.dict(sys.modules, {"llama_stack_client": mock_module}):
         import importlib
 
-        import llamastack_client
+        from mobility_ai.phase7 import llamastack_client
 
         importlib.reload(llamastack_client)
         config = llamastack_client.LlamaStackConfig()
@@ -57,7 +57,7 @@ def test_chat_completion_returns_error_string_on_exception() -> None:
     with patch.dict(sys.modules, {"llama_stack_client": mock_module}):
         import importlib
 
-        import llamastack_client
+        from mobility_ai.phase7 import llamastack_client
 
         importlib.reload(llamastack_client)
         config = llamastack_client.LlamaStackConfig()
@@ -76,7 +76,7 @@ def test_create_agent_session_with_mocked_client() -> None:
     with patch.dict(sys.modules, {"llama_stack_client": mock_module}):
         import importlib
 
-        import llamastack_client
+        from mobility_ai.phase7 import llamastack_client
 
         importlib.reload(llamastack_client)
         config = llamastack_client.LlamaStackConfig()

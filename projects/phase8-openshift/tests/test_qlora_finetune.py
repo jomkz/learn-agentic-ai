@@ -3,8 +3,10 @@
 from __future__ import annotations
 
 import json
+import sys
+from unittest.mock import patch
 
-from qlora_finetune import (
+from mobility_ai.phase8.qlora_finetune import (
     AXOLOTL_CONFIG_EXAMPLE,
     FinetuneConfig,
     build_sft_trainer,
@@ -31,14 +33,13 @@ def test_finetune_config_target_modules():
 
 
 def test_load_model_without_gpu():
-    result = load_model_and_tokenizer(FinetuneConfig())
-    assert isinstance(result, tuple) and len(result) == 2
+    with patch.dict(sys.modules, {"torch": None, "peft": None, "transformers": None}):
+        assert load_model_and_tokenizer(FinetuneConfig()) == (None, None)
 
 
 def test_build_sft_trainer_without_trl():
-    result = build_sft_trainer(None, None, None, FinetuneConfig())
-    # Either None (trl absent) or an object (trl present)
-    assert result is None or result is not None
+    with patch.dict(sys.modules, {"trl": None}):
+        assert build_sft_trainer(None, None, None, FinetuneConfig()) is None
 
 
 def test_axolotl_config_is_string():

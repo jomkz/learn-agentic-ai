@@ -1,7 +1,8 @@
 from __future__ import annotations
 
 import pytest
-from monitoring import (
+
+from mobility_ai.phase9.monitoring import (
     RETRAINING_TRIGGER,
     DriftResult,
     MonitoringConfig,

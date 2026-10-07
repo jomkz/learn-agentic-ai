@@ -2,10 +2,13 @@
 
 from __future__ import annotations
 
+import sys
+from types import SimpleNamespace
 from unittest.mock import patch
 
 import pytest
-from verify_setup import (
+
+from mobility_ai.phase1.verify_setup import (
     _check,
     check_dotenv,
     check_httpx,
@@ -33,7 +36,8 @@ def test_check_dotenv_passes() -> None:
 
 
 def test_check_jupyterlab_passes() -> None:
-    check_jupyterlab()
+    with patch.dict(sys.modules, {"jupyterlab": SimpleNamespace(__version__="4")}):
+        check_jupyterlab()
 
 
 def test_check_fn_returns_true_on_success() -> None:

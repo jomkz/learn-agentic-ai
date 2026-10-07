@@ -4,8 +4,8 @@ from __future__ import annotations
 
 import asyncio
 
-from capstone import OptimizedPipeline, SAMPLE_CORPUS
-from cost import tier_route
+from mobility_ai.phase4.capstone import SAMPLE_CORPUS, OptimizedPipeline
+from mobility_ai.phase4.cost import tier_route
 
 
 def test_sample_corpus_count():
@@ -27,11 +27,12 @@ def test_retrieve_increments_counter():
     assert p.stats()["queries_processed"] == 1
 
 
-def test_cache_hit_returned():
+def test_cached_answer_is_not_a_retrieved_document():
     p = OptimizedPipeline()
     p.cache.set("what is HyDE", "HyDE answer")
     result = asyncio.run(p.retrieve("what is HyDE", SAMPLE_CORPUS))
-    assert result == ["HyDE answer"]
+    assert "HyDE answer" not in result
+    assert p.cached_response("what is HyDE") == "HyDE answer"
 
 
 def test_cache_response_stores():
@@ -41,13 +42,27 @@ def test_cache_response_stores():
 
 
 def test_stats_keys():
-    assert {"cache", "queries_processed", "budget_remaining"} <= set(OptimizedPipeline().stats().keys())
+    assert {"cache", "queries_processed", "budget_remaining"} <= set(
+        OptimizedPipeline().stats().keys()
+    )
 
 
-def test_no_match_returns_corpus_slice():
+def test_no_match_returns_empty():
     results = asyncio.run(OptimizedPipeline().retrieve("xyzzy_nothing", SAMPLE_CORPUS))
-    assert len(results) > 0
+    assert results == []
 
 
 def test_tier_route_integration():
     assert tier_route("what is RAG") == "cheap"
+
+
+async def test_hyde_uses_awaitable_retriever():
+    async def llm(prompt):
+        return "HyDE"
+
+    pipeline = OptimizedPipeline(llm=llm)
+    results = await pipeline.retrieve(
+        "compare retrieval architecture", SAMPLE_CORPUS, use_hyde=True
+    )
+    assert results and all("HyDE" in doc for doc in results)
+    assert pipeline.stats()["budget_remaining"] < 4096

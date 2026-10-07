@@ -1,0 +1,1 @@
+pgvector adds vector similarity search to PostgreSQL. Vectors and document metadata can be stored together and retrieved using distance operators.

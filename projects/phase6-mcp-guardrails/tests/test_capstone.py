@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from fastapi.testclient import TestClient
 
-from capstone import AgentCard, A2ATask, A2ATaskStore, process_with_budget, app
+from mobility_ai.phase6.capstone import A2ATask, A2ATaskStore, AgentCard, app, process_with_budget
 
 
 def test_agent_card_defaults():

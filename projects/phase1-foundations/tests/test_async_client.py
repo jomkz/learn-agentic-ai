@@ -2,7 +2,12 @@
 
 from __future__ import annotations
 
-from async_client import CompletionResult, _AnthropicAsOpenAI, _print_table, build_clients
+from mobility_ai.phase1.async_client import (
+    CompletionResult,
+    _AnthropicAsOpenAI,
+    _print_table,
+    build_clients,
+)
 
 
 def _make_result(**overrides: object) -> CompletionResult:

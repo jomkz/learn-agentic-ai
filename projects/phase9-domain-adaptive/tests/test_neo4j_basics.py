@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from neo4j_basics import (
+from mobility_ai.phase9.neo4j_basics import (
     EXAMPLE_QUERIES,
     SAMPLE_GRAPH,
     GraphNode,

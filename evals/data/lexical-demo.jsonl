@@ -1,0 +1,3 @@
+{"question":"What is RAG?","ground_truth":"RAG combines retrieval with generation.","contexts":["RAG combines retrieval with generation."],"answer":"RAG combines retrieval with generation."}
+{"question":"What is pgvector?","ground_truth":"pgvector adds vector search to PostgreSQL.","contexts":["pgvector adds vector search to PostgreSQL."],"answer":"pgvector adds vector search to PostgreSQL."}
+{"question":"What does chunking do?","ground_truth":"Chunking splits documents into smaller pieces.","contexts":["Chunking splits documents into smaller pieces."],"answer":"Chunking splits documents into smaller pieces."}

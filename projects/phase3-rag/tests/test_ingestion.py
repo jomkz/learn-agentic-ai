@@ -1,7 +1,7 @@
 from __future__ import annotations
 
-from ingestion import chunk_by_fixed_size, chunk_recursive, enrich_metadata
-from retrieval import hybrid_rrf_fusion
+from mobility_ai.phase3.ingestion import chunk_by_fixed_size, chunk_recursive, enrich_metadata
+from mobility_ai.phase3.retrieval import hybrid_rrf_fusion
 
 
 def test_fixed_chunking_produces_chunks() -> None:
@@ -31,3 +31,18 @@ def test_rrf_fusion_scores_first_place_highest() -> None:
     sparse = ["doc_A", "doc_D", "doc_E"]
     fused = hybrid_rrf_fusion(dense, sparse)
     assert fused[0] == "doc_A"
+
+
+def test_chunking_invalid_parameters():
+    import pytest
+
+    for function in [chunk_by_fixed_size, chunk_recursive]:
+        for size, overlap in [(0, 0), (-1, 0), (10, -1), (10, 10), (10, 11)]:
+            with pytest.raises(ValueError):
+                function("text", chunk_size=size, overlap=overlap)
+
+
+def test_chunking_boundaries_and_empty_input():
+    assert chunk_by_fixed_size("", chunk_size=1, overlap=0) == []
+    assert chunk_by_fixed_size("abc", chunk_size=2, overlap=1) == ["ab", "bc", "c"]
+    assert chunk_recursive("abc", chunk_size=2, overlap=0) == ["ab", "c"]

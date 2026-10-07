@@ -1,0 +1,47 @@
+name: Model security gate
+
+on:
+  workflow_dispatch:
+    inputs:
+      model:
+        description: Ollama model identifier to scan
+        required: true
+        type: string
+  workflow_call:
+    inputs:
+      model:
+        required: true
+        type: string
+    secrets:
+      OLLAMA_BASE_URL:
+        required: true
+
+permissions:
+  contents: read
+
+jobs:
+  security-scan:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          version: '0.12.15'
+      - run: uv sync --locked --no-dev --python 3.12
+      - name: Install pinned scanner in a separate environment
+        run: |
+          uv venv --python 3.12 .garak-venv
+          uv pip install --python .garak-venv/bin/python 'garak==0.16.0' 'ollama>=0.3,<1'
+      - name: Run probes and enforce the report gate
+        env:
+          OLLAMA_BASE_URL: ${{ secrets.OLLAMA_BASE_URL }}
+          SCAN_MODEL: ${{ inputs.model }}
+          PYTHONPATH: src
+        run: .garak-venv/bin/python -m mobility_ai.evals.security_gate --model "$SCAN_MODEL"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: garak-report
+          path: outputs/security/
+          if-no-files-found: warn
