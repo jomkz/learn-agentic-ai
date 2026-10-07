@@ -30,3 +30,18 @@ The audit operates on answer-level citation mappings. It checks overall answer s
 each citation's contribution, with an answer excerpt and source quote for supporting judgments.
 It does not establish complete claim-level coverage or validate every inline citation placement.
 It is an advisory diagnostic and does not change the capstone's acceptance behavior.
+
+## October 7 capture
+
+The [verification report](../../../docs/verification/2026-10-07-citation-support.md) records
+two complete attempts on the same eleven cases. Version 2 adds per-request citation counts
+and allowed IDs to the native response schema, and clarifies verbatim answer excerpts after
+version 1 exposed omitted citations and rewritten excerpts. Both attempts, including all
+errors and disagreements, are retained under [results/2026-10-07](results/2026-10-07).
+
+`records.jsonl` is the shared input. `origins.json` records provenance and transformations;
+`expectations.json` holds provisional labels. Each version directory contains raw judgments,
+metadata, and summary counts. `review.json` compares every input with its provisional label,
+including errors in the totals; agreement is not a calibrated accuracy estimate. The
+verification report also reviews rationale errors that label comparisons alone would miss.
+`artifacts.sha256.json` hashes the archived inputs, outputs, and review.
