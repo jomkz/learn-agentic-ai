@@ -20,7 +20,7 @@ from pydantic import BaseModel, ConfigDict, Field
 from mobility_ai.capstone.app import ABSTENTION, OllamaClient
 from mobility_ai.evals.benchmark import digest, normalize, write_json
 
-PROMPT_VERSION = "citation-support-v1"
+PROMPT_VERSION = "citation-support-v2"
 JUDGE_OPTIONS = {"temperature": 0, "seed": 0, "num_ctx": 8192, "num_predict": 1024}
 LIMITATIONS = (
     "Advisory, uncalibrated model judgments, not a correctness gate. Quote presence establishes "
@@ -45,7 +45,7 @@ class CitationJudgment(BaseModel):
     citation_id: Annotated[int, Field(gt=0, strict=True)]
     verdict: Literal["supports_part", "does_not_support", "uncertain"]
     claim: str = Field(
-        description="Exact answer excerpt being assessed, or empty for an irrelevant citation."
+        description="Copy verbatim from answer, never from passage text; empty if irrelevant."
     )
     reason: str = Field(min_length=1)
     quote: str = Field(description="Exact supporting or contradicting source text, or empty.")
@@ -103,6 +103,10 @@ def cited_passages(sample: AuditInput) -> list[dict]:
 
 def judge_payload(sample: AuditInput, passages: list[dict], model: str) -> dict:
     schema = SupportJudgment.model_json_schema()
+    schema["properties"]["citations"].update(minItems=len(passages), maxItems=len(passages))
+    schema["$defs"]["CitationJudgment"]["properties"]["citation_id"]["enum"] = [
+        p["citation_id"] for p in passages
+    ]
     return {
         "model": model,
         "stream": False,
@@ -126,9 +130,11 @@ def judge_payload(sample: AuditInput, passages: list[dict], model: str) -> dict:
                     "Use supports_part only if that passage supports at least one actual claim "
                     "in the answer; use does_not_support for irrelevant or contradicting "
                     "passages, uncertain when undecidable. Extra irrelevant citations must be "
-                    "flagged even when another passage fully supports the answer. Copy an exact "
-                    "answer excerpt into claim for each supports_part judgment; never rewrite it. "
-                    "quote from that citation's text for supports_part; a quote for other "
+                    "flagged even when another passage fully supports the answer. Every nonempty "
+                    "claim must be copied verbatim from the ANSWER field, never from a passage. "
+                    "Do not rewrite it, add punctuation, or complete fragments into sentences. "
+                    "A supports_part judgment requires a nonempty claim and an exact "
+                    "quote from that citation's text; a quote for other "
                     "verdicts is optional. Never quote another passage or invent evidence. "
                     "Explain any unsupported claim in reason. Return JSON only. "
                     f"Schema: {json.dumps(schema)}"

@@ -84,6 +84,19 @@ def test_extra_citation_can_be_irrelevant_even_when_answer_is_supported(record):
     assert result["semantic_support"]["citations"][1]["verdict"] == "does_not_support"
 
 
+@pytest.mark.parametrize("ids", [[2], [1, 2]])
+def test_native_schema_requires_the_supplied_citation_count_and_ids(record, ids):
+    sample = audit.parse_record(record)
+    sample.citations = {str(i): f"source-{i}" for i in ids}
+    payload = audit.judge_payload(sample, audit.cited_passages(sample), "judge")
+    schema = payload["format"]
+    assert schema["properties"]["citations"]["minItems"] == len(ids)
+    assert schema["properties"]["citations"]["maxItems"] == len(ids)
+    assert schema["$defs"]["CitationJudgment"]["properties"]["citation_id"]["enum"] == ids
+    # Each request gets a fresh schema, without modifying the general response validator.
+    assert audit.SupportJudgment.model_json_schema()["properties"]["citations"]["maxItems"] == 20
+
+
 @pytest.mark.parametrize("verdict", ["unsupported", "uncertain", "non_answer"])
 def test_advisory_verdicts_are_preserved_without_overriding_them(record, verdict):
     value = judgment(verdict, "does_not_support", "")
