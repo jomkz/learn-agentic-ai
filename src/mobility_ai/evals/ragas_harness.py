@@ -24,6 +24,8 @@ class EvalSample(BaseModel):
     ground_truth: str = Field(min_length=1)
     contexts: list[str]
     answer: str
+    abstained: bool | None = Field(default=None, strict=True)
+    citations: dict[str, str] | None = None
     latency_ms: float | None = Field(default=None, ge=0, allow_inf_nan=False)
     cost_usd: float | None = Field(default=None, ge=0, allow_inf_nan=False)
 
@@ -86,7 +88,7 @@ def compute_report(
     if not samples:
         raise ValueError("An evaluation requires at least one sample")
     config = dict(configuration or {})
-    config.update(python=platform.python_version(), evaluator_version="2")
+    config.update(python=platform.python_version(), evaluator_version="3")
     if backend == "lexical":
         rows = [_lexical_scores(s) for s in samples]
         limitations = "Lexical diagnostics only; these do not measure factual faithfulness."
@@ -100,7 +102,10 @@ def compute_report(
         except ImportError as exc:
             raise RuntimeError("Install the evaluation extra to use RAGAS") from exc
         dataset = Dataset.from_list(
-            [s.model_dump(exclude={"latency_ms", "cost_usd"}) for s in samples]
+            [
+                s.model_dump(include={"question", "ground_truth", "contexts", "answer"})
+                for s in samples
+            ]
         )
         result = evaluate(
             dataset,

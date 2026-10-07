@@ -95,9 +95,10 @@ def test_successful_ragas_uses_explicit_clients_and_records_scores():
         {"faithfulness": 0.8, "answer_relevancy": 0.7, "context_precision": 0.6}
     ]
     judge, embedder = object(), object()
+    recorded = sample().model_copy(update={"abstained": False, "citations": {"1": "facts#chunk-0"}})
     with patch.dict(sys.modules, {"datasets": datasets, "ragas": ragas, "ragas.metrics": metrics}):
         result = compute_report(
-            [sample()],
+            [recorded],
             llm=judge,
             embeddings=embedder,
             judge_id="local-judge",
@@ -108,6 +109,17 @@ def test_successful_ragas_uses_explicit_clients_and_records_scores():
     assert result.configuration["judge"] == "local-judge"
     assert ragas.evaluate.call_args.kwargs["llm"] is judge
     assert ragas.evaluate.call_args.kwargs["embeddings"] is embedder
+    assert result.per_sample[0].sample.citations == {"1": "facts#chunk-0"}
+    datasets.Dataset.from_list.assert_called_once_with(
+        [
+            {
+                "question": recorded.question,
+                "ground_truth": recorded.ground_truth,
+                "contexts": recorded.contexts,
+                "answer": recorded.answer,
+            }
+        ]
+    )
 
 
 def test_ragas_cli_options_configure_local_models():
@@ -155,4 +167,12 @@ def test_cosine_metric_preserves_range_and_tolerates_roundoff(value, expected):
             [sample()], llm=object(), embeddings=object(), judge_id="judge", embedding_id="embed"
         )
     assert report.metrics["answer_relevancy"] == expected
-    assert report.configuration["evaluator_version"] == "2"
+    assert report.configuration["evaluator_version"] == "3"
+
+
+def test_legacy_records_load_without_structured_metadata(tmp_path):
+    path = tmp_path / "legacy.jsonl"
+    path.write_text(sample().model_dump_json(exclude={"abstained", "citations"}) + "\n")
+    loaded = load_samples(path)[0]
+    assert loaded.abstained is None
+    assert loaded.citations is None

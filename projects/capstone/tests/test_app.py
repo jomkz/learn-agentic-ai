@@ -30,7 +30,11 @@ def test_persist_reopen_retrieve_and_cite(corpus, tmp_path):
     assert "vector search" in result.answer
     assert result.latency_ms >= 0
     assert result.generation_model == "extractive-v1"
-    assert ask(db, "Jupiter moons").answer == ABSTENTION
+    assert result.abstained is False
+    unknown = ask(db, "Jupiter moons")
+    assert unknown.answer == ABSTENTION
+    assert unknown.abstained is True
+    assert unknown.citations == {}
 
 
 def test_reingestion_replaces_changed_and_deleted_documents(corpus, tmp_path):
@@ -52,7 +56,16 @@ def test_ollama_requests_and_invalid_citations(corpus, tmp_path):
             assert payload["truncate"] is False
             return httpx.Response(200, json={"embeddings": [[1, 0] for _ in payload["input"]]})
         assert payload["stream"] is False
-        return httpx.Response(200, json={"message": {"content": "Unsupported citation [99]"}})
+        return httpx.Response(
+            200,
+            json={
+                "message": {
+                    "content": json.dumps(
+                        {"answer": "Unsupported citation", "citations": [99], "abstain": False}
+                    )
+                }
+            },
+        )
 
     client = OllamaClient(transport=httpx.MockTransport(handle))
     db = tmp_path / "corpus.db"
@@ -83,6 +96,8 @@ def test_recorded_evaluation_contains_actual_outputs(corpus, tmp_path):
     assert record["contexts"] == ["pgvector adds vector search to PostgreSQL."]
     assert record["latency_ms"] >= 0
     assert record["cost_usd"] is None
+    assert record["abstained"] is False
+    assert record["citations"] == {"1": "database.txt#chunk-0"}
 
 
 def test_corrupt_dimensions_fail_explicitly(corpus, tmp_path):
@@ -96,22 +111,93 @@ def test_corrupt_dimensions_fail_explicitly(corpus, tmp_path):
         ingest(corpus, db, client=client)
 
 
-@pytest.mark.parametrize("answer", ["Answer [1]", ABSTENTION, "Uncited answer"])
-def test_model_answer_citation_contract(corpus, tmp_path, answer):
+@pytest.fixture
+def model_response(corpus, tmp_path):
+    """Exercise application parsing through the real HTTP provider adapter."""
+    response = {}
+
     def handle(request):
         payload = json.loads(request.content)
         if request.url.path == "/api/embed":
             return httpx.Response(200, json={"embeddings": [[1, 0] for _ in payload["input"]]})
-        return httpx.Response(200, json={"message": {"content": answer}})
+        assert payload["stream"] is False
+        assert payload["format"]["required"] == ["answer", "citations", "abstain"]
+        assert payload["format"]["additionalProperties"] is False
+        assert payload["options"]["temperature"] == 0
+        return httpx.Response(200, json={"message": {"content": response["raw"]}})
 
     client = OllamaClient(transport=httpx.MockTransport(handle))
     db = tmp_path / "corpus.db"
     ingest(corpus, db, client=client)
-    if answer == "Uncited answer":
-        with pytest.raises(ValueError, match="no source citations"):
-            ask(db, "question", client=client)
-    else:
-        assert ask(db, "question", client=client).answer == answer
+
+    def run(value):
+        response["raw"] = value if isinstance(value, str) else json.dumps(value)
+        return ask(db, "question", client=client)
+
+    return run
+
+
+def test_structured_answer_renders_declared_sources(model_response):
+    result = model_response({"answer": "  Answer.  ", "citations": [2, 1], "abstain": False})
+    assert result.answer == "Answer. [1] [2]"
+    assert result.abstained is False
+    assert result.citations == {"1": "agents.txt#chunk-0", "2": "database.txt#chunk-0"}
+
+
+@pytest.mark.parametrize("wording", ["", ABSTENTION, "The supplied document lacks information."])
+def test_abstention_uses_explicit_flag_not_exact_wording(model_response, wording):
+    result = model_response({"answer": wording, "citations": [], "abstain": True})
+    assert result.answer == ABSTENTION
+    assert result.abstained is True
+    assert result.citations == {}
+
+
+@pytest.mark.parametrize(
+    "change, error",
+    [
+        ({"citations": []}, "no source citations"),
+        ({"citations": [3]}, "not retrieved"),
+        ({"citations": [0]}, "greater than 0"),
+        ({"citations": [-1]}, "greater than 0"),
+        ({"citations": [True]}, "valid integer"),
+        ({"citations": [1.0]}, "valid integer"),
+        ({"citations": ["1"]}, "valid integer"),
+        ({"citations": [1, 1]}, "unique"),
+        ({"abstain": "false"}, "valid boolean"),
+        ({"abstain": True}, "cannot contain citations"),
+        ({"answer": " "}, "requires answer text"),
+        ({"answer": ABSTENTION}, "requires answer text"),
+        ({"answer": "Answer [2]"}, "not in answer text"),
+        ({"unexpected": "value"}, "Extra inputs"),
+    ],
+)
+def test_invalid_structured_response_fails_explicitly(model_response, change, error):
+    value = {"answer": "Answer.", "citations": [1], "abstain": False} | change
+    with pytest.raises(ValueError, match=error):
+        model_response(value)
+
+
+@pytest.mark.parametrize("missing", ["answer", "citations", "abstain"])
+def test_missing_fields_are_not_inferred(model_response, missing):
+    value = {"answer": "Answer.", "citations": [1], "abstain": False}
+    del value[missing]
+    with pytest.raises(ValueError, match="Field required"):
+        model_response(value)
+
+
+@pytest.mark.parametrize("raw", ["Answer [1]", '{"answer":', "```json\n{}\n```", "[]"])
+def test_malformed_provider_output_is_rejected(model_response, raw):
+    with pytest.raises(ValueError):
+        model_response(raw)
+
+
+def test_lexical_source_markers_do_not_become_citations(tmp_path):
+    doc = tmp_path / "facts.txt"
+    doc.write_text("Vectors were described in reference [99].")
+    db = tmp_path / "db"
+    ingest(doc, db, provider="lexical")
+    result = ask(db, "Vectors?")
+    assert result.citations == {"1": "facts.txt#chunk-0"}
 
 
 def test_bad_provider_vector_count():

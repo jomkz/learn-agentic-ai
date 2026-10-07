@@ -46,6 +46,8 @@ def test_documented_workflow_and_recorded_comparison(tmp_path, monkeypatch, caps
     assert first["configuration"]["generator"] == "extractive-v1"
     assert first["configuration"]["corpus_sha256"]
     assert first["per_sample"][0]["sample"]["cost_usd"] is None
+    assert first["per_sample"][0]["sample"]["abstained"] is False
+    assert first["per_sample"][0]["sample"]["citations"] == {"1": "facts.md#chunk-0"}
     invoke(
         monkeypatch,
         ragas_harness.main,

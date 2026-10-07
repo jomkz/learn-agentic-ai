@@ -1,0 +1,82 @@
+{
+  "checks": [
+    {
+      "id": "chunk-defaults",
+      "top_k": 1,
+      "contract": "passed",
+      "expected_abstention": "passed",
+      "reference_facts": "present",
+      "citation_source_match": true,
+      "extra_cited_sources": []
+    },
+    {
+      "id": "vector-search",
+      "top_k": 1,
+      "contract": "passed",
+      "expected_abstention": "passed",
+      "reference_facts": "present",
+      "citation_source_match": true,
+      "extra_cited_sources": []
+    },
+    {
+      "id": "unknown-password",
+      "top_k": 1,
+      "contract": "passed",
+      "expected_abstention": "passed",
+      "reference_facts": "not_applicable",
+      "citation_source_match": true,
+      "extra_cited_sources": []
+    },
+    {
+      "id": "unknown-hardware",
+      "top_k": 1,
+      "contract": "passed",
+      "expected_abstention": "passed",
+      "reference_facts": "not_applicable",
+      "citation_source_match": true,
+      "extra_cited_sources": []
+    },
+    {
+      "id": "chunk-defaults",
+      "top_k": 3,
+      "contract": "passed",
+      "expected_abstention": "passed",
+      "reference_facts": "present",
+      "citation_source_match": false,
+      "extra_cited_sources": [
+        "storage.txt#chunk-0"
+      ]
+    },
+    {
+      "id": "vector-search",
+      "top_k": 3,
+      "contract": "passed",
+      "expected_abstention": "passed",
+      "reference_facts": "present",
+      "citation_source_match": true,
+      "extra_cited_sources": []
+    },
+    {
+      "id": "unknown-password",
+      "top_k": 3,
+      "contract": "passed",
+      "expected_abstention": "passed",
+      "reference_facts": "not_applicable",
+      "citation_source_match": true,
+      "extra_cited_sources": []
+    },
+    {
+      "id": "unknown-hardware",
+      "top_k": 3,
+      "contract": "passed",
+      "expected_abstention": "passed",
+      "reference_facts": "not_applicable",
+      "citation_source_match": true,
+      "extra_cited_sources": []
+    }
+  ],
+  "contract_passed": 8,
+  "citation_source_mismatches": 1,
+  "review_note": "The top3 chunk-defaults answer includes an irrelevant storage passage in its citations. This is a citation-support failure, not a schema or identifier error. The first strict source-set assertion surfaced it; it was not retried or filtered out.",
+  "limit": "Inspected development cases, not a held-out quality evaluation. No LLM judge was run."
+}
