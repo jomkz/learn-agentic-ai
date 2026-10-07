@@ -56,6 +56,10 @@ Organized by the phase where each paper is most relevant.
 ### Phase 3 — RAG
 - RAGAS: "RAGAS: Automated Evaluation of Retrieval Augmented Generation" (2023): https://arxiv.org/abs/2309.15217
 - Sentence-BERT: https://arxiv.org/abs/1908.10084
+- [Enabling Large Language Models to Generate Text with Citations (Gao et al., 2023)](https://aclanthology.org/2023.emnlp-main.398/):
+  ALCE separates answer support from irrelevant citations. The local
+  [citation-support audit](../evals/development/citation-support/README.md) uses advisory
+  answer-level judgments; it does not implement ALCE's metrics.
 
 ### Phase 4 — Advanced RAG
 - HyDE: "Precise Zero-Shot Dense Retrieval without Relevance Labels" (2022): https://arxiv.org/abs/2212.10496

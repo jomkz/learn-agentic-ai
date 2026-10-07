@@ -127,6 +127,45 @@ Use separate training and evaluation questions for actual model comparisons. Con
 judge and embedder explicitly. RAGAS failures stop the run. See the
 [evaluation status](evaluation/ragas_comparison.md) before drawing strategy conclusions.
 
+## Audit citation support
+
+Identifier validation only establishes that a cited passage was retrieved. To inspect evidence
+support separately, audit saved evaluation JSONL or benchmark records with an explicit local
+judge model:
+
+```bash
+ollama pull qwen2.5:7b
+uv run python -m mobility_ai.evals.citation_support \
+  --records outputs/local-run.jsonl --judge-model qwen2.5:7b \
+  --output outputs/citation-support-audit
+```
+
+The audit reports `identifiers_valid` separately from the advisory `semantic_support` judgment.
+It sends the question, actual answer, and cited passage text to the judge. Uncited passages,
+source filenames, expected labels, and reference answers are excluded from its prompt.
+Every cited ID must receive exactly one judgment. A supporting judgment must include an exact
+answer excerpt and source quote; the application verifies both, allowing whitespace differences
+but preserving case, punctuation, and negation. A quote found in a passage does not prove that
+the passage entails the answer.
+
+The model classifies whole-answer support and each citation's contribution independently, so
+an otherwise supported answer can still have an irrelevant extra citation. It can also label
+unsupported answers, uncertainty, and non-answers. These are uncalibrated diagnostics; they do
+not reject or approve capstone answers and do not establish complete claim-level coverage or
+correct inline citation placement.
+
+Each non-blank input line remains in the output counts. Malformed records, oversized inputs,
+judge failures, recorded abstentions, and rejected generations are reported explicitly.
+The default `--max-input-chars 12000` bounds question, answer, and cited text without truncating
+evidence; it is a character limit, not a guarantee about model token usage. Use a fresh output
+directory. `judgments.jsonl` preserves raw judge responses and errors; `metadata.json` records
+the input hash, model digest, source hashes, and prompt/settings. A failed final model-digest
+check leaves partial records without a completed report.
+
+See the [citation-support development cases](../../evals/development/citation-support/README.md)
+for inspected failures and controls. Larger, independently reviewed judge calibration remains
+the next step before treating these verdicts as a correctness gate.
+
 ## Reproduce the live documentation benchmark
 
 The [frozen benchmark](../../evals/benchmarks/project-docs-v1/README.md) compares one versus
