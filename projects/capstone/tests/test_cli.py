@@ -76,6 +76,48 @@ def test_documented_workflow_and_recorded_comparison(tmp_path, monkeypatch, caps
     assert results[0]["mean_latency_ms"] >= 0
 
 
+def test_cli_expansion_settings_reach_answers_and_evaluation(tmp_path, monkeypatch, capsys):
+    doc = tmp_path / "facts.txt"
+    text = "preface " * 62 + "namespace identifies model, prompt, corpus version, and tenant."
+    doc.write_text(text)
+    db = tmp_path / "db"
+    invoke(monkeypatch, app.main, "ingest", "--corpus", doc, "--db", db, "--provider", "lexical")
+    capsys.readouterr()
+    settings = ["--top-k", "1", "--adjacent-chunks", "1", "--max-context-chars", "1000"]
+    invoke(monkeypatch, app.main, "ask", "--db", db, "--question", "namespace", *settings)
+    answer = json.loads(capsys.readouterr().out)
+    assert answer["citations"] == {"1": "facts.txt#chunks-0-1"}
+    assert answer["retrieved"][0]["text"] == text
+    questions = tmp_path / "questions.jsonl"
+    questions.write_text(json.dumps({"question": "namespace", "ground_truth": "model, prompt"}))
+    records, report = tmp_path / "records.jsonl", tmp_path / "report.json"
+    invoke(
+        monkeypatch,
+        app.main,
+        "evaluate",
+        "--db",
+        db,
+        "--eval-set",
+        questions,
+        "--records",
+        records,
+        "--output",
+        report,
+        "--backend",
+        "lexical",
+        *settings,
+    )
+    config = json.loads(report.read_text())["configuration"]
+    assert (config["top_k"], config["adjacent_chunks"], config["max_context_chars"]) == (
+        "1",
+        "1",
+        "1000",
+    )
+    recorded = json.loads(records.read_text())
+    assert recorded["contexts"] == [text]
+    assert recorded["citations"] == answer["citations"]
+
+
 @pytest.mark.parametrize("runs", [["bad"], ["a=FILE", "a=FILE"]])
 def test_comparison_cli_rejects_bad_run_names(tmp_path, monkeypatch, runs):
     records = tmp_path / "records.jsonl"

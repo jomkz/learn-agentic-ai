@@ -81,7 +81,10 @@ def ollama(monkeypatch):
     )
 
 
-def test_capture_cli_preserves_every_case_and_provenance(suite, ollama, tmp_path, monkeypatch):
+@pytest.mark.parametrize("adjacent_chunks", [0, 1])
+def test_capture_cli_preserves_every_case_and_provenance(
+    suite, ollama, tmp_path, monkeypatch, adjacent_chunks
+):
     output = tmp_path / "run"
     monkeypatch.setattr(
         sys,
@@ -97,6 +100,10 @@ def test_capture_cli_preserves_every_case_and_provenance(suite, ollama, tmp_path
             "generator",
             "--embedding-model",
             "embedder",
+            "--adjacent-chunks",
+            str(adjacent_chunks),
+            "--max-context-chars",
+            "1000",
         ],
     )
     benchmark.main()
@@ -107,6 +114,9 @@ def test_capture_cli_preserves_every_case_and_provenance(suite, ollama, tmp_path
         assert summary[f"top{top_k}"]["answerable_with_all_reference_evidence"] == 1
         rows = benchmark.read_jsonl(output / f"top{top_k}.jsonl")
         assert rows[0]["result"]["citations"] == {"1": "facts.txt#chunk-0"}
+        assert rows[0]["adjacent_chunks"] == adjacent_chunks
+        assert rows[0]["result"]["adjacent_chunks"] == adjacent_chunks
+        assert rows[0]["max_context_chars"] == 1000
         assert rows[0]["provider_calls"][-1]["statistics"]["eval_count"] == 5
         assert json.loads(rows[0]["raw_response"])["citations"] == [1]
         assert rows[0]["abstained"] is False
@@ -116,6 +126,8 @@ def test_capture_cli_preserves_every_case_and_provenance(suite, ollama, tmp_path
     assert metadata["models"]["generator"]["digest"] == "g"
     assert metadata["completed_at"]
     assert metadata["source_sha256"]
+    assert metadata["adjacent_chunks"] == adjacent_chunks
+    assert metadata["max_context_chars"] == 1000
     with pytest.raises(FileExistsError):
         benchmark.capture(suite, output, "http://localhost", "generator", "embedder")
 

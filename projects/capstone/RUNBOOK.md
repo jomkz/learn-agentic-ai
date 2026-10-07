@@ -30,6 +30,41 @@ an `abstained` boolean, retrieved passages, total query latency, and generation 
 offline mode quotes retrieved text; it is not an LLM. Queries with no matching evidence return an explicit
 abstention. Citation validation checks identifiers, not whether every generated claim is true.
 
+## Expand passages across chunk boundaries
+
+For evidence cut at a character boundary, enable adjacent-chunk expansion at query time:
+
+```bash
+uv run python -m mobility_ai.capstone.app ask \
+  --db outputs/capstone.db --question "What does pgvector add to PostgreSQL?" \
+  --top-k 3 --adjacent-chunks 1 --max-context-chars 6000
+```
+
+`--top-k` selects 1–20 similarity matches before expansion. `--adjacent-chunks 1` adds at most
+one preceding and one following chunk from each match's source. Contiguous chunks are joined
+using the stored chunk size and overlap, so repeated overlap text is removed and source text
+is preserved exactly. Separate files and gaps in chunk indices are never joined. No re-ingestion
+or database migration is required. Expansion defaults to 0; its quality benefit has not been
+established on a new held-out set.
+
+The 6000-character default budget applies to the total passage text in both modes. Every
+original match is retained. If those matches alone exceed the budget, the query fails explicitly;
+lower `--top-k` or raise `--max-context-chars`. Expansion tries neighbors in match order, next
+then previous, and skips whole neighbors that do not fit. It never truncates a passage to fit.
+The budget excludes the prompt and question and is not a token limit; account for the model's
+context window separately.
+
+Each returned passage lists `chunk_indices` for all contributing chunks and `matched_indices`
+for its original similarity matches. `index` is the first contributing chunk. Its score and
+position come from its best-ranked original match. Single-chunk citations retain
+`source#chunk-N`; joined spans use `source#chunks-N-M`. These ranges identify the supplied
+source span, not which individual sentence supports a claim.
+
+The same flags work on `evaluate`; settings are recorded in report configuration. The benchmark
+recorder also accepts the expansion and budget flags and records them per attempt and in
+metadata. See the [off/on development comparison](../../evals/development/chunk-boundaries/README.md)
+for the inspected cache-namespace example and controls.
+
 ## Run with Ollama
 
 ```bash
@@ -125,6 +160,10 @@ their original scoring behavior.
 - Invalid response schema or citation: inspect the benchmark's `raw_response` and the prompt/model;
   the command fails. Plain-text model responses are no longer accepted by the Ollama adapter.
 - Invalid vector dimensions: re-ingest with the intended embedding model.
+- Context budget exceeded: lower `--top-k` or raise `--max-context-chars`; matches are never
+  silently discarded to make room for neighbors.
+- Inconsistent adjacent chunks: re-ingest the corpus; expansion refuses to join text whose
+  overlap does not match the stored chunking configuration.
 - Bad corpus update: preserve a copy of the previous SQLite database before replacing a
   corpus, or re-ingest the previous version of the source files. Do not copy while ingestion
   is writing; stop writers or use SQLite's backup API.
