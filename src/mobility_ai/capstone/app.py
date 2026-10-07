@@ -5,7 +5,6 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
-import math
 import re
 import sqlite3
 import time
@@ -16,6 +15,13 @@ from typing import Annotated, Any, Literal, Self
 import httpx
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
+from mobility_ai.capstone.retrieval import (
+    Chunk,
+    RetrievedChunk,
+    build_context,
+    retrieve,
+    validate_vectors,
+)
 from mobility_ai.evals.ragas_harness import (
     EvalSample,
     add_evaluation_arguments,
@@ -44,20 +50,6 @@ class CorpusConfig(BaseModel):
     overlap: int
 
 
-class Chunk(BaseModel):
-    source: str
-    index: int
-    text: str
-    vector: list[float]
-
-
-class RetrievedChunk(BaseModel):
-    source: str
-    index: int
-    text: str
-    score: float
-
-
 class Answer(BaseModel):
     question: str
     answer: str
@@ -66,6 +58,9 @@ class Answer(BaseModel):
     retrieved: list[RetrievedChunk]
     latency_ms: float
     generation_model: str
+    top_k: int
+    adjacent_chunks: int
+    max_context_chars: int
 
 
 class GeneratedAnswer(BaseModel):
@@ -160,14 +155,6 @@ class OllamaClient:
         return response["message"]["content"]
 
 
-def _validate_vectors(vectors: list[list[float]]) -> None:
-    if not vectors or not vectors[0]:
-        raise ValueError("Vectors must be non-empty")
-    dimension = len(vectors[0])
-    if any(len(v) != dimension or any(not math.isfinite(x) for x in v) for v in vectors):
-        raise ValueError("Vectors must have consistent dimensions and finite values")
-
-
 def embed(texts: list[str], config: CorpusConfig, client: OllamaClient) -> list[list[float]]:
     if config.provider == "ollama":
         vectors = client.embed(texts, config.embedding_model)
@@ -176,7 +163,7 @@ def embed(texts: list[str], config: CorpusConfig, client: OllamaClient) -> list[
         for text in texts:
             counts = Counter(tokenize(text))
             vectors.append([float(counts[word]) for word in config.vocabulary])
-    _validate_vectors(vectors)
+    validate_vectors(vectors)
     return vectors
 
 
@@ -187,7 +174,7 @@ class VectorStore:
         self.path = path
 
     def replace(self, chunks: list[Chunk], config: CorpusConfig) -> None:
-        _validate_vectors([chunk.vector for chunk in chunks])
+        validate_vectors([chunk.vector for chunk in chunks])
         self.path.parent.mkdir(parents=True, exist_ok=True)
         with sqlite3.connect(self.path) as db:
             db.execute("CREATE TABLE IF NOT EXISTS metadata (config TEXT NOT NULL)")
@@ -268,28 +255,14 @@ def ingest(
     return len(chunks)
 
 
-def retrieve(vector: list[float], chunks: list[Chunk], top_k: int) -> list[RetrievedChunk]:
-    if not 1 <= top_k <= 20:
-        raise ValueError("top_k must be between 1 and 20")
-    _validate_vectors([vector] + [c.vector for c in chunks])
-    norm = math.sqrt(sum(x * x for x in vector))
-    ranked = []
-    for chunk in chunks:
-        other_norm = math.sqrt(sum(x * x for x in chunk.vector))
-        score = (
-            sum(a * b for a, b in zip(vector, chunk.vector, strict=True)) / (norm * other_norm)
-            if norm and other_norm
-            else 0.0
-        )
-        if score > 0:
-            ranked.append(
-                RetrievedChunk(source=chunk.source, index=chunk.index, text=chunk.text, score=score)
-            )
-    return sorted(ranked, key=lambda c: (-c.score, c.source, c.index))[:top_k]
-
-
 def ask(
-    db_path: Path, question: str, *, top_k: int = 3, client: OllamaClient | None = None
+    db_path: Path,
+    question: str,
+    *,
+    top_k: int = 3,
+    adjacent_chunks: int = 0,
+    max_context_chars: int = 6000,
+    client: OllamaClient | None = None,
 ) -> Answer:
     if not question.strip() or len(question) > 8000:
         raise ValueError("Question must contain 1–8000 characters")
@@ -297,7 +270,14 @@ def ask(
     config, chunks = VectorStore(db_path).load()
     provider = client or OllamaClient()
     vector = embed([question], config, provider)[0]
-    results = retrieve(vector, chunks, top_k)
+    results = build_context(
+        retrieve(vector, chunks, top_k),
+        chunks,
+        chunk_size=config.chunk_size,
+        overlap=config.overlap,
+        adjacent_chunks=adjacent_chunks,
+        max_context_chars=max_context_chars,
+    )
     numbers: list[int] = []
     abstained = not results
     if not results:
@@ -321,17 +301,25 @@ def ask(
         question=question,
         answer=answer,
         abstained=abstained,
-        citations={
-            str(i): f"{results[i - 1].source}#chunk-{results[i - 1].index}" for i in sorted(numbers)
-        },
+        citations={str(i): results[i - 1].citation for i in numbers},
         retrieved=results,
         latency_ms=(time.perf_counter() - started) * 1000,
         generation_model=config.generation_model,
+        top_k=top_k,
+        adjacent_chunks=adjacent_chunks,
+        max_context_chars=max_context_chars,
     )
 
 
 def record_evaluation(
-    db_path: Path, questions_path: Path, records_path: Path, *, client: OllamaClient | None = None
+    db_path: Path,
+    questions_path: Path,
+    records_path: Path,
+    *,
+    top_k: int = 3,
+    adjacent_chunks: int = 0,
+    max_context_chars: int = 6000,
+    client: OllamaClient | None = None,
 ) -> list[EvalSample]:
     questions = [
         json.loads(line) for line in questions_path.read_text().splitlines() if line.strip()
@@ -340,7 +328,14 @@ def record_evaluation(
         raise ValueError("Evaluation requires non-empty, unique questions")
     samples = []
     for row in questions:
-        result = ask(db_path, row["question"], client=client)
+        result = ask(
+            db_path,
+            row["question"],
+            top_k=top_k,
+            adjacent_chunks=adjacent_chunks,
+            max_context_chars=max_context_chars,
+            client=client,
+        )
         samples.append(
             EvalSample(
                 question=row["question"],
@@ -355,6 +350,13 @@ def record_evaluation(
     records_path.parent.mkdir(parents=True, exist_ok=True)
     records_path.write_text("".join(s.model_dump_json() + "\n" for s in samples), encoding="utf-8")
     return samples
+
+
+def add_retrieval_arguments(parser: argparse.ArgumentParser, *, include_top_k: bool = True) -> None:
+    if include_top_k:
+        parser.add_argument("--top-k", type=int, default=3)
+    parser.add_argument("--adjacent-chunks", type=int, choices=[0, 1], default=0)
+    parser.add_argument("--max-context-chars", type=int, default=6000)
 
 
 def main() -> None:
@@ -376,6 +378,8 @@ def main() -> None:
         subparser.add_argument("--db", type=Path, required=True)
         if subparser != evaluation:
             subparser.add_argument("--ollama-url", default="http://localhost:11434")
+    for subparser in [question, evaluation]:
+        add_retrieval_arguments(subparser)
     args = parser.parse_args()
     client = OllamaClient(args.ollama_url)
     if args.command == "ingest":
@@ -389,9 +393,26 @@ def main() -> None:
         )
         print(json.dumps({"chunks": count, "provider": args.provider, "database": str(args.db)}))
     elif args.command == "ask":
-        print(ask(args.db, args.question, client=client).model_dump_json(indent=2))
+        print(
+            ask(
+                args.db,
+                args.question,
+                client=client,
+                top_k=args.top_k,
+                adjacent_chunks=args.adjacent_chunks,
+                max_context_chars=args.max_context_chars,
+            ).model_dump_json(indent=2)
+        )
     else:
-        samples = record_evaluation(args.db, args.eval_set, args.records, client=client)
+        samples = record_evaluation(
+            args.db,
+            args.eval_set,
+            args.records,
+            client=client,
+            top_k=args.top_k,
+            adjacent_chunks=args.adjacent_chunks,
+            max_context_chars=args.max_context_chars,
+        )
         options: dict[str, Any] = evaluation_options(args)
         config, _ = VectorStore(args.db).load()
         options["configuration"].update(
@@ -401,6 +422,9 @@ def main() -> None:
             prompt_version=PROMPT_VERSION,
             chunk_size=str(config.chunk_size),
             overlap=str(config.overlap),
+            top_k=str(args.top_k),
+            adjacent_chunks=str(args.adjacent_chunks),
+            max_context_chars=str(args.max_context_chars),
         )
         report = compute_report(samples, **options)
         save_report(report, args.output)

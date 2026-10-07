@@ -23,6 +23,7 @@ from mobility_ai.capstone.app import (
     PROMPT_VERSION,
     OllamaClient,
     VectorStore,
+    add_retrieval_arguments,
     ask,
     ingest,
 )
@@ -94,17 +95,34 @@ class RecordingClient(OllamaClient):
         return self.raw_answer
 
 
-def capture_one(db: Path, question: dict, top_k: int, client: RecordingClient) -> dict:
+def capture_one(
+    db: Path,
+    question: dict,
+    top_k: int,
+    client: RecordingClient,
+    *,
+    adjacent_chunks: int = 0,
+    max_context_chars: int = 6000,
+) -> dict:
     client.reset()
     started = time.perf_counter()
     result, error = None, None
     try:
-        result = ask(db, question["question"], top_k=top_k, client=client).model_dump()
+        result = ask(
+            db,
+            question["question"],
+            top_k=top_k,
+            client=client,
+            adjacent_chunks=adjacent_chunks,
+            max_context_chars=max_context_chars,
+        ).model_dump()
     except (ValueError, httpx.HTTPError) as exc:
         error = f"{type(exc).__name__}: {exc}"
     return {
         "id": question["id"],
         "top_k": top_k,
+        "adjacent_chunks": adjacent_chunks,
+        "max_context_chars": max_context_chars,
         "question": question["question"],
         "ground_truth": question["ground_truth"],
         "answerable": question["answerable"],
@@ -171,7 +189,16 @@ def sample(row: dict) -> EvalSample:
     )
 
 
-def capture(suite: Path, output: Path, endpoint: str, generation: str, embedding: str) -> None:
+def capture(
+    suite: Path,
+    output: Path,
+    endpoint: str,
+    generation: str,
+    embedding: str,
+    *,
+    adjacent_chunks: int = 0,
+    max_context_chars: int = 6000,
+) -> None:
     questions = load_suite(suite)
     output.mkdir(parents=True, exist_ok=False)
     with httpx.Client(base_url=endpoint, timeout=30) as api:
@@ -191,6 +218,8 @@ def capture(suite: Path, output: Path, endpoint: str, generation: str, embedding
         "generation_options": GENERATION_OPTIONS,
         "prompt_version": PROMPT_VERSION,
         "top_k": [1, 3],
+        "adjacent_chunks": adjacent_chunks,
+        "max_context_chars": max_context_chars,
         "questions_sha256": digest(suite / "questions.jsonl"),
         "manifest_sha256": digest(suite / "corpus-manifest.json"),
         "lockfile_sha256": digest(Path("uv.lock")),
@@ -229,7 +258,14 @@ def capture(suite: Path, output: Path, endpoint: str, generation: str, embedding
     runs: dict[int, list[dict]] = {1: [], 3: []}
     for index, question in enumerate(questions):
         for top_k in [1, 3] if index % 2 == 0 else [3, 1]:
-            row = capture_one(db, question, top_k, client)
+            row = capture_one(
+                db,
+                question,
+                top_k,
+                client,
+                adjacent_chunks=adjacent_chunks,
+                max_context_chars=max_context_chars,
+            )
             runs[top_k].append(row)
             with (output / f"top{top_k}.jsonl").open("a", encoding="utf-8") as stream:
                 stream.write(json.dumps(row, allow_nan=False) + "\n")
@@ -374,10 +410,17 @@ def main() -> None:
     parser.add_argument("--generation-model", default="llama3.2:3b")
     parser.add_argument("--judge-model", default="qwen2.5:7b")
     parser.add_argument("--embedding-model", default="nomic-embed-text:v1.5")
+    add_retrieval_arguments(parser, include_top_k=False)
     args = parser.parse_args()
     if args.stage == "capture":
         capture(
-            args.suite, args.output, args.ollama_url, args.generation_model, args.embedding_model
+            args.suite,
+            args.output,
+            args.ollama_url,
+            args.generation_model,
+            args.embedding_model,
+            adjacent_chunks=args.adjacent_chunks,
+            max_context_chars=args.max_context_chars,
         )
     else:
         judge(args.output, args.ollama_url, args.judge_model, args.embedding_model)

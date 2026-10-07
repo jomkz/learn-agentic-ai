@@ -1,0 +1,230 @@
+{
+  "reviewer": "Codex inspection of recorded answers and source passages; not independent human review.",
+  "protocol": "Five inspected baseline questions; 20 attempts across expansion off/on and top_k 1/3. No retries and no LLM judge.",
+  "source_corpus": "evals/benchmarks/project-docs-v1/corpus",
+  "summary": {
+    "off-top1": {
+      "attempts": 5,
+      "application_errors": 1,
+      "answerable_with_full_reference_excerpt": 1,
+      "answerable_total": 3,
+      "accepted_explicit_abstentions": 0,
+      "unanswerable_total": 2,
+      "mean_context_chars": 427.2,
+      "median_latency_ms": 3448.162498010788
+    },
+    "off-top3": {
+      "attempts": 5,
+      "application_errors": 1,
+      "answerable_with_full_reference_excerpt": 2,
+      "answerable_total": 3,
+      "accepted_explicit_abstentions": 0,
+      "unanswerable_total": 2,
+      "mean_context_chars": 1421.2,
+      "median_latency_ms": 5355.055081992759
+    },
+    "on-top1": {
+      "attempts": 5,
+      "application_errors": 1,
+      "answerable_with_full_reference_excerpt": 2,
+      "answerable_total": 3,
+      "accepted_explicit_abstentions": 0,
+      "unanswerable_total": 2,
+      "mean_context_chars": 1198.4,
+      "median_latency_ms": 5678.832227000385
+    },
+    "on-top3": {
+      "attempts": 5,
+      "application_errors": 2,
+      "answerable_with_full_reference_excerpt": 3,
+      "answerable_total": 3,
+      "accepted_explicit_abstentions": 0,
+      "unanswerable_total": 2,
+      "mean_context_chars": 3252.2,
+      "median_latency_ms": 8532.027532986831
+    }
+  },
+  "cases": [
+    {
+      "mode": "off",
+      "top_k": 1,
+      "id": "q02",
+      "status": "ok",
+      "reference_excerpt_present": true,
+      "context_chars": 512,
+      "finding": "Reference facts appear; source selection requires separate claim-support review."
+    },
+    {
+      "mode": "off",
+      "top_k": 1,
+      "id": "q08",
+      "status": "ok",
+      "reference_excerpt_present": false,
+      "context_chars": 512,
+      "finding": "Gives corpus rollback advice instead of the missing-database ingest instruction."
+    },
+    {
+      "mode": "off",
+      "top_k": 1,
+      "id": "q18",
+      "status": "error",
+      "reference_excerpt_present": false,
+      "context_chars": 512,
+      "finding": "Incomplete retrieval; invented identifiers and nonexistent citation IDs. Rejected."
+    },
+    {
+      "mode": "off",
+      "top_k": 1,
+      "id": "q21",
+      "status": "ok",
+      "reference_excerpt_present": null,
+      "context_chars": 88,
+      "finding": "Invented throughput of 10; accepted despite absent evidence."
+    },
+    {
+      "mode": "off",
+      "top_k": 1,
+      "id": "q23",
+      "status": "ok",
+      "reference_excerpt_present": null,
+      "context_chars": 512,
+      "finding": "Does not give a password, but abstain=false and unsupported wording attributes the lack of a password to pgvector."
+    },
+    {
+      "mode": "off",
+      "top_k": 3,
+      "id": "q02",
+      "status": "ok",
+      "reference_excerpt_present": true,
+      "context_chars": 1386,
+      "finding": "Reference facts appear; source selection requires separate claim-support review."
+    },
+    {
+      "mode": "off",
+      "top_k": 3,
+      "id": "q08",
+      "status": "ok",
+      "reference_excerpt_present": true,
+      "context_chars": 1536,
+      "finding": "Reference facts appear; source selection requires separate claim-support review."
+    },
+    {
+      "mode": "off",
+      "top_k": 3,
+      "id": "q18",
+      "status": "error",
+      "reference_excerpt_present": false,
+      "context_chars": 1536,
+      "finding": "Incomplete namespace list; invented identifiers and nonexistent citation IDs. Rejected."
+    },
+    {
+      "mode": "off",
+      "top_k": 3,
+      "id": "q21",
+      "status": "ok",
+      "reference_excerpt_present": null,
+      "context_chars": 1112,
+      "finding": "Prose says throughput is not provided, but abstain=false; not an explicit abstention."
+    },
+    {
+      "mode": "off",
+      "top_k": 3,
+      "id": "q23",
+      "status": "ok",
+      "reference_excerpt_present": null,
+      "context_chars": 1536,
+      "finding": "Does not give a password, but abstain=false and unsupported wording attributes the lack of a password to the Capstone app."
+    },
+    {
+      "mode": "on",
+      "top_k": 1,
+      "id": "q02",
+      "status": "ok",
+      "reference_excerpt_present": true,
+      "context_chars": 1408,
+      "finding": "Reference facts appear; source selection requires separate claim-support review."
+    },
+    {
+      "mode": "on",
+      "top_k": 1,
+      "id": "q08",
+      "status": "ok",
+      "reference_excerpt_present": true,
+      "context_chars": 1232,
+      "finding": "Correct missing-database ingest instruction with the supporting runbook span."
+    },
+    {
+      "mode": "on",
+      "top_k": 1,
+      "id": "q18",
+      "status": "ok",
+      "reference_excerpt_present": false,
+      "context_chars": 1408,
+      "finding": "Relevant document still absent. Invented model_id, task_id, timestamp with an existing but unsupported citation; accepted."
+    },
+    {
+      "mode": "on",
+      "top_k": 1,
+      "id": "q21",
+      "status": "error",
+      "reference_excerpt_present": null,
+      "context_chars": 536,
+      "finding": "Abstain=true with citations; rejected as contradictory."
+    },
+    {
+      "mode": "on",
+      "top_k": 1,
+      "id": "q23",
+      "status": "ok",
+      "reference_excerpt_present": null,
+      "context_chars": 1408,
+      "finding": "Prose says the password is not provided, but abstain=false; not an explicit abstention."
+    },
+    {
+      "mode": "on",
+      "top_k": 3,
+      "id": "q02",
+      "status": "ok",
+      "reference_excerpt_present": true,
+      "context_chars": 3178,
+      "finding": "Reference facts appear; source selection requires separate claim-support review."
+    },
+    {
+      "mode": "on",
+      "top_k": 3,
+      "id": "q08",
+      "status": "ok",
+      "reference_excerpt_present": true,
+      "context_chars": 2679,
+      "finding": "Reference facts appear; source selection requires separate claim-support review."
+    },
+    {
+      "mode": "on",
+      "top_k": 3,
+      "id": "q18",
+      "status": "ok",
+      "reference_excerpt_present": true,
+      "context_chars": 3938,
+      "finding": "All four reference identifiers appear, but citation [3] is architecture.md; the supporting namespace list is in passage [2], overview.md#chunks-9-11."
+    },
+    {
+      "mode": "on",
+      "top_k": 3,
+      "id": "q21",
+      "status": "error",
+      "reference_excerpt_present": null,
+      "context_chars": 3202,
+      "finding": "Abstain=true with citations; rejected as contradictory."
+    },
+    {
+      "mode": "on",
+      "top_k": 3,
+      "id": "q23",
+      "status": "error",
+      "reference_excerpt_present": null,
+      "context_chars": 3264,
+      "finding": "Abstain=true with citations; rejected as contradictory."
+    }
+  ],
+  "decision": "Keep expansion opt-in. It repairs the inspected source truncation, but wrong citations, invented answers, contradictory abstentions, and added latency prevent a broader quality claim."
+}
