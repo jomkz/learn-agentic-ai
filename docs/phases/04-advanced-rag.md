@@ -1,5 +1,8 @@
 # Phase 4: Advanced RAG Techniques + Semantic Caching + Cost Optimization
 
+Implementation status and measurable completion criteria: [status matrix](../status.md).
+This phase includes optional exercises; verify the status before treating examples as integrations.
+
 **Duration: 3 weeks** | [← Phase 3](03-rag-fundamentals.md) | [Phase 5 →](05-langgraph.md)
 
 **Project directory:** [`projects/phase4-advanced-rag/`](../../projects/phase4-advanced-rag/)

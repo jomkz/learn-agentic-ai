@@ -1,5 +1,8 @@
 # Phase 7: LlamaStack
 
+Implementation status and measurable completion criteria: [status matrix](../status.md).
+This phase includes optional exercises; verify the status before treating examples as integrations.
+
 **Duration: 3 weeks** | [← Phase 6](06-agentic-patterns-mcp.md) | [Phase 8 →](08-huggingface-openshift.md)
 
 **Project directory:** [`projects/phase7-llamastack/`](../../projects/phase7-llamastack/)

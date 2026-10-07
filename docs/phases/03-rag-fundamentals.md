@@ -1,5 +1,8 @@
 # Phase 3: RAG Fundamentals — Document Parsing, Embeddings, Vector Stores, Retrieval
 
+Implementation status and measurable completion criteria: [status matrix](../status.md).
+This phase includes optional exercises; verify the status before treating examples as integrations.
+
 **Duration: 4 weeks** | [← Phase 2](02-langchain.md) | [Phase 4 →](04-advanced-rag.md)
 
 **Project directory:** [`projects/phase3-rag/`](../../projects/phase3-rag/)

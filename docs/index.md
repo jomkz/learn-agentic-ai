@@ -1,5 +1,7 @@
 # Agentic AI & MLOps on OpenShift AI — Learning Path
 
+See [implementation status and the shorter core track](status.md) before starting.
+
 ## Context
 
 This learning path is for a senior software engineer/architect at Red Hat who needs to become proficient in designing, building, and leading the implementation of production-grade Agentic AI applications. The target stack is Python-first, open-source-first, and Red Hat/OpenShift-aligned.
@@ -60,7 +62,8 @@ Capstone                              [needs all phases]
 │   ├── index.md              ← you are here
 │   ├── resources.md          ← books, courses, channels, papers
 │   └── phases/               ← one file per phase
-├── projects/                 ← hands-on project code by phase
+├── src/mobility_ai/           ← importable code by phase
+├── projects/                 ← phase tests and supporting resources
 ├── notebooks/                ← Jupyter notebooks for exploration
 ├── evals/                    ← reusable RAGAS evaluation harnesses
 ├── pyproject.toml            ← uv-managed dependencies (phase-gated extras)

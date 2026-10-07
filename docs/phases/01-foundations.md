@@ -1,5 +1,8 @@
 # Phase 1: AI/ML Foundations, Python Modernization, and Local Dev Environment
 
+Implementation status and measurable completion criteria: [status matrix](../status.md).
+This phase includes optional exercises; verify the status before treating examples as integrations.
+
 **Duration: 3 weeks** | [← Index](../index.md) | [Phase 2 →](02-langchain.md)
 
 **Project directory:** [`projects/phase1-foundations/`](../../projects/phase1-foundations/)

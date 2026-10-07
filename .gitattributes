@@ -1,0 +1,2 @@
+# Preserve raw validation logs byte for byte; their hashes are recorded in the artifact manifest.
+evals/benchmarks/**/live-validation/*.log -text -whitespace

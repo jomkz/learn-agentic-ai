@@ -1,5 +1,8 @@
 # Final Capstone: Enterprise Knowledge Assistant Platform
 
+Implementation status and measurable completion criteria: [status matrix](../status.md).
+This phase includes optional exercises; verify the status before treating examples as integrations.
+
 **Duration: 2 weeks** | [← Phase 9](09-graphrag-raft-instructlab.md) | [← Index](../index.md)
 
 **Project directory:** [`projects/`](../../projects/) — draws from all phase project directories

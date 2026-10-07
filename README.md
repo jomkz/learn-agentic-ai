@@ -1,164 +1,113 @@
-# Agentic AI & MLOps on OpenShift AI — Learning Path Workspace
+# Agentic AI & MLOps learning workspace
 
-Structured workspace for the Agentic AI & MLOps on OpenShift AI learning path.
-See [docs/index.md](docs/index.md) for the full curriculum.
+A Python learning path from LLM fundamentals to RAG, agents, and OpenShift AI.
+Start with the [curriculum](docs/index.md) and [implementation status](docs/status.md).
+Advanced deployment and training materials include exercises that require additional work;
+the runnable local capstone is documented separately from the proposed enterprise architecture.
 
-## Prerequisites
+## Quick start — no API key or GPU required
 
-Install these before starting Phase 1.
-
-| Tool | Purpose | Install |
-|------|---------|---------|
-| **Python 3.11+** | Runtime | `dnf install python3.11` or https://python.org |
-| **uv** | Package manager (replaces pip/venv) | `curl -LsSf https://astral.sh/uv/install.sh \| sh` |
-| **Ollama** | Local LLM serving — no API key needed for dev | https://ollama.com |
-| **Podman** | Container runtime (Red Hat default) | `dnf install podman podman-compose` |
-| **Git** | Version control | `dnf install git` |
-
-Optional (cloud API access — needed for some exercises):
-- Anthropic API key: https://console.anthropic.com
-- OpenAI API key: https://platform.openai.com
-- LangSmith API key (free): https://smith.langchain.com
-
-## Quick Start
+Install Git and [uv](https://docs.astral.sh/uv/getting-started/installation/), then run from this repository:
 
 ```bash
-# 1. Clone and enter the workspace
-git clone <repo-url> && cd learn-agentic-ai
-
-# 2. Copy and fill in API keys
-cp .env.example .env
-# Edit .env — at minimum, set ANTHROPIC_API_KEY or OPENAI_API_KEY
-
-# 3. Pull a local model (no API key needed)
-ollama pull llama3.2          # 3B — fast, good for Phase 1 iteration
-ollama pull llama3.1:8b       # 8B — better quality, needs ~8GB RAM
-ollama pull nomic-embed-text  # embedding model for RAG phases
-
-# 4. Create Python environment and install Phase 1 dependencies
-uv sync
-
-# 5. Start local infrastructure services (needed from Phase 3 onward)
-podman-compose up -d
-
-# 6. Launch Jupyter for notebook-based experimentation
-uv run jupyter lab
+uv python install 3.12
+uv sync --locked
+uv run python -m mobility_ai.capstone.app ingest \
+  --corpus projects/capstone/data/corpus --db outputs/capstone.db --provider lexical
+uv run python -m mobility_ai.capstone.app ask \
+  --db outputs/capstone.db --question "What does pgvector add to PostgreSQL?"
+uv run python -m mobility_ai.capstone.app evaluate \
+  --db outputs/capstone.db --eval-set evals/data/capstone-questions.jsonl \
+  --records outputs/local-run.jsonl --output outputs/local-report.json --backend lexical
 ```
 
-## Installing Dependencies by Phase
+This is a complete offline exercise: lexical count vectors are persisted in SQLite, cosine
+search retrieves chunks, and extractive answers cite the source files. Lexical evaluation
+measures token overlap, not factual faithfulness. SQLite uses a linear vector scan suitable
+for small local corpora; pgvector remains a future production integration exercise.
 
-Dependencies are organized as optional groups in `pyproject.toml` to avoid installing
-everything upfront. Install each group when you reach that phase.
+For LLM-generated answers, install [Ollama](https://ollama.com), pull `llama3.2` and
+`nomic-embed-text`, and ingest with `--provider ollama`. Re-ingest when switching embedding
+models. See the [capstone runbook](projects/capstone/RUNBOOK.md).
+
+Live CPU validation and a 24-question retrieval-depth benchmark are recorded in the
+[September 23 results](evals/benchmarks/project-docs-v1/results/2026-09-23/README.md).
+The benchmark preserves failed responses and separates application errors from judge scores.
+
+## Dependencies by phase
+
+Python 3.12 is the supported runtime, pinned in `.python-version`. The lockfile is committed.
+Phase extras include their prerequisites: `rag` includes `langchain`, `advanced-rag` includes
+`rag`, and `agents` includes `langchain`. `uv sync` selects the requested extras exactly;
+repeat all extras that you want to retain when moving between independent tracks.
+
+| Track | Install |
+|---|---|
+| Phase 1 and local capstone | `uv sync --locked` |
+| Phase 2 | `uv sync --locked --extra langchain` |
+| Phase 3 | `uv sync --locked --extra rag` |
+| Phase 4, including DSPy | `uv sync --locked --extra advanced-rag` |
+| Phases 5–6 | `uv sync --locked --extra agents` |
+| Phase 7 | `uv sync --locked --extra llamastack` |
+| Phase 8 training | `uv sync --locked --extra ml` |
+| Phase 8 KFP compilation only | `uv sync --locked --extra pipelines` |
+| Phase 9 graph integrations | `uv sync --locked --extra advanced` |
+| RAGAS evaluation | `uv sync --locked --extra evaluation` |
+| Notebooks | `uv sync --locked --extra notebooks --extra agents` |
+
+GPU/ML extras are large. Install only the track you need; do not use `--all-extras` for the
+core learning path. Optional cloud credentials can be configured with `cp .env.example .env`;
+leave keys empty for local work. Tracing is disabled by default.
+
+## Checks
 
 ```bash
-# Phase 2 — LangChain, FastAPI, streaming
-uv sync --extra langchain
-
-# Phase 3 — RAG: Docling, pgvector, Qdrant, RAGAS
-uv sync --extra rag
-
-# Phase 4 — Advanced RAG: Redis semantic cache, rerankers, DSPy
-uv sync --extra advanced-rag
-
-# Phase 5-6 — LangGraph, MCP, A2A, Guardrails, Garak, OpenTelemetry
-uv sync --extra agents
-
-# Phase 7 — LlamaStack
-uv sync --extra llamastack
-
-# Phase 8 — HuggingFace, LoRA/QLoRA, Axolotl, MLflow, W&B, DVC, Ray, KFP
-uv sync --extra ml
-
-# Phase 9 — GraphRAG, Neo4j
-uv sync --extra advanced
-
-# Everything at once (not recommended for Phase 1)
-uv sync --all-extras
-```
-
-## Local Infrastructure Services
-
-`podman-compose.yml` runs all the data services needed across the learning path.
-You do not need all of them immediately — start only what the current phase requires.
-
-```bash
-# Start everything
-podman-compose up -d
-
-# Start only what Phase 3 needs
-podman-compose up -d postgres qdrant
-
-# Start only what Phase 4 adds
-podman-compose up -d redis
-
-# Phase 9 adds Neo4j
-podman-compose up -d neo4j
-
-# Check status
-podman-compose ps
-
-# View logs
-podman-compose logs -f postgres
-
-# Stop everything, preserve data
-podman-compose down
-
-# Stop everything, delete all data volumes (clean slate)
-podman-compose down -v
-```
-
-### Service URLs
-
-| Service | URL | Notes |
-|---------|-----|-------|
-| PostgreSQL + pgvector | `localhost:5432` | DB: `ragdb`, User: `postgres`, Password: `postgres` |
-| Qdrant | http://localhost:6333 | Dashboard at http://localhost:6333/dashboard |
-| Redis | `localhost:6379` | RedisInsight UI at http://localhost:8001 |
-| Neo4j Browser | http://localhost:7474 | Bolt: `localhost:7687`, Password: `password` |
-
-## Project Structure
-
-```
-.
-├── README.md                         # This file
-├── docs/index.md                     # Full curriculum — start here
-├── pyproject.toml                    # Python dependencies (uv)
-├── podman-compose.yml                # Local infrastructure services
-├── .env.example                      # API key template → copy to .env
-├── .gitignore
-│
-├── projects/
-│   ├── phase1-foundations/           # Pydantic models, async LLM client, prompt engineering
-│   ├── phase2-langchain/             # Research assistant agent, streaming API, test suite
-│   ├── phase3-rag/                   # Technical documentation search (Docling + pgvector)
-│   ├── phase4-advanced-rag/          # Advanced retrieval + semantic cache + cost optimization
-│   ├── phase5-langgraph/             # Autonomous research pipeline (multi-agent)
-│   ├── phase6-mcp-guardrails/        # MCP server + guardrailed agent
-│   ├── phase7-llamastack/            # Portable AI application
-│   ├── phase8-openshift/             # Production RAG platform on OpenShift AI
-│   └── phase9-domain-adaptive/       # Domain-adaptive knowledge system + ADR
-│
-├── notebooks/                        # Jupyter notebooks for exploration and experiments
-└── evals/                            # Reusable RAGAS evaluation harnesses (built in Phase 3)
-```
-
-## Running Tests
-
-```bash
-# All tests
+uv sync --locked --extra agents --extra pipelines --extra evaluation
+uv run ruff check .
+uv run ruff format --check .
+uv run mypy
 uv run pytest
-
-# Tests for a specific phase
-uv run pytest projects/phase2-langchain/
-
-# With verbose output
-uv run pytest -v
+uv run pytest projects/phase3-rag/
 ```
 
-## Key Decisions and Conventions
+Unit tests mock optional backends explicitly. The KFP compilation test runs when its extra
+is installed. Service and GPU execution remain separate integration checks. CI tests the
+core, phase installations, and the installed capstone outside the source tree. Heavyweight
+extras can be checked through the CI workflow's manual `optional_phases` input.
 
-- **Ollama first**: all exercises are designed to run locally with Ollama before using cloud APIs — avoid cost and latency during iteration
-- **Podman over Docker**: Red Hat default; all compose files use Podman; `docker compose` also works as a drop-in
-- **pgvector as default vector store**: use pgvector for anything that needs to persist; use Chroma only for throwaway experiments in early phases
-- **`.env` for secrets**: never hardcode API keys; always load with `python-dotenv`
-- **`uv` over pip**: faster, reproducible, lockfile-based; use `uv add <package>` to add new dependencies
+The separate **Model security gate** workflow runs real Garak probes against an explicitly
+configured Ollama endpoint and fails on missing/incomplete results or detected failures.
+It is callable by a future promotion workflow; there is no automated model promotion here.
+
+## Layout
+
+```text
+src/mobility_ai/phase1/ … phase9/  importable examples
+src/mobility_ai/capstone/         runnable local application and component diagnostics
+src/mobility_ai/evals/            explicit evaluation backends and security report gate
+projects/phase*/tests/            phase tests
+projects/capstone/               runbook, fixtures, deployment exercises, design records
+evals/                           evaluation inputs and tests
+docs/                            curriculum, status, and resources
+notebooks/                       interactive exercises
+```
+
+Run modules with `uv run python -m mobility_ai.phaseN.module`; source files have moved from
+`projects/` into the installed package. There are no phase-specific `sys.path` workarounds.
+
+## Optional local services
+
+Install Podman and `podman-compose` for the service exercises. Published ports bind to
+localhost. Development credentials are examples; cluster credentials use Secrets.
+
+```bash
+podman-compose up -d postgres qdrant
+podman-compose up -d redis
+podman-compose up -d neo4j
+podman-compose down
+```
+
+The offline capstone does not require these services. Redis response caching uses exact
+queries and a namespace identifying the model, prompt, corpus version, and tenant. MCP file
+tools default to `data/mcp`; create that directory or set `MCP_ALLOWED_ROOT` to an approved
+folder. Absolute paths outside that folder, parent traversal, and symlinks are rejected.
