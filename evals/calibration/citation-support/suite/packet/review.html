@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; connect-src 'none'; img-src 'none'; base-uri 'none'; form-action 'none'">
+<title>Citation support — independent review</title>
+<style>
+body { max-width: 900px; margin: 32px auto; padding: 0 20px; font: 17px/1.5 system-ui,sans-serif; color: #182b39; background: #f5f7fa; }
+h1 { font-size: 1.8rem; } h2 { font-size: 1.35rem; }
+section, details { background: white; border: 1px solid #bbc8d4; border-radius: 8px; padding: 20px; margin: 20px 0; }
+pre { white-space: pre-wrap; overflow-wrap: anywhere; font: inherit; background: #f0f4f7; padding: 14px; }
+label { display: block; margin: 12px 0; }
+input, select, textarea, button { font: inherit; padding: 8px; max-width: 100%; box-sizing: border-box; }
+textarea { display: block; width: 100%; min-height: 90px; }
+button { cursor: pointer; } nav { display: flex; flex-wrap: wrap; gap: 10px; margin: 20px 0; }
+#message { white-space: pre-wrap; color: #8b2525; } .muted { color: #4c6272; }
+</style>
+<h1>Citation support — independent review</h1>
+<p>Read the question, answer, and cited passages. Label every case and citation using only this evidence.
+Judge predictions and suggested labels are hidden. Your brief explanation should address the answer’s claims and reasoning, and any irrelevant citation.</p>
+<details open><summary>Labeling guide</summary>
+<p><b>Supported:</b> every substantive factual claim and reasoning step follows from the cited passages together.
+<b>Unsupported:</b> some claim or reasoning step lacks evidence or contradicts it.
+<b>Uncertain:</b> the evidence is ambiguous and you cannot decide.
+<b>Non-answer:</b> the response does not provide the requested information, including saying it is unavailable.</p>
+<p>For each citation, use <b>supports_part</b> if it supports at least one actual answer claim,
+<b>does_not_support</b> if it is irrelevant or contradicts the answer, or <b>uncertain</b> if undecidable.
+An unsupported answer can still have a passage supporting part of it. An extra irrelevant citation does not automatically make the answer’s claims unsupported.</p>
+<p>Respect negation, units, qualifications, and causality. Do not add an exclusivity requirement that the answer never claims.
+Shared words, valid identifiers, or an apparently correct conclusion alone do not establish support.
+Use a short explanation to identify missing or contradicting evidence and ambiguities.</p>
+<p>These are development calibration cases, including previously inspected examples. They are not held-out evaluation.
+Review before opening judge outputs or prior expected labels; note any prior exposure in your explanation.</p>
+</details>
+<label>Your reviewer name or stable identifier <input id="reviewer" autocomplete="off"></label>
+<label><input id="independent" type="checkbox"> I completed these labels without consulting judge predictions or suggested labels for this review.</label>
+<p class="muted">Everything stays in this browser until you download a file. Save a draft before closing;
+this page does not automatically save your work. Load a draft to continue.</p>
+<nav><button id="save" type="button">Save draft</button><button id="export" type="button">Export completed labels</button>
+<label>Load draft <input id="load" type="file" accept="application/json,.json"></label></nav>
+<p id="progress" aria-live="polite"></p><p id="message" role="alert"></p>
+<main id="cases"></main>
+<script id="packet" type="application/json">{"template": {"format_version": 1, "records_sha256": "5dd97181ace812e42761c8323639ef36efad7c019fe253064f70a83a3a0f3704", "reviewer": "", "reviewed_without_judge": false, "cases": [{"id": "case-001", "answer_support": null, "reason": "", "citations": [{"citation_id": 1, "verdict": null}]}, {"id": "case-002", "answer_support": null, "reason": "", "citations": [{"citation_id": 1, "verdict": null}]}, {"id": "case-003", "answer_support": null, "reason": "", "citations": [{"citation_id": 1, "verdict": null}, {"citation_id": 2, "verdict": null}]}, {"id": "case-004", "answer_support": null, "reason": "", "citations": [{"citation_id": 1, "verdict": null}]}, {"id": "case-005", "answer_support": null, "reason": "", "citations": [{"citation_id": 1, "verdict": null}]}, {"id": "case-006", "answer_support": null, "reason": "", "citations": [{"citation_id": 1, "verdict": null}, {"citation_id": 2, "verdict": null}]}, {"id": "case-007", "answer_support": null, "reason": "", "citations": [{"citation_id": 1, "verdict": null}]}, {"id": "case-008", "answer_support": null, "reason": "", "citations": [{"citation_id": 1, "verdict": null}, {"citation_id": 2, "verdict": null}]}, {"id": "case-009", "answer_support": null, "reason": "", "citations": [{"citation_id": 1, "verdict": null}]}, {"id": "case-010", "answer_support": null, "reason": "", "citations": [{"citation_id": 1, "verdict": null}]}, {"id": "case-011", "answer_support": null, "reason": "", "citations": [{"citation_id": 1, "verdict": null}]}, {"id": "case-012", "answer_support": null, "reason": "", "citations": [{"citation_id": 1, "verdict": null}]}, {"id": "case-013", "answer_support": null, "reason": "", "citations": [{"citation_id": 1, "verdict": null}, {"citation_id": 2, "verdict": null}]}, {"id": "case-014", "answer_support": null, "reason": "", "citations": [{"citation_id": 1, "verdict": null}]}, {"id": "case-015", "answer_support": null, "reason": "", "citations": [{"citation_id": 2, "verdict": null}, {"citation_id": 3, "verdict": null}]}, {"id": "case-016", "answer_support": null, "reason": "", "citations": [{"citation_id": 1, "verdict": null}]}, {"id": "case-017", "answer_support": null, "reason": "", "citations": [{"citation_id": 1, "verdict": null}]}, {"id": "case-018", "answer_support": null, "reason": "", "citations": [{"citation_id": 1, "verdict": null}]}, {"id": "case-019", "answer_support": null, "reason": "", "citations": [{"citation_id": 1, "verdict": null}]}, {"id": "case-020", "answer_support": null, "reason": "", "citations": [{"citation_id": 1, "verdict": null}]}, {"id": "case-021", "answer_support": null, "reason": "", "citations": [{"citation_id": 2, "verdict": null}]}, {"id": "case-022", "answer_support": null, "reason": "", "citations": [{"citation_id": 3, "verdict": null}]}, {"id": "case-023", "answer_support": null, "reason": "", "citations": [{"citation_id": 1, "verdict": null}]}, {"id": "case-024", "answer_support": null, "reason": "", "citations": [{"citation_id": 1, "verdict": null}]}, {"id": "case-025", "answer_support": null, "reason": "", "citations": [{"citation_id": 1, "verdict": null}]}, {"id": "case-026", "answer_support": null, "reason": "", "citations": [{"citation_id": 1, "verdict": null}]}, {"id": "case-027", "answer_support": null, "reason": "", "citations": [{"citation_id": 1, "verdict": null}]}, {"id": "case-028", "answer_support": null, "reason": "", "citations": [{"citation_id": 1, "verdict": null}, {"citation_id": 2, "verdict": null}]}, {"id": "case-029", "answer_support": null, "reason": "", "citations": [{"citation_id": 1, "verdict": null}]}, {"id": "case-030", "answer_support": null, "reason": "", "citations": [{"citation_id": 1, "verdict": null}]}, {"id": "case-031", "answer_support": null, "reason": "", "citations": [{"citation_id": 1, "verdict": null}]}, {"id": "case-032", "answer_support": null, "reason": "", "citations": [{"citation_id": 1, "verdict": null}]}]}, "samples": [{"id": "case-001", "question": "What should I do if asking a question fails because the corpus database is missing?", "answer": "run ingest [1]", "cited_passages": [{"citation_id": 1, "text": ".2 --embedding-model nomic-embed-text \\\n  --revision YOUR_COMMIT --output outputs/ragas-report.json\n```\n\nUse separate training and evaluation questions for actual model comparisons. Configure both\njudge and embedder explicitly. RAGAS failures stop the run. See the\n[evaluation status](evaluation/ragas_comparison.md) before drawing strategy conclusions.\n\n## Troubleshooting and rollback\n\n- Missing database: run `ingest`; `ask` never silently creates a new corpus.\n- Ollama connection/model error: check the endpoint and `ollama list`, then repeat the command.\n- Missing/invalid citation: inspect the captured output and prompt/model; the command fails.\n- Invalid vector dimensions: re-ingest with the intended embedding model.\n- Bad corpus update: preserve a copy of the previous SQLite database before replacing a\n  corpus, or re-ingest the previous version of the source files. Do not copy while ingestion\n  is writing; stop writers or use SQLite's backup API.\n\n`mobility_ai.capstone.integration` checks importable symbols only. It is not a model-server,\ndatabase, or deployment health check. Training, promotion, monitoring dashboards, and\nmulti-service failover are optional exercises, not operational capabilities of this lab."}]}, {"id": "case-002", "question": "What latency statistic was measured?", "answer": "The median is 12 ms. [1]", "cited_passages": [{"citation_id": 1, "text": "The measured median query latency was 12 ms. The p95 was not measured."}]}, {"id": "case-003", "question": "Is feature X enabled?", "answer": "Yes. [1] [2]", "cited_passages": [{"citation_id": 1, "text": "The release note says feature X is enabled."}, {"citation_id": 2, "text": "The same release note says feature X is disabled. Neither statement has a date or precedence."}]}, {"id": "case-004", "question": "What does pgvector add to PostgreSQL?", "answer": "vector similarity search [1]", "cited_passages": [{"citation_id": 1, "text": "pgvector adds vector similarity search to PostgreSQL."}]}, {"id": "case-005", "question": "What are the default chunk size and overlap?", "answer": "512 tokens with 64 tokens overlap. [1]", "cited_passages": [{"citation_id": 1, "text": "Defaults are 512 **characters** per\nchunk and 64 characters overlap."}]}, {"id": "case-006", "question": "What is the timeout?", "answer": "The timeout is 5 seconds. [1] [2]", "cited_passages": [{"citation_id": 1, "text": "The timeout is 5 seconds."}, {"citation_id": 2, "text": "Logs are stored as JSON."}]}, {"id": "case-007", "question": "What is the default chunk overlap?", "answer": "128 characters. [1]", "cited_passages": [{"citation_id": 1, "text": "Defaults are 512 **characters** per\nchunk and 64 characters overlap."}]}, {"id": "case-008", "question": "What are the timeout and retry count?", "answer": "The timeout is 5 seconds and the retry count is 2. [1] [2]", "cited_passages": [{"citation_id": 1, "text": "The timeout is 5 seconds."}, {"citation_id": 2, "text": "The retry count is 2."}]}, {"id": "case-009", "question": "Is feature X enabled?", "answer": "Yes, for every tenant. [1]", "cited_passages": [{"citation_id": 1, "text": "Feature X is enabled for tenant alpha. No other tenants were tested."}]}, {"id": "case-010", "question": "What is the measured time to first token?", "answer": "The cited text does not provide that measurement. [1]", "cited_passages": [{"citation_id": 1, "text": "mean total query latency, not p95 or time to first token."}]}, {"id": "case-011", "question": "Does the comparison report latency represent p95 or time to first token?", "answer": "The comparison report does not represent p95 or time to first token. According to [1], \"Local inference does not establish a zero infrastructure cost, so unmeasured costs remain null.\" This implies that the comparison report does not include time to first token, which is an unmeasured cost.", "cited_passages": [{"citation_id": 1, "text": "ot p95 or time to first token. Local inference does not establish a\nzero infrastructure cost, so unmeasured costs remain null."}]}, {"id": "case-012", "question": "What should I run when the database is missing?", "answer": "Run ask; it silently creates a new corpus. [1]", "cited_passages": [{"citation_id": 1, "text": "- Missing database: run `ingest`; `ask` never silently creates a new corpus."}]}, {"id": "case-013", "question": "What are the chunk size and overlap?", "answer": "Chunks contain 512 characters and overlap by 64 characters. [1] [2]", "cited_passages": [{"citation_id": 1, "text": "Chunks contain 512 characters."}, {"citation_id": 2, "text": "Adjacent chunks overlap by 64 characters."}]}, {"id": "case-014", "question": "What should I do if asking a question fails because the corpus database is missing?", "answer": "According to document [1], if asking a question fails because the corpus database is missing, you should run `ingest`.", "cited_passages": [{"citation_id": 1, "text": "es a new corpus.\n- Ollama connection/model error: check the endpoint and `ollama list`, then repeat the command.\n- Missing/invalid citation: inspect the captured output and prompt/model; the command fails.\n- Invalid vector dimensions: re-ingest with the intended embedding model.\n- Bad corpus update: preserve a copy of the previous SQLite database before replacing a\n  corpus, or re-ingest the previous version of the source files. Do not copy while ingestion\n  is writing; stop writers or use SQLite's backup A"}]}, {"id": "case-015", "question": "What exact requests-per-second throughput has this capstone achieved on OpenShift?", "answer": "The exact requests-per-second throughput of this capstone on OpenShift is not provided in the given documentation. [2] [3]", "cited_passages": [{"citation_id": 2, "text": " a GPU is optional and affects latency.\n\n## Capture and evaluate outputs\n\n```bash\nuv run python -m mobility_ai.capstone.app evaluate \\\n  --db outputs/capstone.db --eval-set evals/data/capstone-questions.jsonl \\\n  --records outputs/local-run.jsonl --output outputs/local-report.json \\\n  --backend lexical --revision YOUR_COMMIT\n```\n\nThe four-question fixture checks the workflow, including an unanswerable question. It is\nnot a production quality benchmark. `records` retains actual answers, retrieved contexts,\nr"}, {"citation_id": 3, "text": "trieve, cite, record outputs, evaluate | None for lexical mode; Ollama for model-backed mode |\n\nThe offline track requires no GPU and only small text fixtures. Model-backed RAM/VRAM needs\nare determined by model size, quantization, and context length; measure them on your machine.\nGPU training and OpenShift exercises need separately provisioned infrastructure and should\nbe scheduled after the local completion criteria pass.\n\n## Verification boundaries\n\nUnit tests use explicit mocks for optional SDKs. KFP co"}]}, {"id": "case-016", "question": "Which identifiers does the namespace include?", "answer": "Only the model, and no other identifiers. [1]", "cited_passages": [{"citation_id": 1, "text": "queries and a namespace identifying the model, prompt, corpus version, and tenant."}]}, {"id": "case-017", "question": "What happens after failed embedding calls?", "answer": "The previous database stays intact, so every query is guaranteed to succeed. [1]", "cited_passages": [{"citation_id": 1, "text": "Failed\nembedding calls leave the previous database intact."}]}, {"id": "case-018", "question": "What can we say about local inference infrastructure cost?", "answer": "Local inference establishes zero infrastructure cost. [1]", "cited_passages": [{"citation_id": 1, "text": "Local inference does not establish a\nzero infrastructure cost, so unmeasured costs remain null."}]}, {"id": "case-019", "question": "What must I do after changing embedding models?", "answer": "Re-ingest the corpus. [1]", "cited_passages": [{"citation_id": 1, "text": "Re-ingest when switching embedding\nmodels."}]}, {"id": "case-020", "question": "Which identifiers should a shared Redis response-cache namespace include?", "answer": "model_id, task_id, timestamp [1]", "cited_passages": [{"citation_id": 1, "text": " boundaries, persistence, and\nevaluation. Then add Phase 4 optimizations and Phase 5 orchestration only after recording a\nbaseline. Phase 7 and the infrastructure/domain-adaptation tracks are optional branches.\n\n| Phase | Current status | Completion evidence | Requirements beyond Python |\n|---|---|---|---|\n| 1 | Local examples; provider calls optional | Validate configs and pass phase tests | Ollama for model calls; cloud keys optional |\n| 2 | Local chain/API demos; simulated search | Pass API/tool tests; show a cited model response | LangChain extra; Ollama for live generation |\n| 3 | Chunking/retrieval exercises | Ingest and query persisted documents through the capstone | RAG extra for optional parsing/vector integrations |\n| 4 | Exact cache, retrieval patterns, DSPy exercise | Reject unrelated cache hits; run async HyDE; compare actual outputs | Advanced RAG extra; Redis for shared cache |\n| 5 | Graph orchestration demo with placeholder research nodes | Demonstrate state transitions; replace nodes and record behavior | Agents extra; live providers for research |\n| 6 | Restricted file tools and task API demo | Traversal/symlink tests pass; use an approved file root | POSIX/Linux for descriptor-based file restrictions |\n| 7 | Provider portability exercise | Verify each selected backend against its installed SDK/server | LlamaStack server or provider credentials |\n| 8 | KFP compilatio"}]}, {"id": "case-021", "question": "Which identifiers should a shared Redis response-cache namespace include?", "answer": "model, prompt, corpus version, and tenant [2]", "cited_passages": [{"citation_id": 2, "text": "jects/phase*/tests/            phase tests\nprojects/capstone/               runbook, fixtures, deployment exercises, design records\nevals/                           evaluation inputs and tests\ndocs/                            curriculum, status, and resources\nnotebooks/                       interactive exercises\n```\n\nRun modules with `uv run python -m mobility_ai.phaseN.module`; source files have moved from\n`projects/` into the installed package. There are no phase-specific `sys.path` workarounds.\n\n## Optional local services\n\nInstall Podman and `podman-compose` for the service exercises. Published ports bind to\nlocalhost. Development credentials are examples; cluster credentials use Secrets.\n\n```bash\npodman-compose up -d postgres qdrant\npodman-compose up -d redis\npodman-compose up -d neo4j\npodman-compose down\n```\n\nThe offline capstone does not require these services. Redis response caching uses exact\nqueries and a namespace identifying the model, prompt, corpus version, and tenant. MCP file\ntools default to `data/mcp`; create that directory or set `MCP_ALLOWED_ROOT` to an approved\nfolder. Absolute paths outside that folder, parent traversal, and symlinks are rejected."}]}, {"id": "case-022", "question": "Which identifiers should a shared Redis response-cache namespace include?", "answer": "model, prompt, corpus version, and tenant [3]", "cited_passages": [{"citation_id": 3, "text": "figuration metadata in one database transaction.\nRepeating ingestion replaces the corpus instead of appending duplicate chunks. Failed\nembedding calls leave the previous database intact. Retrieval rejects incompatible vectors.\n\nThe offline mode uses an explicit token vocabulary and count vectors. It demonstrates the\nsame persistence and retrieval path without claiming semantic understanding. Ollama mode\nuses model embeddings and generated answers; failures are propagated. Citation validation\nrejects nonexistent identifiers but does not establish factual correctness. Judge-based\nRAGAS evaluation is an explicit, separately configured operation.\n\nThe KFP compiler wraps the same CLI in two container components and produces real database,\nrecord, and report artifacts. Cluster execution is unverified. SQLite and linear vector\nsearch are deliberately limited to a small local corpus and one writer.\n\n## Proposed extensions\n\nThe ADRs and deployment templates describe exercises for pgvector/Qdrant, LangGraph,\nRedis, GraphRAG, GPU inference, LoRA, access control, and observability. They are not\nimplemented together as an enterprise platform. Add one integration at a time and verify\nits behavior against the local baseline. No throughput, latency SLO, quality gain, or\nproduction readiness is claimed without a reproducible run artifact."}]}, {"id": "case-023", "question": "What can we say about local inference infrastructure cost?", "answer": "Unmeasured infrastructure costs remain null. [1]", "cited_passages": [{"citation_id": 1, "text": "Local inference does not establish a\nzero infrastructure cost, so unmeasured costs remain null."}]}, {"id": "case-024", "question": "Which identifiers does the namespace include?", "answer": "Model, prompt, corpus version, and tenant. [1]", "cited_passages": [{"citation_id": 1, "text": "queries and a namespace identifying the model, prompt, corpus version, and tenant."}]}, {"id": "case-025", "question": "What latency statistic was measured?", "answer": "The p95 is 12 ms. [1]", "cited_passages": [{"citation_id": 1, "text": "The measured median query latency was 12 ms. The p95 was not measured."}]}, {"id": "case-026", "question": "Does the comparison report time to first token?", "answer": "No, it does not report time to first token. [1]", "cited_passages": [{"citation_id": 1, "text": "mean total query latency, not p95 or time to first token."}]}, {"id": "case-027", "question": "Is SQLite intended for scalable production vector search?", "answer": "SQLite is intended for scalable production vector search. [1]", "cited_passages": [{"citation_id": 1, "text": "SQLite is not intended for scalable production vector search."}]}, {"id": "case-028", "question": "What are the default chunk size and overlap?", "answer": "512, 64 [1] [2]", "cited_passages": [{"citation_id": 1, "text": "Documents are split into 512-character chunks with 64 characters of overlap."}, {"citation_id": 2, "text": "pgvector adds vector similarity search to PostgreSQL."}]}, {"id": "case-029", "question": "What are the default chunk size and overlap?", "answer": "512 characters with 64 characters overlap. [1]", "cited_passages": [{"citation_id": 1, "text": "Defaults are 512 **characters** per\nchunk and 64 characters overlap."}]}, {"id": "case-030", "question": "What are the timeout and retry count?", "answer": "The timeout is 5 seconds and the retry count is 2. [1]", "cited_passages": [{"citation_id": 1, "text": "The timeout is 5 seconds."}]}, {"id": "case-031", "question": "How many requests per second were measured?", "answer": "40 requests per second. [1]", "cited_passages": [{"citation_id": 1, "text": "The benchmark processed 40 requests in 20 seconds."}]}, {"id": "case-032", "question": "What should I run when the database is missing?", "answer": "Run ingest. [1]", "cited_passages": [{"citation_id": 1, "text": "- Missing database: run `ingest`; `ask` never silently creates a new corpus."}]}]}</script>
+<script>
+"use strict";
+const packet = JSON.parse(document.getElementById("packet").textContent);
+let review = structuredClone(packet.template);
+const answerLabels = ["supported", "unsupported", "uncertain", "non_answer"];
+const citationLabels = ["supports_part", "does_not_support", "uncertain"];
+function node(tag, text, parent) {
+  const item = document.createElement(tag);
+  if (text !== undefined) item.textContent = text;
+  if (parent) parent.append(item);
+  return item;
+}
+function select(parent, title, values, value, update) {
+  const label = node("label", title + " ", parent);
+  const input = node("select", undefined, label);
+  for (const optionValue of ["", ...values]) {
+    const option = node("option", optionValue || "Choose a label", input);
+    option.value = optionValue;
+  }
+  input.value = value || "";
+  input.onchange = () => { update(input.value || null); progress(); };
+}
+function complete(c) {
+  return answerLabels.includes(c.answer_support) && c.reason.trim() &&
+    c.citations.every(p => citationLabels.includes(p.verdict)) &&
+    (c.answer_support !== "supported" || c.citations.some(p => p.verdict === "supports_part"));
+}
+function progress() {
+  const count = review.cases.filter(complete).length;
+  document.getElementById("progress").textContent = `${count} of ${review.cases.length} cases complete`;
+}
+function render() {
+  document.getElementById("reviewer").value = review.reviewer;
+  document.getElementById("independent").checked = review.reviewed_without_judge;
+  const container = document.getElementById("cases");
+  container.replaceChildren();
+  packet.samples.forEach((sample, i) => {
+    const c = review.cases[i];
+    const section = node("section", undefined, container);
+    section.id = `case-${i}`;
+    node("h2", `${i + 1}. ${sample.id}`, section);
+    node("h3", "Question", section); node("pre", sample.question, section);
+    node("h3", "Answer", section); node("pre", sample.answer, section);
+    for (const passage of sample.cited_passages) {
+      node("h3", `Cited passage [${passage.citation_id}]`, section);
+      node("pre", passage.text, section);
+      const annotation = c.citations.find(p => p.citation_id === passage.citation_id);
+      select(section, `Contribution of [${passage.citation_id}]`, citationLabels,
+        annotation.verdict, value => { annotation.verdict = value; });
+    }
+    select(section, "Whole-answer support", answerLabels, c.answer_support,
+      value => { c.answer_support = value; });
+    const label = node("label", "Your explanation (including ambiguous or unsupported claims)", section);
+    const reason = node("textarea", undefined, label);
+    reason.value = c.reason;
+    reason.oninput = () => { c.reason = reason.value; progress(); };
+  });
+  progress();
+}
+function download(completed) {
+  review.reviewer = document.getElementById("reviewer").value;
+  review.reviewed_without_judge = document.getElementById("independent").checked;
+  const missing = review.cases.findIndex(c => !complete(c));
+  if (completed && (!review.reviewer.trim() || !review.reviewed_without_judge || missing !== -1)) {
+    document.getElementById("message").textContent =
+      "Complete every label and explanation, provide your reviewer name, and confirm independent review. A supported answer needs at least one supporting citation.";
+    if (missing !== -1) document.getElementById(`case-${missing}`).scrollIntoView();
+    return;
+  }
+  const blob = new Blob([JSON.stringify(review, null, 2) + "\n"], {type: "application/json"});
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url; link.download = completed ? "labels.reviewed.json" : "labels.draft.json";
+  link.click(); setTimeout(() => URL.revokeObjectURL(url), 1000);
+  document.getElementById("message").textContent = "Download created. Keep this file to preserve your review.";
+}
+document.getElementById("save").onclick = () => download(false);
+document.getElementById("export").onclick = () => download(true);
+document.getElementById("load").onchange = async event => {
+  const file = event.target.files[0];
+  if (!file) return;
+  try {
+    const value = JSON.parse(await file.text());
+    if (value.format_version !== 1 || value.records_sha256 !== review.records_sha256 ||
+        typeof value.reviewer !== "string" || typeof value.reviewed_without_judge !== "boolean" ||
+        !Array.isArray(value.cases) || value.cases.length !== review.cases.length) throw new Error();
+    const cases = packet.template.cases.map(expected => {
+      const matches = value.cases.filter(c => c.id === expected.id);
+      if (matches.length !== 1) throw new Error();
+      const c = matches[0];
+      if (!(c.answer_support === null || answerLabels.includes(c.answer_support)) ||
+          typeof c.reason !== "string" || !Array.isArray(c.citations) ||
+          c.citations.length !== expected.citations.length) throw new Error();
+      const citations = expected.citations.map(p => {
+        const matches = c.citations.filter(item => item.citation_id === p.citation_id);
+        if (matches.length !== 1 || !(matches[0].verdict === null || citationLabels.includes(matches[0].verdict))) throw new Error();
+        return {citation_id: p.citation_id, verdict: matches[0].verdict};
+      });
+      return {id: c.id, answer_support: c.answer_support, reason: c.reason, citations};
+    });
+    review = {...packet.template, reviewer: value.reviewer,
+      reviewed_without_judge: value.reviewed_without_judge, cases};
+    render(); document.getElementById("message").textContent = "Draft loaded.";
+  } catch {
+    document.getElementById("message").textContent = "Cannot load this draft: wrong input file, missing cases, or invalid labels. Your current work is unchanged.";
+  }
+};
+render();
+</script>
+</html>

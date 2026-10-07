@@ -166,6 +166,11 @@ See the [citation-support development cases](../../evals/development/citation-su
 for inspected failures and controls. Larger, independently reviewed judge calibration remains
 the next step before treating these verdicts as a correctness gate.
 
+The [independent calibration workflow](../../evals/calibration/citation-support/README.md)
+provides an unlabelled browser packet, draft/export controls, and a comparison command that
+retains judge errors in its denominators. Independent review is deferred; no calibration
+result or quality approval is implied by the tooling checks.
+
 ## Reproduce the live documentation benchmark
 
 The [frozen benchmark](../../evals/benchmarks/project-docs-v1/README.md) compares one versus

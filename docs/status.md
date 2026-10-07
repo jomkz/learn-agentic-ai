@@ -64,9 +64,12 @@ Prioritize the following work using the recorded failure cases:
    excerpts and source quotes are validated. [Verification and both live attempts](verification/2026-10-07-citation-support.md)
    record 503 passing tests and judge errors/disagreements on eleven inspected cases. The
    audit is diagnostic; capstone acceptance behavior is unchanged.
-4. **Judge calibration — next:** use a larger, independently reviewed set containing supported claims,
-   unsupported claims, non-answers, and incorrect citations. Report judge disagreements;
-   the current judge is not a correctness gate.
+4. **Judge calibration — tooling ready; independent review deferred:** the
+   [32-case packet and comparison workflow](../evals/calibration/citation-support/README.md)
+   cover support, incorrect citations, non-answers, and reasoning failures. Labels remain
+   blank until independent review; the new judge run and comparison follow that review.
+   [Tooling verification](verification/2026-10-07-judge-calibration.md) does not establish
+   calibrated judge quality. The judge remains advisory.
 
 Develop against the inspected cases, then evaluate on a new held-out question set. Preserve
 the frozen benchmark and its original results. GPU training, cluster execution, and a live

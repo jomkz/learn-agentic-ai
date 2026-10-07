@@ -1,0 +1,7 @@
+{
+  "records_sha256": "5dd97181ace812e42761c8323639ef36efad7c019fe253064f70a83a3a0f3704",
+  "case_count": 32,
+  "citation_count": 38,
+  "labels_complete": false,
+  "limitations": "Agreement with one independent reviewer is not established accuracy or a correctness gate. Judge errors remain in overall denominators. Inspect rationales even when labels agree; resolve ambiguity and obtain further review before adoption. This is development calibration, not held-out answer-quality evaluation."
+}
