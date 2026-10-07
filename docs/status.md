@@ -54,9 +54,12 @@ Prioritize the following work using the recorded failure cases:
    [October 7 verification](verification/2026-10-07-structured-responses.md) records 433 passing
    tests and eight valid live responses. One live answer also cited an irrelevant passage;
    citation support remains priority 3.
-2. **Chunk boundaries — next:** compare sentence-aware chunking or adjacent-chunk expansion against
-   the truncated cache-namespace example, while retaining source provenance.
-3. **Citation support:** distinguish an existing source identifier from a passage that supports
+2. **Chunk boundaries — complete (opt-in):** bounded adjacent-chunk expansion recovers the
+   truncated namespace list and retains source ranges. [Verification and the live comparison](verification/2026-10-07-chunk-boundaries.md)
+   record 456 passing tests and 20 development attempts. Keep expansion off by default:
+   added context also exposed wrong citations, unsupported answers, abstention failures, and
+   increased latency.
+3. **Citation support — next:** distinguish an existing source identifier from a passage that supports
    the claim. Include the wrong-passage, extra-passage, and unsupported-reasoning examples in
    development checks.
 4. **Judge calibration:** use a larger, manually reviewed set containing supported claims,

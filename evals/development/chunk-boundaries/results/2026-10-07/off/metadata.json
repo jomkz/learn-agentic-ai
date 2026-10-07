@@ -1,0 +1,188 @@
+{
+  "started_at": "2026-10-07T14:51:06.279405+00:00",
+  "endpoint": "http://127.0.0.1:11434",
+  "server": {
+    "version": "0.34.3"
+  },
+  "models": {
+    "llama3.2:3b": {
+      "name": "llama3.2:3b",
+      "model": "llama3.2:3b",
+      "modified_at": "2026-10-07T09:34:38.845563566-05:00",
+      "size": 2019393189,
+      "digest": "a80c4f17acd55265feec403c7aef86be0c25983ab279d83f3bcd3abbcb5b8b72",
+      "details": {
+        "parent_model": "",
+        "format": "gguf",
+        "family": "llama",
+        "families": [
+          "llama"
+        ],
+        "parameter_size": "3.2B",
+        "quantization_level": "Q4_K_M",
+        "context_length": 131072,
+        "embedding_length": 3072
+      },
+      "capabilities": [
+        "completion",
+        "tools"
+      ]
+    },
+    "nomic-embed-text:v1.5": {
+      "name": "nomic-embed-text:v1.5",
+      "model": "nomic-embed-text:v1.5",
+      "modified_at": "2026-10-07T09:34:06.675310605-05:00",
+      "size": 274302450,
+      "digest": "0a109f422b47e3a30ba2b10eca18548e944e8a23073ee3f3e947efcf3c45e59f",
+      "details": {
+        "parent_model": "",
+        "format": "gguf",
+        "family": "nomic-bert",
+        "families": [
+          "nomic-bert"
+        ],
+        "parameter_size": "137M",
+        "quantization_level": "F16",
+        "context_length": 2048,
+        "embedding_length": 768
+      },
+      "capabilities": [
+        "embedding"
+      ]
+    }
+  },
+  "python": "3.12.14",
+  "cpu_threads": 16,
+  "generation_options": {
+    "temperature": 0,
+    "seed": 0,
+    "num_ctx": 4096,
+    "num_predict": 512
+  },
+  "prompt_version": "structured-rag-v2",
+  "top_k": [
+    1,
+    3
+  ],
+  "adjacent_chunks": 0,
+  "max_context_chars": 6000,
+  "questions_sha256": "1e6bc8ea6da8b77a2a2bbeab31fd1be956853a562da4b59c7fb3a1938a22ce5e",
+  "manifest_sha256": "cdca1401e0373ab39177e48fd43e85a79657218ea7e808f7e83836616ebd87d1",
+  "lockfile_sha256": "f926063332964aa14f6fb128b1c0708b38bce541226a59aa8cc38dd03ccb7a84",
+  "source_sha256": {
+    "__init__.py": "138369da356fbcefa5ebc410fa57bb1b7dd46ea5f4fb8c6de59a55f092b87720",
+    "capstone/__init__.py": "32899828fc85f893643d236fe648ecdba367dc5885afd7510757e48d03d6c97b",
+    "capstone/app.py": "906d419ecff2c986656c847280c93c324d7bb0521651ae505a2a11d7688e439d",
+    "capstone/integration.py": "1d158f790a26375fdcccade97318c2db65e6ef3f02f6c153ed7c8d34abbf5d7a",
+    "capstone/retrieval.py": "4ea811d122204a8e12f25237d7e8b689d25e31d3fd9f62bd76cbc6b7fc4d4363",
+    "check_install.py": "f11a272f586337c0bcef4bad04de44f8074cb7d770f06a966009a61ee56f86ab",
+    "evals/__init__.py": "56f697ea476807adfac92740a109ab28f4c14a7353503566a0f85fb0d40f139b",
+    "evals/benchmark.py": "90c01541ac387e238ce337f69bd7912e2852a76a84c78e2e89756121524c3b04",
+    "evals/ragas_harness.py": "add52968f8d2af05f1ba433c32859991e02b539ccfadd80629c14d5b611e3c2a",
+    "evals/security_gate.py": "7748b12e18f5c634904b7675f864a03f76d554a9c48416876af7d5496b8e7161",
+    "phase1/__init__.py": "0376316ebf8e3003e722cc423540b3104e35fecf8288ae6aa9bd37bd3fbded39",
+    "phase1/async_client.py": "c4c3aa9607dda80e60b1bd910a41063aaaaffb994cf19327207f5e4b0d2a7e4f",
+    "phase1/config.py": "996e7ae9178086adcf404b764d2d086e2d3793e81aba19d46196a8726b7a1a14",
+    "phase1/prompt_engineering.py": "072d1a6a7004d80c401e562581ab2009720401a08ed957e0c6b61bf055dc8e63",
+    "phase1/verify_setup.py": "f58a7f79f7bbaefe61e5556c951bb3f2b0ba17622a079e1a5e5af1a6790eae65",
+    "phase2/__init__.py": "4bd243ac2f7c8cbbe20d023febd7f1624125799728809e39be17a5dc03749dba",
+    "phase2/agent.py": "0a7f236742265fcccdae492831702fa4b78367e93376ec2c28f3ce0417ee8fa3",
+    "phase2/arithmetic.py": "2f06d14bca9f998c1ab7d3ed936827d580941c0c62bf7b70add3ca971e8cf93c",
+    "phase2/capstone.py": "28c7ff1d94226aa3a8b1c74842ed6b7291df1bb3b3746f646f07a141c6a62868",
+    "phase2/chains.py": "94e7dcdeb03fa6c4941f99bca8be0ab6866e8ee83ec229054d9acb85e572df56",
+    "phase2/streaming.py": "6cb48ff0394e0edef2196056d691aea63bf822457802eebc773deff25ece2e08",
+    "phase3/__init__.py": "0a721e09d4a43c92e84f116403180e43a29dfbeb6f1561a97b0beb100a7e508d",
+    "phase3/capstone.py": "e2130fe43ac7f037d51361d8214b9e18614569103775ea633d91ce31b6674105",
+    "phase3/ingestion.py": "d9fad7f5c3dea4bc65ac43cc483089e7b729c24874a0e6b94581406ef605e462",
+    "phase3/retrieval.py": "7a7e0b1dd5922522fc2c573796ce30f79571bcc032e83143f61158be3f295d98",
+    "phase4/__init__.py": "50f1a3f48064058f4e850e945706e574e9461ef5ea989ee31f9acbadbe8f5258",
+    "phase4/cache.py": "0b76d1e441c59008d0f53d0903dedd5282867b62531bd02add643c1c46513c9e",
+    "phase4/capstone.py": "a8ed4a9703cfc47fbef72bd14ad8929c0a43f1661041417a7dabc8945b70ace8",
+    "phase4/cost.py": "40c6007f789f0a27197e5a3ce4949fc91cd87445a67145225a4e3e38ca6b8a16",
+    "phase4/dspy_rag.py": "23b3e2cb5a0c0e8563c860e3198980af2f84fea3fe984308142a03c58df5acf2",
+    "phase4/techniques.py": "5a116b6d1ea251155b45f5561a03a81179ae5af05bf0544eaf4d629340df8a20",
+    "phase5/__init__.py": "00aa25e8519c1950163a39af3ad42fc59b027e02d29cc4079773436cd605ba71",
+    "phase5/capstone.py": "ffa3220e4d570dab9ca306866068ffa9be79e4eb6845aeb6ab1123db3e44540f",
+    "phase5/graphs.py": "ea6607c1b90057a47ecf191caf3c20ef7fcb2d1312410d2f96e89cceb82ca5b2",
+    "phase5/multi_agent.py": "11028bc1a087983f066d15e92ddcae3802df4f5f7f5f7f8273b1bfb3525c0db2",
+    "phase6/__init__.py": "8017e80b8d176e873bd675b90cb84aef9618078dffd80c587d21d9463a95be57",
+    "phase6/capstone.py": "e31744e2b27fe8f10d98b5bd7a401a4572fe0f1e2fed102cff963a16fdf8f306",
+    "phase6/context_budget.py": "16e57c4dc98652a0653a934c55458be0daf0b1e27b08f058260da063a1e0039c",
+    "phase6/mcp_server.py": "1161563162582ecb581fef1a274e5506c8b2c0ae5f6c572a19428f9e31033cf8",
+    "phase7/__init__.py": "c8fe40dec4d08f14e8c56877d65bee0f753ed60b16239db85ca92d32ba021f98",
+    "phase7/capstone.py": "17572a93b06dde8ce07c18b5ae5f8c9539c85152ac54276b123a195d95c83239",
+    "phase7/llamastack_client.py": "8145078ae8621591bdff808fee70e39bdbdb62a6a2db73e381f5a22c4546964a",
+    "phase7/portable_app.py": "d1008348c3f2f79cd080a2172629226bf97c66f9759994876a8b262ecf2efa3a",
+    "phase8/__init__.py": "c8f2d71dcd603f92730efc8275a8bfdbc59ffdcebc9a6626540c414b815e6be8",
+    "phase8/capstone.py": "71dc6a473230ff3253fc5f9f643e9d172c8158a268530c4c56a7c4590d3ab0f2",
+    "phase8/kfp_pipeline.py": "dab65b2bd9dff25d9992d48332c331356a777fda86dc16dccf8b44714c3958f1",
+    "phase8/mlflow_tracking.py": "4153b8b177686133f08661b2c03c7c56938dc1c9b78686552f55f10003cea245",
+    "phase8/qlora_finetune.py": "028623672be1eaf3fc7475d44d8abd14c0dcdf98a69b26cd8529d24b154a3f5b",
+    "phase9/__init__.py": "db8691eaaf5976fbc71e4d4681197dab39e62a7065db4810dde3285f7ab76845",
+    "phase9/capstone.py": "576765c45f30934ff521d81ee6f5df1c7e6f913acf089c0d140e9188f4e55a39",
+    "phase9/monitoring.py": "e40be300f3a870488c8282a5698249221d9370b20147917e4cf6879e87066326",
+    "phase9/neo4j_basics.py": "02c0887f9d5785c9d1b1fb0d49540dfc9ba8b3789fca222398b92b6dace8e51f",
+    "phase9/raft_dataset.py": "1ccfa61d87227cf1dd9c41589001faf3ba7ed1248284b6056dd01769d28d6024"
+  },
+  "git_head": "9905a6542b1d34e5989886d1f60ae7fb82e49e53",
+  "working_tree": "Source hashes identify the working tree; HEAD alone is not the run revision.",
+  "packages": {
+    "mobility-ai": "0.1.0",
+    "httpx": "0.28.1",
+    "pydantic": "2.13.4"
+  },
+  "chunks": 48,
+  "ingestion_seconds": 4.265984404992196,
+  "corpus_config": {
+    "provider": "ollama",
+    "embedding_model": "nomic-embed-text:v1.5",
+    "generation_model": "llama3.2:3b",
+    "corpus_sha256": "d2a678b011063d86193010adbd4e02a53a95359cff4145d150d259baceb4bf53",
+    "vocabulary": [],
+    "chunk_size": 512,
+    "overlap": 64
+  },
+  "loaded_models": {
+    "models": [
+      {
+        "name": "llama3.2:3b",
+        "model": "llama3.2:3b",
+        "size": 2561524365,
+        "digest": "a80c4f17acd55265feec403c7aef86be0c25983ab279d83f3bcd3abbcb5b8b72",
+        "details": {
+          "parent_model": "",
+          "format": "gguf",
+          "family": "llama",
+          "families": [
+            "llama"
+          ],
+          "parameter_size": "3.2B",
+          "quantization_level": "Q4_K_M"
+        },
+        "expires_at": "2026-10-07T10:22:01.307854243-05:00",
+        "size_vram": 0,
+        "context_length": 4096
+      },
+      {
+        "name": "nomic-embed-text:v1.5",
+        "model": "nomic-embed-text:v1.5",
+        "size": 376449269,
+        "digest": "0a109f422b47e3a30ba2b10eca18548e944e8a23073ee3f3e947efcf3c45e59f",
+        "details": {
+          "parent_model": "",
+          "format": "gguf",
+          "family": "nomic-bert",
+          "families": [
+            "nomic-bert"
+          ],
+          "parameter_size": "137M",
+          "quantization_level": "F16"
+        },
+        "expires_at": "2026-10-07T10:21:54.955741019-05:00",
+        "size_vram": 0,
+        "context_length": 2048
+      }
+    ]
+  },
+  "completed_at": "2026-10-07T14:52:01.321226+00:00"
+}

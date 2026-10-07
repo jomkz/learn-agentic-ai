@@ -29,3 +29,7 @@ The sequential runs are a development comparison, not a controlled throughput ex
 The offline regression additionally replays q18's original retrieved passages through context
 expansion. It verifies the exact source slice and provenance independently of a fresh embedding
 ranking or model answer. Neither the frozen corpus nor its original results are rewritten.
+
+The [October 7 verification](../../../docs/verification/2026-10-07-chunk-boundaries.md) records
+all 20 attempts, improved excerpt availability, added latency, and the remaining citation,
+answer, and abstention failures. The results support keeping expansion opt-in.
