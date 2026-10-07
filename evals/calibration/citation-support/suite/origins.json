@@ -1,0 +1,218 @@
+{
+  "case-001": {
+    "kind": "previously_inspected",
+    "source": "development/citation-support/results/2026-10-07/records.jsonl",
+    "sha256": "6ea7df3570bbdc16e7a1f219df72ece581d91945f1a08b2cc5dc5aa942e46f98",
+    "original_id": "supported-missing-database",
+    "note": "Existing development case, not a new model generation."
+  },
+  "case-002": {
+    "kind": "authored_control",
+    "topic": "statistic_scope",
+    "note": "Codex-authored answer/evidence pairing; not a new model generation.",
+    "source": "Synthetic evidence; no real system measurements implied."
+  },
+  "case-003": {
+    "kind": "authored_control",
+    "topic": "conflicting_evidence",
+    "note": "Codex-authored answer/evidence pairing; not a new model generation.",
+    "source": "Synthetic evidence; no real system measurements implied."
+  },
+  "case-004": {
+    "kind": "previously_inspected",
+    "source": "development/citation-support/results/2026-10-07/records.jsonl",
+    "sha256": "6ea7df3570bbdc16e7a1f219df72ece581d91945f1a08b2cc5dc5aa942e46f98",
+    "original_id": "supported-vector-search",
+    "note": "Existing development case, not a new model generation."
+  },
+  "case-005": {
+    "kind": "authored_control",
+    "topic": "units",
+    "note": "Codex-authored answer/evidence pairing; not a new model generation.",
+    "source": "benchmarks/project-docs-v1/corpus/runbook.md",
+    "sha256": "d04673a2ed0352b295d7d64c70b0c7be3b00e29b4793fd2df7e29f3a991db420"
+  },
+  "case-006": {
+    "kind": "authored_control",
+    "topic": "extra_citation",
+    "note": "Codex-authored answer/evidence pairing; not a new model generation.",
+    "source": "Synthetic evidence; no real system measurements implied."
+  },
+  "case-007": {
+    "kind": "authored_control",
+    "topic": "quantity",
+    "note": "Codex-authored answer/evidence pairing; not a new model generation.",
+    "source": "benchmarks/project-docs-v1/corpus/runbook.md",
+    "sha256": "d04673a2ed0352b295d7d64c70b0c7be3b00e29b4793fd2df7e29f3a991db420"
+  },
+  "case-008": {
+    "kind": "authored_control",
+    "topic": "distributed_evidence",
+    "note": "Codex-authored answer/evidence pairing; not a new model generation.",
+    "source": "Synthetic evidence; no real system measurements implied."
+  },
+  "case-009": {
+    "kind": "authored_control",
+    "topic": "qualification",
+    "note": "Codex-authored answer/evidence pairing; not a new model generation.",
+    "source": "Synthetic evidence; no real system measurements implied."
+  },
+  "case-010": {
+    "kind": "authored_control",
+    "topic": "non_answer",
+    "note": "Codex-authored answer/evidence pairing; not a new model generation.",
+    "source": "benchmarks/project-docs-v1/corpus/evaluation.md",
+    "sha256": "48e20b4a4cc315900cffdc56ef8ad9dac798e42da47c3d00b9d59c338d4d4c4b"
+  },
+  "case-011": {
+    "kind": "previously_inspected",
+    "source": "development/citation-support/results/2026-10-07/records.jsonl",
+    "sha256": "6ea7df3570bbdc16e7a1f219df72ece581d91945f1a08b2cc5dc5aa942e46f98",
+    "original_id": "unsupported-reasoning-latency",
+    "note": "Existing development case, not a new model generation."
+  },
+  "case-012": {
+    "kind": "authored_control",
+    "topic": "recovery",
+    "note": "Codex-authored answer/evidence pairing; not a new model generation.",
+    "source": "benchmarks/project-docs-v1/corpus/runbook.md",
+    "sha256": "d04673a2ed0352b295d7d64c70b0c7be3b00e29b4793fd2df7e29f3a991db420"
+  },
+  "case-013": {
+    "kind": "previously_inspected",
+    "source": "development/citation-support/results/2026-10-07/records.jsonl",
+    "sha256": "6ea7df3570bbdc16e7a1f219df72ece581d91945f1a08b2cc5dc5aa942e46f98",
+    "original_id": "split-support",
+    "note": "Existing development case, not a new model generation."
+  },
+  "case-014": {
+    "kind": "previously_inspected",
+    "source": "development/citation-support/results/2026-10-07/records.jsonl",
+    "sha256": "6ea7df3570bbdc16e7a1f219df72ece581d91945f1a08b2cc5dc5aa942e46f98",
+    "original_id": "wrong-passage-ingest",
+    "note": "Existing development case, not a new model generation."
+  },
+  "case-015": {
+    "kind": "previously_inspected",
+    "source": "development/citation-support/results/2026-10-07/records.jsonl",
+    "sha256": "6ea7df3570bbdc16e7a1f219df72ece581d91945f1a08b2cc5dc5aa942e46f98",
+    "original_id": "non-answer-throughput",
+    "note": "Existing development case, not a new model generation."
+  },
+  "case-016": {
+    "kind": "authored_control",
+    "topic": "list_scope",
+    "note": "Codex-authored answer/evidence pairing; not a new model generation.",
+    "source": "benchmarks/project-docs-v1/corpus/overview.md",
+    "sha256": "35aab7344d741aaa15ba74159115024043c9d680def8e77bb6f6f6f2f6cd7b23"
+  },
+  "case-017": {
+    "kind": "authored_control",
+    "topic": "unsupported_reasoning",
+    "note": "Codex-authored answer/evidence pairing; not a new model generation.",
+    "source": "benchmarks/project-docs-v1/corpus/architecture.md",
+    "sha256": "e24c73a3a52d6d330ac0e9a984cddf1acb2a67239dcd76d72e4ccdbbb773f86e"
+  },
+  "case-018": {
+    "kind": "authored_control",
+    "topic": "negation",
+    "note": "Codex-authored answer/evidence pairing; not a new model generation.",
+    "source": "benchmarks/project-docs-v1/corpus/evaluation.md",
+    "sha256": "48e20b4a4cc315900cffdc56ef8ad9dac798e42da47c3d00b9d59c338d4d4c4b"
+  },
+  "case-019": {
+    "kind": "authored_control",
+    "topic": "paraphrase",
+    "note": "Codex-authored answer/evidence pairing; not a new model generation.",
+    "source": "benchmarks/project-docs-v1/corpus/overview.md",
+    "sha256": "35aab7344d741aaa15ba74159115024043c9d680def8e77bb6f6f6f2f6cd7b23"
+  },
+  "case-020": {
+    "kind": "previously_inspected",
+    "source": "development/citation-support/results/2026-10-07/records.jsonl",
+    "sha256": "6ea7df3570bbdc16e7a1f219df72ece581d91945f1a08b2cc5dc5aa942e46f98",
+    "original_id": "unsupported-namespace",
+    "note": "Existing development case, not a new model generation."
+  },
+  "case-021": {
+    "kind": "previously_inspected",
+    "source": "development/citation-support/results/2026-10-07/records.jsonl",
+    "sha256": "6ea7df3570bbdc16e7a1f219df72ece581d91945f1a08b2cc5dc5aa942e46f98",
+    "original_id": "corrected-namespace-citation",
+    "note": "Existing development case, not a new model generation."
+  },
+  "case-022": {
+    "kind": "previously_inspected",
+    "source": "development/citation-support/results/2026-10-07/records.jsonl",
+    "sha256": "6ea7df3570bbdc16e7a1f219df72ece581d91945f1a08b2cc5dc5aa942e46f98",
+    "original_id": "wrong-passage-namespace",
+    "note": "Existing development case, not a new model generation."
+  },
+  "case-023": {
+    "kind": "authored_control",
+    "topic": "negation",
+    "note": "Codex-authored answer/evidence pairing; not a new model generation.",
+    "source": "benchmarks/project-docs-v1/corpus/evaluation.md",
+    "sha256": "48e20b4a4cc315900cffdc56ef8ad9dac798e42da47c3d00b9d59c338d4d4c4b"
+  },
+  "case-024": {
+    "kind": "authored_control",
+    "topic": "list_scope",
+    "note": "Codex-authored answer/evidence pairing; not a new model generation.",
+    "source": "benchmarks/project-docs-v1/corpus/overview.md",
+    "sha256": "35aab7344d741aaa15ba74159115024043c9d680def8e77bb6f6f6f2f6cd7b23"
+  },
+  "case-025": {
+    "kind": "authored_control",
+    "topic": "statistic_scope",
+    "note": "Codex-authored answer/evidence pairing; not a new model generation.",
+    "source": "Synthetic evidence; no real system measurements implied."
+  },
+  "case-026": {
+    "kind": "authored_control",
+    "topic": "latency_scope",
+    "note": "Codex-authored answer/evidence pairing; not a new model generation.",
+    "source": "benchmarks/project-docs-v1/corpus/evaluation.md",
+    "sha256": "48e20b4a4cc315900cffdc56ef8ad9dac798e42da47c3d00b9d59c338d4d4c4b"
+  },
+  "case-027": {
+    "kind": "previously_inspected",
+    "source": "development/citation-support/results/2026-10-07/records.jsonl",
+    "sha256": "6ea7df3570bbdc16e7a1f219df72ece581d91945f1a08b2cc5dc5aa942e46f98",
+    "original_id": "negation-overlap",
+    "note": "Existing development case, not a new model generation."
+  },
+  "case-028": {
+    "kind": "previously_inspected",
+    "source": "development/citation-support/results/2026-10-07/records.jsonl",
+    "sha256": "6ea7df3570bbdc16e7a1f219df72ece581d91945f1a08b2cc5dc5aa942e46f98",
+    "original_id": "extra-passage-chunk-size",
+    "note": "Existing development case, not a new model generation."
+  },
+  "case-029": {
+    "kind": "authored_control",
+    "topic": "units",
+    "note": "Codex-authored answer/evidence pairing; not a new model generation.",
+    "source": "benchmarks/project-docs-v1/corpus/runbook.md",
+    "sha256": "d04673a2ed0352b295d7d64c70b0c7be3b00e29b4793fd2df7e29f3a991db420"
+  },
+  "case-030": {
+    "kind": "authored_control",
+    "topic": "uncited_evidence",
+    "note": "Codex-authored answer/evidence pairing; not a new model generation.",
+    "source": "Synthetic evidence; no real system measurements implied."
+  },
+  "case-031": {
+    "kind": "authored_control",
+    "topic": "unsupported_arithmetic",
+    "note": "Codex-authored answer/evidence pairing; not a new model generation.",
+    "source": "Synthetic evidence; no real system measurements implied."
+  },
+  "case-032": {
+    "kind": "authored_control",
+    "topic": "recovery",
+    "note": "Codex-authored answer/evidence pairing; not a new model generation.",
+    "source": "benchmarks/project-docs-v1/corpus/runbook.md",
+    "sha256": "d04673a2ed0352b295d7d64c70b0c7be3b00e29b4793fd2df7e29f3a991db420"
+  }
+}

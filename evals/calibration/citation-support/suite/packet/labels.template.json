@@ -1,0 +1,384 @@
+{
+  "format_version": 1,
+  "records_sha256": "5dd97181ace812e42761c8323639ef36efad7c019fe253064f70a83a3a0f3704",
+  "reviewer": "",
+  "reviewed_without_judge": false,
+  "cases": [
+    {
+      "id": "case-001",
+      "answer_support": null,
+      "reason": "",
+      "citations": [
+        {
+          "citation_id": 1,
+          "verdict": null
+        }
+      ]
+    },
+    {
+      "id": "case-002",
+      "answer_support": null,
+      "reason": "",
+      "citations": [
+        {
+          "citation_id": 1,
+          "verdict": null
+        }
+      ]
+    },
+    {
+      "id": "case-003",
+      "answer_support": null,
+      "reason": "",
+      "citations": [
+        {
+          "citation_id": 1,
+          "verdict": null
+        },
+        {
+          "citation_id": 2,
+          "verdict": null
+        }
+      ]
+    },
+    {
+      "id": "case-004",
+      "answer_support": null,
+      "reason": "",
+      "citations": [
+        {
+          "citation_id": 1,
+          "verdict": null
+        }
+      ]
+    },
+    {
+      "id": "case-005",
+      "answer_support": null,
+      "reason": "",
+      "citations": [
+        {
+          "citation_id": 1,
+          "verdict": null
+        }
+      ]
+    },
+    {
+      "id": "case-006",
+      "answer_support": null,
+      "reason": "",
+      "citations": [
+        {
+          "citation_id": 1,
+          "verdict": null
+        },
+        {
+          "citation_id": 2,
+          "verdict": null
+        }
+      ]
+    },
+    {
+      "id": "case-007",
+      "answer_support": null,
+      "reason": "",
+      "citations": [
+        {
+          "citation_id": 1,
+          "verdict": null
+        }
+      ]
+    },
+    {
+      "id": "case-008",
+      "answer_support": null,
+      "reason": "",
+      "citations": [
+        {
+          "citation_id": 1,
+          "verdict": null
+        },
+        {
+          "citation_id": 2,
+          "verdict": null
+        }
+      ]
+    },
+    {
+      "id": "case-009",
+      "answer_support": null,
+      "reason": "",
+      "citations": [
+        {
+          "citation_id": 1,
+          "verdict": null
+        }
+      ]
+    },
+    {
+      "id": "case-010",
+      "answer_support": null,
+      "reason": "",
+      "citations": [
+        {
+          "citation_id": 1,
+          "verdict": null
+        }
+      ]
+    },
+    {
+      "id": "case-011",
+      "answer_support": null,
+      "reason": "",
+      "citations": [
+        {
+          "citation_id": 1,
+          "verdict": null
+        }
+      ]
+    },
+    {
+      "id": "case-012",
+      "answer_support": null,
+      "reason": "",
+      "citations": [
+        {
+          "citation_id": 1,
+          "verdict": null
+        }
+      ]
+    },
+    {
+      "id": "case-013",
+      "answer_support": null,
+      "reason": "",
+      "citations": [
+        {
+          "citation_id": 1,
+          "verdict": null
+        },
+        {
+          "citation_id": 2,
+          "verdict": null
+        }
+      ]
+    },
+    {
+      "id": "case-014",
+      "answer_support": null,
+      "reason": "",
+      "citations": [
+        {
+          "citation_id": 1,
+          "verdict": null
+        }
+      ]
+    },
+    {
+      "id": "case-015",
+      "answer_support": null,
+      "reason": "",
+      "citations": [
+        {
+          "citation_id": 2,
+          "verdict": null
+        },
+        {
+          "citation_id": 3,
+          "verdict": null
+        }
+      ]
+    },
+    {
+      "id": "case-016",
+      "answer_support": null,
+      "reason": "",
+      "citations": [
+        {
+          "citation_id": 1,
+          "verdict": null
+        }
+      ]
+    },
+    {
+      "id": "case-017",
+      "answer_support": null,
+      "reason": "",
+      "citations": [
+        {
+          "citation_id": 1,
+          "verdict": null
+        }
+      ]
+    },
+    {
+      "id": "case-018",
+      "answer_support": null,
+      "reason": "",
+      "citations": [
+        {
+          "citation_id": 1,
+          "verdict": null
+        }
+      ]
+    },
+    {
+      "id": "case-019",
+      "answer_support": null,
+      "reason": "",
+      "citations": [
+        {
+          "citation_id": 1,
+          "verdict": null
+        }
+      ]
+    },
+    {
+      "id": "case-020",
+      "answer_support": null,
+      "reason": "",
+      "citations": [
+        {
+          "citation_id": 1,
+          "verdict": null
+        }
+      ]
+    },
+    {
+      "id": "case-021",
+      "answer_support": null,
+      "reason": "",
+      "citations": [
+        {
+          "citation_id": 2,
+          "verdict": null
+        }
+      ]
+    },
+    {
+      "id": "case-022",
+      "answer_support": null,
+      "reason": "",
+      "citations": [
+        {
+          "citation_id": 3,
+          "verdict": null
+        }
+      ]
+    },
+    {
+      "id": "case-023",
+      "answer_support": null,
+      "reason": "",
+      "citations": [
+        {
+          "citation_id": 1,
+          "verdict": null
+        }
+      ]
+    },
+    {
+      "id": "case-024",
+      "answer_support": null,
+      "reason": "",
+      "citations": [
+        {
+          "citation_id": 1,
+          "verdict": null
+        }
+      ]
+    },
+    {
+      "id": "case-025",
+      "answer_support": null,
+      "reason": "",
+      "citations": [
+        {
+          "citation_id": 1,
+          "verdict": null
+        }
+      ]
+    },
+    {
+      "id": "case-026",
+      "answer_support": null,
+      "reason": "",
+      "citations": [
+        {
+          "citation_id": 1,
+          "verdict": null
+        }
+      ]
+    },
+    {
+      "id": "case-027",
+      "answer_support": null,
+      "reason": "",
+      "citations": [
+        {
+          "citation_id": 1,
+          "verdict": null
+        }
+      ]
+    },
+    {
+      "id": "case-028",
+      "answer_support": null,
+      "reason": "",
+      "citations": [
+        {
+          "citation_id": 1,
+          "verdict": null
+        },
+        {
+          "citation_id": 2,
+          "verdict": null
+        }
+      ]
+    },
+    {
+      "id": "case-029",
+      "answer_support": null,
+      "reason": "",
+      "citations": [
+        {
+          "citation_id": 1,
+          "verdict": null
+        }
+      ]
+    },
+    {
+      "id": "case-030",
+      "answer_support": null,
+      "reason": "",
+      "citations": [
+        {
+          "citation_id": 1,
+          "verdict": null
+        }
+      ]
+    },
+    {
+      "id": "case-031",
+      "answer_support": null,
+      "reason": "",
+      "citations": [
+        {
+          "citation_id": 1,
+          "verdict": null
+        }
+      ]
+    },
+    {
+      "id": "case-032",
+      "answer_support": null,
+      "reason": "",
+      "citations": [
+        {
+          "citation_id": 1,
+          "verdict": null
+        }
+      ]
+    }
+  ]
+}
